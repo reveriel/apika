@@ -1,0 +1,280 @@
+\section{基于cocos2d-x 3.3的游戏软件中动态链接库分析}
+我们以MoonWarriors软件包含的动态链接库libgame.so为例，
+对该动态链接库包含的函数等进行深入分析。
+我们用objdump命令，从libgame.so中导出符号表。
+符号表中包含函数名、地址、符号类型说明、段类型说明等几类符号信息：\url{http://www.cnblogs.com/wangkangluo1/archive/2012/07/02/2572433.html}.
+我们将其中的函数分成如下五类，依次在下面各小节中分别说明:
+\begin{enumerate}
+\item \hei{游戏引擎库函数}：
+	指由cocos2d-x引擎提供的游戏相关的库所包含的函数，
+	参见第\ref{sec:so:cocolib}节；
+\item \hei{Lua运行时函数}：
+	Lua运行时环境（Lua虚拟机）提供的库函数，
+	参见第\ref{sec:so:lualib}节；
+\item \hei{系统级JNI本地函数}：
+	cocos2d-x中针对android系统中的JNI函数给出的本地函数实现，
+	参见第\ref{sec:so:sysjnilib}节；
+\item \hei{C++与Lua之间的绑定函数}：
+	cocos2d-x用于方便沟通C/C++层与Lua vm之间绑定(binding)所使用的、
+	函数名以tolua开头的函数（一个自动bind工具），
+	参见第\ref{sec:so:bindlib}节；
+\item \hei{应用级JNI本地函数}：
+	以Java\_org\_cocos2dx\_lib打头的函数，
+	这些是针对cocos2d以及游戏应用的JNI函数给出的本地函数实现，
+	参见第\ref{sec:so:appjnilib}节；
+\end{enumerate}
+
+\subsection{cocos2d-x游戏库函数}
+\label{sec:so:cocolib}
+这类函数对应的符号表占总符号表的0.65+.\\
+e.g.:
+
+      \_ZTSN7cocos2d9extension9CCBReaderE\\
+      \_ZN7cocos2d10CCDirector13setProjectionENS\_20ccDirectorProjectionE\\
+      \_ZTVN7cocos2d8CCActionE\\
+      \_ZTIN7cocos2d8CCLiquidE\\
+      \_ZNK7cocos2d13CCDictElement9getStrKeyEv\\
+总而言之，就是类似如下的形式:\\
+	      \_ZTSN7cocos2d[1-9]([a-zA-Z]+)(([1-9]+)[a-zA-Z]+)?\\
+	      \_ZNK7cocos2d[1-9]([a-zA-Z]+)(([1-9]+)[a-zA-Z]+)?\\
+              \_ZTVN7cocos2d[1-9]([a-zA-Z]+)(([1-9]+)[a-zA-Z]+)?\\
+              \_ZTIN7cocos2d[1-9]([a-zA-Z]+)(([1-9]+)[a-zA-Z]+)?\\
+	      \_ZN7cocos2d([1-9a-zA-Z])+\\
+如果想亲自察看第一类函数名的具体信息，请察看我们提供的cocos.txt文件.（应该不止于此，还有一些不是不包含cocos关键字）\\
+
+函数 \_ZN7\_JNIEnv16CallObjectMethodEP8\_jobjectP10\_jmethodIDz 是编译器将C++程序中的符号去除面向对象特征后转换得到的、能唯一标识的符号名字。
+
+所有被换名的(mangled)符号以 \_Z开始，N表示接下来后跟的是类名或namespace名，每个这样的名字以数字开头后跟这个数字长度的字符串，例如7\_JNIEnv；再接下来是函数名CallObjectMethod，其后为参数类型的编码，这里依次有如下类型的参数：
+
+E: undigned char
+
+P8\_jobject: P表示指针，P8\_jobject表示类型\_jobject *
+
+P10\_jmethod：表示类型\_jmethod *
+
+D: char
+
+z： 结束参数列表
+
+\subsection{lua vm对外的接口，即lua vm对外提供的API}
+\label{sec:so:lualib}
+第二类符号表占总符号表的1/14左右.\\
+该类符号表形式如下所示:\\
+e.g.:\\
+	luaL\_ref\\
+	luaL\_unref\\
+	luaL\_checkany\\
+	luaopen\_table\\
+	luaopen\_ffi\\
+	luaopen\_os\\
+	luaopen\_io\\
+	...\\
+一言以概之,其形式为:luaL\_(.)+ luaopen\_(.)+.
+欲知详情，请看luaopen\_prefix.txt  lua\_prefix.txt文件.
+
+\subsection{cocos2d-x配合JNI机制的一些函数名}
+\label{sec:so:sysjnilib}
+第三类函数名所占比重很少，和前两者相比简直就是小巫见大巫.\\
+\begin{lstlisting}
+001f12d0 g    DF .text  00000068 openKeyboardJNI
+001f1338 g    DF .text  00000068 closeKeyboardJNI
+0021e540 g    DF .text  00000054 endJNI
+0021e0d4 g    DF .text  00000080 preloadBackgroundMusicJNI
+0021e154 g    DF .text  00000088 playBackgroundMusicJNI
+
+
+001efe48  w   DF .text  00000018 _ZN7_JNIEnv12NewStringUTFEPKc
+001f007c g    DF .text  000000f0 _Z21showEditTextDialogJNIPKcS0_iiiiPFvS0_PvES1_
+001f01cc g    DF .text  000000ac _Z17getPackageNameJNIv
+001f0598 g    DF .text  0000009c _Z16getBoolForKeyJNIPKcb
+001f0634 g    DF .text  00000094 _Z19getIntegerForKeyJNIPKci
+001f06c8 g    DF .text  0000009c _Z17getFloatForKeyJNIPKcf
+001f0764 g    DF .text  0000009c _Z18getDoubleForKeyJNIPKcd
+001f0800 g    DF .text  00000130 _Z18getStringForKeyJNIPKcS0_
+001f0930 g    DF .text  0000008c _Z16setBoolForKeyJNIPKcb
+001f09bc g    DF .text  0000008c _Z19setIntegerForKeyJNIPKci
+001f0a48 g    DF .text  00000094 _Z17setFloatForKeyJNIPKcf
+001f0adc g    DF .text  00000090 _Z18setDoubleForKeyJNIPKcd
+001f0b6c g    DF .text  000000a8 _Z18setStringForKeyJNIPKcS0_
+001efe10  w   DF .text  00000038 _ZN7_JNIEnv22CallStaticDoubleMethodEP7_jclassP10\_jmethodIDz
+0018cf44 g    DF .text  00000018 JNI_OnLoad
+\end{lstlisting}
+
+上面的符号可以进一步分成如下几类:
+\begin{itemize}
+\item (funtionname)JNI
+\item (\_Z[0-9]+(get|set)(type)ForKeyJNI(certain format))
+\item \_ZN7\_JNIENv([0-9]+)(Call|Delete|New)(Static|Local)(certain type)Method(arg list)
+\item JNI\_Onload
+\end{itemize}
+
+通过对.so利用objudmp -D反汇编，我们可以察看到由libgame.so文件导出表的所有汇编代码。
+
+\subsubsection{(function)JNI}
+以playBackgroundMusicJNI为例子,从反汇编得到的汇编代码可分析得到
+如下的函数调用关系：
+\begin{itemize}
+\item playBackgroundMusicJNI
+  \begin{itemize}
+  \item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv|
+  \item \verb|_ZN7cocos2d7CCPointC1Eff|
+  \item \verb|_ZN7cocos2d6CCSizeC1Eff|
+  \item \verb|_ZN7cocos2d6CCRect7setRectEffff|
+  \item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv| 
+	自身递归
+  \end{itemize}
+\item \verb|<android_setCpuArm+0x94c>|
+\item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv|
+  \begin{itemize}
+  \item \verb|pthread_key_create@plt|
+  \item \verb|__android_log_print@plt|
+  \item \verb|pthread\_getspecific@plt|
+  \item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv| 自身递归
+  \end{itemize}
+\item \verb|__android_log_print@plt|
+\item 其他一些\verb|xxx@plt|函数
+\item \verb|_ZN7_JNIEnv14DeleteLocalRefEP8_jobject|
+\item \verb|_ZN7_JNIEnv20Cal33lStaticVoidMethodEP7_jclassP10_jmethodIDz|
+  \begin{itemize}
+  \item ......
+  \end{itemize}
+\item ......
+\end{itemize}
+详细说明如下:\\
+该函数会调用如下三个函数\\
+\begin{lstlisting}
+ 555088   21e17c:       ebffff53        bl      21ded0 <_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv+0x98>
+ 555101   21e1b0:       ebff3da5        bl      1ed84c <_ZN7_JNIEnv20Cal33lStaticVoidMethodEP7_jclassP10_jmethodIDz>
+ 555104   21e1bc:       ebff46f1        bl      1efd88 <_ZN7_JNIEnv14DeleteLocalRefEP8_jobject>
+\end{lstlisting}
+ 4.  对自身的调用\\
+其中1 2 3存在严格的序关系，即会先调用1，然后2，然后才是3，而对自身的调用会被插入1，2或2，3或3，以后。\\
+其实如果继续观察如何该形式的其他函数，也是如上形式，它们的基本特点是一样的，\\
+
+
+1.<\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv+0x98>的形式是\\
+不断的递归，同时还有对如下函数的调用:
+\begin{lstlisting}
+ 430181 001aa5e4 <_ZN7cocos2d7CCPointC1Eff>:
+ 430182   1aa5e4:       e92d4800        push    {fp, lr}
+ 430183   1aa5e8:       e5801000        str     r1, [r0]
+ 430184   1aa5ec:       e28db004        add     fp, sp, #4
+ 430185   1aa5f0:       e5802004        str     r2, [r0, #4]
+ 430186   1aa5f4:       e8bd8800        pop     {fp, pc}
+
+ 430598 001aabe0 <_ZN7cocos2d6CCSizeC1Eff>:
+ 430599   1aabe0:       e92d4800        push    {fp, lr}
+ 430600   1aabe4:       e5801000        str     r1, [r0]
+ 430601   1aabe8:       e28db004        add     fp, sp, #4
+ 430602   1aabec:       e5802004        str     r2, [r0, #4]
+ 430603   1aabf0:       e8bd8800        pop     {fp, pc}
+
+
+ 430799 001aaeac <_ZN7cocos2d6CCRect7setRectEffff>:
+ 430800   1aaeac:       e92d4800        push    {fp, lr}
+ 430801   1aaeb0:       e28db004        add     fp, sp, #4
+ 430802   1aaeb4:       e5803008        str     r3, [r0, #8]
+ 430803   1aaeb8:       e59b3004        ldr     r3, [fp, #4]
+ 430804   1aaebc:       e5801000        str     r1, [r0]
+ 430805   1aaec0:       e5802004        str     r2, [r0, #4]
+ 430806   1aaec4:       e580300c        str     r3, [r0, #12]
+ 430807   1aaec8:       e8bd8800        pop     {fp, pc}
+\end{lstlisting}
+
+\verb|<android_setCpuArm+0x94c>|   无汇编代码，
+说明它是由android运行时环境提供的动态链接函数。
+
+\verb|<_ZN7cocos2d9JniHelper9getJavaVMEv>| 
+该函数会对\verb|<pthread_key_create@plt>|、
+\verb|<__android_log_print@plt>|、
+\verb|<pthread_getspecific@plt>|
+以及其自身\verb|_ZN7cocos2d9JniHelper9getJavaVMEv|调用。
+
+
+\verb|0018bd10 <__android_log_print@plt>|
+
+其他一些\verb|xxx@plt|的函数
+
+\verb|555104   21e1bc:       ebff46f1        bl      1efd88 <_ZN7_JNIEnv14DeleteLocalRefEP8_jobject>|\\
+
+该函数只有一个跳转:\\
+\begin{lstlisting}
+ 001efd88 <_ZN7_JNIEnv14DeleteLocalRefEP8_jobject>:
+         1efd88:       e92d4800        push    {fp, lr}
+         1efd8c:       e5903000        ldr     r3, [r0]
+         1efd90:       e28db004        add     fp, sp, #4
+         1efd94:       e593305c        ldr     r3, [r3, #92]   ; 0x5c
+         1efd98:       e12fff33        blx     r3
+         1efd9c:       e8bd8800        pop     {fp, pc}
+\end{lstlisting}
+
+\subsection{C/C++层与Lua之间的绑定函数}
+\label{sec:so:bindlib}
+此类函数的形式为tolua\_XXX。
+
+\subsection{应用级JNI本地函数}
+\label{sec:so:appjnilib}
+这类函数是cocos2d-x之间面向android平台的native function，将对应与dex文件中的native属性的方法。目前估计其起作用是基于第三类函数，推测理由是\\第三类函数中涉及到android平台提供的JNI\_OnLoad()  以及包含JVM为关键字的函数.\\
+
+其形式可以举例如下:\\
+e.g.
+\verb|Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward|
+总之，Java\_org\_cocos2dx\_lib\_类名\_native函数名.就是其形式，之所以是这个形式全是有JNI使用规范决定.\\
+
+以Java\_org\_cocos2dx\_lib\_Cocos2dxRenderer\_nativeInit为例，该函数的意思为:
+
+Java表示这是一个要通过JNI起作用的函数(本地）
+
+org\_cocos2dx\_lib  表示cocos2d-x/cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxRenderer.java中cocos/platfrom/androidjava/src下的包
+
+Cocos2dxRenderen 表示类名，对应与本地C++层的一个类,位于cocos2d-x/cocos/platform/android/jni下的类
+nativeInit 表示方法或函数.
+
+JNI规范是\url{http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html#wp16432}
+
+该函数位于\verb|/cocos2d-x/cocos/platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxRenderer.cpp|.
+不止于此，
+\verb|Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward|
+直接对应的java 层native method: nativeDeleteBackward
+
+还存在于由dexdump -d xxx.apk输出的文件中\\
+\begin{lstlisting}
+    #2              : (in Lorg/cocos2dx/lib/Cocos2dxRenderer;)
+      name          : 'nativeDeleteBackward'
+      type          : '()V'
+      access        : 0x010a (PRIVATE STATIC NATIVE)
+      code          : (none)
+\end{lstlisting}
+
+而\verb|Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward|
+通过\\
+\begin{lstlisting}
+objdump -T libgame.so |grep "Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward"
+\end{lstlisting}
+
+可以输出
+\begin{lstlisting}
+001f0d48 <Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward>:
+\end{lstlisting}
+所以可知要使用的native function在.so .dex文件中将一一对应才行.\\
+
+
+\subsection{总结}
+通过以上对.so文件中的符号表进行分类，我们推测，应该说基本笃定如果要对基于cocos2d-x的游戏进行优化，可以只对lua vm做优化，保持其对cocos2d-x
+的使用接口不变.本身对lua vm的优化就可能存在多种方案，当然基于整体cocos2d-x游戏的优化，也未必一定是针对lua vm的优化，一切暂时还处于未知。\\
+
+此外，另一方面，也许我们也可能从一个或若干个通过NDK编译得到的.so单独剥离出liblua.so,然后替换为我们修改lua vm得到的那份新的liblua.so。\\
+这里提到的liblua.so指的都是lua vm编译得到的.so文件，只是存在修改与未修改之分。而此剥离也许会在我们的思考之内，甚至可能成为考虑工作之一.\\
+
+
+
+
+
+
+
+
+
+
+
+
+

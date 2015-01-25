@@ -1,0 +1,99 @@
+\section{DexAnalysis}
+依据apk文件在ART中的安装过程，我们对apk文件的优化关注于第2阶段：由dex到oat的转换过程。dex到中间代码的转换是从dex文件中提取类和方法开始，所以我们希望能够对dex文件有更多的了解和认识。在android SDK中提供了一个名为dexdump的工具，可以打印DEX文件的信息,它的源代码在dalvik目录中。但是dexdump得到的信息不能够满足我们的需求，因此通过修改dexdump工具得到了一个新的工具DexAnalysis，关于DexAnalysis的介绍参考android-work/tools/DexAnalysis/doc中的文档介绍。
+\subsection{案例分析}
+使用DexAnalysis对2个游戏软件的classes.dex文件进行解析，解析得到的文件位于android-work/survey/casestudy/result，游戏dex文件的解析结果保存在对应游戏名字的目录下面，其中libMethod.txt是库方法及其对应类的信息；userMethod.txt是程序自定义方法及其对应类的信息;nativeMethod.txt是native方法对应的类及其对应类的信息。
+
+\begin{itemize}
+\item MoonWarriors\\
+MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo，源代码发布在Cocos2d-x官网的引擎示例当中：\url{http://cn.cocos2d-x.org/tutorial/show?id=2254}
+
+根据解析结果文件，统计数据得到表格如下：
+\begin{table}[htbp]
+\centering
+\caption{\label{MoonWarriors}MoonWarriors方法统计}
+\begin{tabular}{|c|c|c|c|}
+\hline
+方法 & 数目 & 类 & 数目\\
+\hline
+lib method & 299 & lib class & 87\\
+\hline
+self-define method & 385 & self-define & 61\\
+\hline
+native method & 21 & native class & 6\\
+\hline
+methods sum & 684 & classes sum & 148\\
+\hline
+\end{tabular}
+\end{table}
+
+由表格数据，MoonWarriors中调用的库方法有299个，对应的类有87个;程序自定义的方法有385个，对应的类有61个，在这些自定义方法中有21个native方法,对应的类有6个，这21个native方法具体如下所示：
+\begin{lstlisting}
+Lorg/cocos2dx/lib/Cocos2dxAccelerometer;.onSensorChanged:(FFFJ)V
+Lorg/cocos2dx/lib/Cocos2dxBitmap;.nativeInitBitmapDC:(II[B)V
+Lorg/cocos2dx/lib/Cocos2dxETCLoader;.nativeSetTextureInfo:(II[BI)V
+Lorg/cocos2dx/lib/Cocos2dxHelper;.nativeSetApkPath:(Ljava/lang/String;)V
+Lorg/cocos2dx/lib/Cocos2dxHelper;.nativeSetEditTextDialogResult:([B)V
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.callLuaFunctionWithString:(ILjava/lang/String;)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.callLuaGlobalFunctionWithString:(Ljava/lang/String;Ljava/lang/String;)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.releaseLuaFunction:(I)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.retainLuaFunction:(I)I
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeDeleteBackward:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeGetContentText:()Ljava/lang/String;
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeInit:(II)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeInsertText:(Ljava/lang/String;)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeKeyDown:(I)Z
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeOnPause:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeOnResume:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeRender:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesBegin:(IFF)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesCancel:([I[F[F)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesEnd:(IFF)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesMove:([I[F[F)V
+\end{lstlisting}
+这些native方法均对应于游戏引擎cocos2dx相关的类 
+ 
+\item Temple Run\\
+神庙逃亡（Temple Run）是由 Imangi Studios开发的没有终点的动作类视频游戏,在Android平台采用统一的Unity游戏引擎。下载来源：\url{http://temple-run.cn.uptodown.com/android}
+
+根据解析结果文件，统计数据得到表格如下：
+\begin{table}[htbp]
+\centering
+\caption{\label{Temple Run}Temple Run方法统计}
+\begin{tabular}{|c|c|c|c|}
+\hline
+方法 & 数目 & 类 & 数目\\
+\hline
+lib method & 1748 & lib class & 412\\
+\hline
+self-define method & 7214 & self-define & 1190\\
+\hline
+native method & 99 & native class & 10\\
+\hline
+methods sum & 8962 & classes sum & 1602\\
+\hline
+\end{tabular}
+\end{table}
+由表格数据，Temple Run中调用的库方法有1748个，对应的类有412个;程序自定义的方法有7214个，对应的类有1190个，在这些自定义方法中有99个native方法,对应的类有10个，对应的这10个类具体如下所示：
+\begin{lstlisting}
+Lcom/amazon/ags/jni/AGSJniHandler;
+Lcom/amazon/ags/jni/achievements/AchievementsJni;
+Lcom/amazon/ags/jni/leaderboards/LeaderboardsJni;
+Lcom/amazon/ags/jni/profiles/ProfilesJni;
+Lcom/amazon/ags/jni/whispersync/WhisperSyncJni;
+Lcom/unity3d/player/PlayerPrefs;
+Lcom/unity3d/player/UnityJavaRunnable;
+Lcom/unity3d/player/UnityPlayer;
+Lcom/unity3d/player/WWW;
+Lorg/fmod/FMODAudioDevice;
+\end{lstlisting}
+这10个类中除了游戏引擎unity3d直接对应的类，还有2个amazon和fmod是相关的游戏插件。
+\end{itemize}
+
+\subsection{总结}
+通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方
+
+游戏软件中，自定义方法中调用的native method的方法相对来说比较少，基本与游戏引擎以及第三方提供的游戏插件有关，从这些方法中进行人工分析的难度低的多，但仍然需要对这些native method方法特征进行进一步分析
+
+另外一个方面需要考虑，游戏软件中方法的调用之间是否存在一定的模式，从调用模式入手思考可以优化的点
+
+

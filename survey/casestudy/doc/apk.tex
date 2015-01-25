@@ -1,0 +1,58 @@
+\section{APK结构}
+APK文件：Android application package文件。每个要安装到Android平台的应用都要被编译打包为一个单独的文件，后缀名为.apk，其中包含了应用的二进制代码、资源、配置文件等。
+
+apk文件实际是一个zip压缩包，可以通过解压缩工具解开。一般解压后的结构如下所示：
+\begin{table}[htbp]
+\centering
+\caption{\label{apk}apk组成}
+\begin{tabular}{|c|c|}
+\hline
+文件或目录 & 作用\\
+\hline
+assets/ & 存放资源文件的目录\\
+\hline
+META-INF/ & 从java jar文件引入的描述包信息的目录\\
+\hline
+res/ & 存放资源文件的目录\\
+\hline
+libs/ & 如果存在的话，存放的是ndk编出来的so库\\
+\hline
+AndroidManifest.xml & 程序全局配置文件\\
+\hline
+classes.dex & 最终生成的dalvik字节码\\
+\hline
+resources.ars & 编译后的二进制资源文件\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item assets目录\\
+assets目录可以存放一些配置文件，这些文件的内容在程序运行过程中可以通过相关的API获得。
+
+\item META-INF目录\\
+META-INF目录下存放的是签名信息，用来保证apk包的完整性和系统的安全。在eclipse编译生成一个apk包时，会对所有要打包的文件做一个校验计算，并把计算结果放在META-INF目录下，这就保证了apk包里的文件不能被随意替换。
+
+\item res目录\\
+res目录存放资源文件，包括图片，字符串等等。
+
+\item libs目录\\
+lib目录下的子目录armeabi存放的是一些so文件。eclipse在打包的时候会根据文件名的命名规则（lib****.so）去打包so文件，开头和结尾必须分别为"lib"和".so"，否则是不会打包到apk文件中的。
+
+\item AndroidManifest.xml\\
+该文件是每个应用都必须定义和包含的，它描述了应用的名字、版本、权限、引用的库文件等等信息，如要把apk上传到Google Market上，也要对这个xml做一些配置。在apk中的AndroidManifest.xml是经过压缩的，可以通过AXMLPrinter2工具解开，具体命令为：java -jar AXMLPrinter2.jar AndroidManifest.xml
+
+\item classes.dex文件\\
+ classes.dex是java源码编译后生成的java字节码文件。但由于Android使用的dalvik虚拟机与标准的java虚拟机是不兼容的，dex文件与class文件相比，不论是文件结构还是opcode都不一样。目前常见的java反编译工具都不能处理dex文件。Android模拟器中提供了一个dex文件的反编译工具，dexdump。
+
+\item resources.ars文件\\
+编译后的二进制资源文件
+\end{itemize}
+
+\redt{补充说明：}\\
+res和assets文件夹来存放不需要系统编译成二进制的文件，例如字体文件等，两者的区别：
+
+1.assets:不会在R.java文件下生成相应的标记，assets文件夹可以自己创建文件夹，必须使用AssetsManager类进行访问，存放到这里的资源在运行打包的时候都会打入程序安装包中
+
+2.res：会在R.java文件下生成标记，这里的资源会在运行打包操作的时候判断哪些被使用到了，没有被使用到的文件资源是不会打包到安装包中的
+

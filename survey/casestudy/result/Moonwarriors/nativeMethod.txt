@@ -1,0 +1,34 @@
+Processing '/home/zkun/下载/game/Moonwarriors.apk_FILES/classes.dex'...
+Opened '/home/zkun/下载/game/Moonwarriors.apk_FILES/classes.dex', DEX version '035'
+The loadLibrary function:
+Ljava/lang/System;.loadLibrary:(Ljava/lang/String;)V
+
+Lorg/cocos2dx/lib/Cocos2dxAccelerometer;.onSensorChanged:(FFFJ)V
+Lorg/cocos2dx/lib/Cocos2dxBitmap;.nativeInitBitmapDC:(II[B)V
+Lorg/cocos2dx/lib/Cocos2dxETCLoader;.nativeSetTextureInfo:(II[BI)V
+Lorg/cocos2dx/lib/Cocos2dxHelper;.nativeSetApkPath:(Ljava/lang/String;)V
+Lorg/cocos2dx/lib/Cocos2dxHelper;.nativeSetEditTextDialogResult:([B)V
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.callLuaFunctionWithString:(ILjava/lang/String;)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.callLuaGlobalFunctionWithString:(Ljava/lang/String;Ljava/lang/String;)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.releaseLuaFunction:(I)I
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;.retainLuaFunction:(I)I
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeDeleteBackward:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeGetContentText:()Ljava/lang/String;
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeInit:(II)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeInsertText:(Ljava/lang/String;)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeKeyDown:(I)Z
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeOnPause:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeOnResume:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeRender:()V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesBegin:(IFF)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesCancel:([I[F[F)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesEnd:(IFF)V
+Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesMove:([I[F[F)V
+There are 21 native methods!
+Lorg/cocos2dx/lib/Cocos2dxAccelerometer;
+Lorg/cocos2dx/lib/Cocos2dxBitmap;
+Lorg/cocos2dx/lib/Cocos2dxETCLoader;
+Lorg/cocos2dx/lib/Cocos2dxHelper;
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge;
+Lorg/cocos2dx/lib/Cocos2dxRenderer;
+There are 6 native class!
