@@ -1,0 +1,26 @@
+DexAnalysis
+
+目录结构
+========
+========
+doc目录：关于DexAnalysis工具的说明文档
+|
+|--设计文档:dexanalysis.tex: DexAnalysis工具的设计说明
+|
+|--用户手册:userguide.tex:工具的使用说明.
+|
+
+
+
+=======
+=======
+src目录:是DexAnalysis工具的代码部分.
+|
+|--DexAnalysis.cpp：DexAnalysis工具的源码文件.
+|
+|--DexAnalysis：DexAnalysis源码生成的共享库.
+|
+|--run.sh:脚本文件，使用DexAnalysis工具对example目录中的例子进行解析，并输出相应的结果文件.
+|
+|--example：游戏例子.
+|

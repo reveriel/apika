@@ -1,0 +1,16 @@
+\section{用户手册}
+DexAnalysis工具的源码位于src目录中，由于源码需要在Android环境中编译，如果需要，要替换dalvik/dexdump中的dexdump.cpp中的代码，编译之后生成的工具位于android5.0.0\_r7/out/host/linux-x86/bin。直接使用可以使用src目录下面的DexAnalysis，具体命令如下所示：
+\begin{lstlisting}
+//输出库方法及对应的类
+./DexAnalysis -a -k classes.dex >libMethod.txt
+
+//输出程序自定义方法及对应的类
+./DexAnalysis -a -s classes.dex >userMethod.txt
+
+//输出本地方法及对应的类
+./DexAnalysis -a -n classes.dex >nativeMethod.txt
+\end{lstlisting}
+
+生成的文本文件中会输出相应的方法和类的名字以及统计相应的方法和类的数目
+
+用户也可以运行src目录下的run.sh来看如何使用DexAnalysis工具解析dex文件,src目录下考虑到游戏程序源码比较大，所以只存放了dex文件，游戏具体的源码可以从\url{ftp://192.168.1.60/sw/android_games/}上获取

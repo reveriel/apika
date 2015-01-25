@@ -1,0 +1,31 @@
+\newcommand\showchange{TT}%{TT FL}%
+\newcommand\hasalgo{FL}%{TT FL}
+%\documentclass[preprint]{../../share/sigplanconf}
+\documentclass[a4paper,11pt,titlepage]{article}
+
+\input local	% common local setting
+\input clocal	% common Chinese setting
+\newcommand{\bs}[0]{$\backslash$}
+\lstset{numbers=left,numberstyle=\tiny, %显示行号
+%keywordstyle=\color{blue!70}, commentstyle=\color{red!50!green!50!blue!50},
+}
+
+\begin{document}
+\title{\hei{dex解析工具}}
+\author{周坤\thanks{984040887@qq.com}}
+\author{潘振忠\thanks{pzz2011@mail.ustc.edu.cn}}
+\author{张昱\thanks{yuzhang@ustc.edu.cn, 0551-63603804}}
+\affil{\hei{中国科学技术大学~~计算机科学与技术学院}}
+
+\maketitle %可以显示上边的信息
+\tableofcontents
+\setcounter{tocdepth}{3}
+\newpage
+% turn on page numbers
+%\pagestyle{empty}
+\pagenumbering{arabic}
+
+\input dexanalysis
+\input userguide
+
+\end{document}
