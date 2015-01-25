@@ -1,9 +1,9 @@
 \section{基于cocos2d-x 3.3的游戏软件中动态链接库分析}
-我们以???软件包含的动态链接库libgame.so为例，
+我们以MoonWarriors软件包含的动态链接库libgame.so为例，
 对该动态链接库包含的函数等进行深入分析。
-我们用???命令，从libgame.so中导出符号表。
-符号表中包含函数名、???等几类符号信息。
-我们将其中的函数分成如下??类，依次在下面各小节中分别说明:
+我们用objdump命令，从libgame.so中导出符号表。
+符号表中的信息可以参见\ref{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
+我们将其中的函数分成如下五类，依次在下面各小节中分别说明:
 \begin{enumerate}
 \item \hei{游戏引擎库函数}：
 	指由cocos2d-x引擎提供的游戏相关的库所包含的函数，
