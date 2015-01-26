@@ -1,37 +1,4 @@
-\section{DexAnalysis}
-\subsection{设计需求}
-Android应用程序包APK解压之后的目录结构如下：
-\begin{table}[htbp]
-\centering
-\caption{\label{apk}apk组成}
-\begin{tabular}{|c|c|}
-\hline
-文件或目录 & 作用\\
-\hline
-assets/ & 存放资源文件的目录\\
-\hline
-META-INF/ & 从java jar文件引入的描述包信息的目录\\
-\hline
-res/ & 存放资源文件的目录\\
-\hline
-libs/ & 如果存在的话，存放的是ndk编出来的so库\\
-\hline
-AndroidManifest.xml & 程序全局配置文件\\
-\hline
-classes.dex & 最终生成的dalvik字节码\\
-\hline
-resources.ars & 编译后的二进制资源文件\\
-\hline
-\end{tabular}
-\end{table}
-
-补充说明：\\
-res和assets文件夹来存放不需要系统编译成二进制的文件，例如字体文件等，两者的区别：
-
-1.assets:不会在R.java文件下生成相应的标记，assets文件夹可以自己创建文件夹，必须使用AssetsManager类进行访问，存放到这里的资源在运行打包的时候都会打入程序安装包中
-
-2.res：会在R.java文件下生成标记，这里的资源会在运行打包操作的时候判断哪些被使用到了，没有被使用到的文件资源是不会打包到安装包中的
-
+\section{Android解析工具}
 应用程序到Android上运行时是由dex文件开始的，所以我们需要了解classes.dex文件的结构。在android SDK中提供了一个名为dexdump的工具，可以打印DEX文件的信息,它的源代码在dalvik目录中。dexdump工具提供了一些命令行参数来帮助用户输出相应的dex文件信息，相应的参数如下：
 
 -c： 验证DEX文件的校验和
@@ -52,7 +19,6 @@ res和assets文件夹来存放不需要系统编译成二进制的文件，例�
 
 但是分析Android应用程序的特征，依靠android自身提供dexdump工具解析dex文件，输出的dex字节码往往有几万行，很难从中提取重要的信息，因此我们选择对dexdump工具进行修改使其输出我们所需的信息。
 
-\subsection{代码修改}
 我们希望能够对Android游戏程序中的部分代码进行优化，但首先需要确定程序的哪部分能够进行优化，需要对这些应用程序进行案例分析。我们目前关注于游戏程序中的方法调用。因此对dexdump代码做出的修改，需要输出以下几类信息：
 
 1.程序中调用了哪些库方法以及对应的类

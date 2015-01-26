@@ -1,8 +1,7 @@
 \section{基于dex文件解析的游戏软件案例分析}
 \label{dexanalysis}
-
 \subsection{游戏案例介绍}
-
+\label{sec:dexanalysis:case}
 \begin{table}[H]
 \caption{\hei{游戏软件信息}}
 \begin{tabular}{|p{2.5cm}|p{2cm}|p{2.1cm}|p{2cm}|p{2cm}|}
@@ -34,6 +33,7 @@ MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
 \end{itemize}
 
 \subsection{数据分析}
+\label{sec:dexanalysis:casestudy}
 我们使用DexAnalysis对2个游戏软件的classes.dex文件进行解析，解析得到的文件位于android-work/survey/casestudy/result，游戏dex文件的解析结果保存在对应游戏名字的目录下面，其中libMethod.txt是库方法及其对应类的信息；userMethod.txt是程序自定义方法及其对应类的信息;nativeMethod.txt是native方法对应的类及其对应类的信息。
 
 根据解析结果文件，统计数据得到表格如表~\ref{analysisresult}所示
@@ -164,9 +164,10 @@ Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge: LUA与java互调
 
 Lorg/cocos2dx/lib/Cocos2dxRenderer:利用androidGLSurfaceview 的生命周期创造cocos2d的生命周期，并画图
 
-\url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，其中提到这些类对应的java层的实现，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper:衔接org.cocos2dx.lib.Cocos2dxHelper类
+\url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper用于衔接org.cocos2dx.lib.Cocos2dxHelper类
  
 \subsection{总结}
+\label{sec:dexanalysis:conclusion}
 通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方
 
 游戏软件中，自定义方法中调用的native method的方法相对来说比较少，基本与游戏引擎以及第三方提供的游戏插件有关，从这些方法中进行人工分析的难度低的多，但仍然需要对这些native method方法特征进行进一步分析

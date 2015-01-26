@@ -1,8 +1,9 @@
 \section{基于cocos2d-x 3.3的游戏软件中动态链接库分析}
+\label{soanalysis}
 我们以MoonWarriors软件包含的动态链接库libgame.so为例，
 对该动态链接库包含的函数等进行深入分析。
 我们用objdump命令，从libgame.so中导出符号表。
-符号表中的信息可以参见\href{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
+符号表中的信息可以参见\url{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
 我们将其中的函数分成如下五类，依次在下面各小节中分别说明:
 \begin{enumerate}
 \item \hei{游戏引擎库函数}：
@@ -31,25 +32,26 @@
 \caption{\hei{Properties of Different Paging Modes}}
 \begin{tabular}{|c|c|c|c|}
 \hline 类别 & 该类符号的数目 & \% & .so中所有的符号数目\\
-\hline cocos2d-x游戏库函数& 8641 & 0.52690 & 16431  \\
+\hline cocos2d-x游戏库函数& 8431 & 0.52690 & 16431  \\
 \hline  lua vm 提供的API & 74 & 0.00450 & 16431 \\
 \hline C/C++与lua之间的绑定函数 & 79 &  0.004808 & 16431 \\
 \hline 与JNI相关的函数(不含接口JNI) & 69 & 0.00420 & 16431 \\
 \hline 接口JNI & 21 & 0.00128 & 16431 \\
+\hline
 \end{tabular}
 \end{table}
 
-首先根据objdump -T libgame.so|grep ".text" > \_text.txt 命令得到的文件\_text.txt ，\\
-此文件中的每一行的最后一项均表示一个游戏在运行过程中可能用到的函数名。\\
-然后我们察看该文件，发现共有16431行，也就是说游戏运行过程中可能用到16431个函数。\\
+首先根据objdump -T libgame.so|grep ".text" > \_text.txt 命令得到的文件\_text.txt，\\
+此文件中的每一行的最后一项均表示一个游戏在运行过程中可能用到的函数名。
+
+然后我们查看该文件，发现共有16431行，也就是说游戏运行过程中可能用到16431个函数。\\
 而通过:\\
 cat \_text.txt | grep  "\_Z" > \_z.txt\\
 cat \_z.txt | grep "cocos2dx" > cocos2dx.txt\\
-通过察看cocos2dx.txt，发现共有8431行，cocos2d-x游戏库提供了大概8431个函数，这些
+通过查看cocos2dx.txt，发现共有8431行，cocos2d-x游戏库提供了大概8431个函数，这些
 函数都是经过编译器去除面向对象特性的函数。
  
-e.g.:
-
+e.g.:\\
       \_ZTSN7cocos2d9extension9CCBReaderE\\
       \_ZN7cocos2d10CCDirector13setProjectionENS\_20ccDirectorProjectionE\\
       \_ZTVN7cocos2d8CCActionE\\
@@ -68,7 +70,7 @@ E 表示unsigned char\\
 P 表示指针，由于其后是\_jobject ，故此指针为\_jobject *\\
 同理有指针\_jmethodIDz *.\\
 	
-如果想亲自察看第一类函数名的具体信息，请察看我们提供的cocos.txt文件.（应该不止于此，还有一些不是不包含cocos关键字）\\
+如果想亲自查看第一类函数名的具体信息，请查看我们提供的cocos.txt文件.（位于android-work/survey/casestudy/result目录相应游戏目录下），第一类函数应该不止这些，还有一些未包含cocos关键字\\
 
 \subsection{lua vm提供的API}
 \label{sec:so:lualib}
@@ -84,10 +86,10 @@ e.g.:\\
 	luaopen\_io\\
 	...\\
 一言以概之,其形式为:luaL\_(.)+ luaopen\_(.)+.
-可以参看luaopen\_prefix.txt  lua\_prefix.txt文件.
+可以参见luaopen\_prefix.txt  lua\_prefix.txt文件.（位于android-work/survey/casestudy/result目录相应游戏目录下）.
 
-\section{cocos2d-x配合JNI机制的一些函数名}
-
+\subsection{系统级JNI本地函数}
+\label{sec:so:sysjnilib}
 \begin{lstlisting}
 001f12d0 g    DF .text  00000068 openKeyboardJNI
 001f1338 g    DF .text  00000068 closeKeyboardJNI
@@ -176,11 +178,8 @@ resumeAllEffectsJNI
 \item JNI\_Onload
 \end{itemize}
 
-
-
 \subsubsection{以JNI结尾的函数}
 通过对.so利用objudmp -D反汇编，我们可以察看到由libgame.so文件导出表的所有汇编代码。
-
 
 以playBackgroundMusicJNI为例子,从反汇编得到的汇编代码可分析得到
 如下的函数调用关系：
@@ -223,11 +222,9 @@ resumeAllEffectsJNI
 \end{lstlisting}
  4.  对自身的调用\\
 其中1 2 3存在严格的序关系，即会先调用1，然后2，然后才是3，而对自身的调用会被插入1，2或2，3或3，以后。\\
-其实如果继续观察如何该形式的其他函数，也是如上形式，它们的基本特点是一样的，\\
+其实如果继续观察如何调用该形式的其他函数，也是如上所示流程，它们的基本特点是一样的\\
 
-
-1.<\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv>的形式是\\
-不断的递归，同时还有对如下函数的调用:
+1.<\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv>的形式是：不断的递归，同时还有对如下函数的调用:
 \begin{lstlisting}
  430181 001aa5e4 <_ZN7cocos2d7CCPointC1Eff>:
  430182   1aa5e4:       e92d4800        push    {fp, lr}
@@ -261,14 +258,15 @@ resumeAllEffectsJNI
 该函数会对\verb|<pthread_key_create@plt>|、
 \verb|<__android_log_print@plt>|、
 \verb|<pthread_getspecific@plt>|
-以及其自身\verb|_ZN7cocos2d9JniHelper9getJavaVMEv|调用。
-
+以及其自身\verb|_ZN7cocos2d9JniHelper9getJavaVMEv|调用.
 
 \verb|0018bd10 <__android_log_print@plt>|
 
 其他一些\verb|xxx@plt|的函数
 
-\verb|555104   21e1bc:       ebff46f1        bl      1efd88 <_ZN7_JNIEnv14DeleteLocalRefEP8_jobject>|\\
+\verb|555104   21e1bc:       ebff46f1        bl      1efd88|
+ 
+\verb|<_ZN7_JNIEnv14DeleteLocalRefEP8_jobject>|\\
 
 该函数只有一个跳转:\\
 \begin{lstlisting}
@@ -283,9 +281,12 @@ resumeAllEffectsJNI
 
 \subsection{C/C++层与Lua之间的绑定函数}
 \label{sec:so:bindlib}
-此类函数的形式为tolua\_XXX .\\
-这些函数是用于将C/C++写的函数，自动注册到lua vm中，供lua脚本语言调用。\\
-而针对这里，我们也许可以在保持接口不变的情况下，从逃逸分析的角度给出优化方法。\\
+此类函数的形式为tolua\_XXX .
+
+这些函数是用于将C/C++写的函数，自动注册到lua vm中，供lua脚本语言调用。
+
+而针对这里，我们也许可以在保持接口不变的情况下，从逃逸分析的角度给出优化方法。
+
 这些函数例如:\\
 \begin{lstlisting}
 tolua\_isnoobj
@@ -293,11 +294,10 @@ tolua\_typename
 tolua\_classevents
 \end{lstlisting}
 
-\subsection{接口JNI}
+\subsection{应用级JNI本地函数}
 \label{sec:so:appjnilib}
 这类函数是cocos2d-x直接面向android平台的native function，是dex文件中的native属性的方法的具体实现。\\
-而且我们暂时估计这些方法是一些cocos2d-x提供的用于cocos2d-x与android平台建立联系的接口函数，所有的引擎相关的native 函数或者第三方提供的sqlite，web，socket，ssl，openssl等native function均通过这些接口函数\\
-最终作用于android平台\\
+而且我们暂时估计这些方法是一些cocos2d-x提供的用于cocos2d-x与android平台建立联系的接口函数，所有的引擎相关的native 函数或者第三方提供的sqlite，web，socket，ssl，openssl等native function均通过这些接口函数,最终作用于android平台\\
 
 以我们分析的case为例，在dex文件中，有如下native function:\\
 \begin{lstlisting}
@@ -323,9 +323,11 @@ nativeTouchesEnd
 nativeTouchesMove
 \end{lstlisting}
 
-其中的nativeDeleteBackward函数对应的C++层函数为：
+其中的nativeDeleteBackward函数对应的C++层函数为：\\
 \verb|Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward|
-该函数位于\verb|/cocos2d-x/cocos/platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxRenderer.cpp|.
+该函数位于\verb|/cocos2d-x/cocos/platform/android/jni|
+
+目录下的Java\_org\_cocos2dx\_lib\_Cocos2dxRenderer.cpp|.
 
 为了直观，再作如下说明:\\
 通过命令dexdump -d xxx.apk输出的文件中包含如下一个native method的信息\\
@@ -348,33 +350,9 @@ objdump -T libgame.so |grep "Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDelete
 001f0d48 <Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDeleteBackward>:
 \end{lstlisting}
 所以可知要使用的native function在.so .dex文件中将一一对应才行.\\
-
-
 \subsection{总结}
+\label{sec:so:conclusion}
 通过以上对.so文件中的符号表进行分类，我们推测，应该说基本笃定如果要对基于cocos2d-x的游戏进行优化，可以只对lua vm做优化，保持其对cocos2d-x
 的使用接口不变.本身对lua vm的优化就可能存在多种方案，当然基于整体cocos2d-x游戏的优化，也未必一定是针对lua vm的优化，一切暂时还处于未知。\\
-
 此外，另一方面，也许我们也可能从一个或若干个通过NDK编译得到的.so单独剥离出liblua.so,然后替换为我们修改lua vm得到的那份新的liblua.so。\\
 这里提到的liblua.so指的都是lua vm编译得到的.so文件，只是存在修改与未修改之分。而此剥离也许会在我们的思考之内，甚至可能成为考虑工作之一.\\
-
-目前存在的一些疑问:\\
-1.就目前基于cocos2d-x开发的游戏而言，是否有在linux+android studio上开发的呢？而新版的android studio在linux下存在各种问题，在导入工程后，居然没法将cocos2d-x游戏中的需要的一些文件包含进工程中。不知道是不是和gradle build system 有关。环境很重要，不然以后即使修改了代码也不能测试到底修改成功与否。\\
-    我知道在android studio推出之前，是有linux+eclipse的，此eclipse当时也可以在\href{http://developer.android.com/sdk/index.html#Other} 找到，但是自从android studio 推出后，貌似之前的google版本的eclipse就下架了\\
-作为例证:\href{http://www.cnblogs.com/lonkiss/archive/2012/11/17/2775440.html} 该网页可以说明此事\\
-
-
-3.cocos2d-x中的lua解释器代码是否就是\href{http://www.lua.org/download.html}上提供的，如果经过修改，不知道修改过哪些东西？\\
-该代码路径为cocos2d-x/external/lua/lua。
-
-
-
-
-
-
-
-
-
-
-
-
-
