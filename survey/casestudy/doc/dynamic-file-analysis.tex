@@ -1,9 +1,10 @@
-\section{基于cocos2d-x 3.3的游戏软件中动态链接库分析}
+\section{基于cocos2d-x的游戏软件案例分析：so文件解析}
 \label{soanalysis}
 我们以MoonWarriors软件包含的动态链接库libgame.so为例，
 对该动态链接库包含的函数等进行深入分析。
 我们用objdump命令，从libgame.so中导出符号表。
-符号表中的信息可以参见\url{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
+符号表中的信息可以参见
+\url{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格。
 我们将其中的函数分成如下五类，依次在下面各小节中分别说明:
 \begin{enumerate}
 \item \hei{游戏引擎库函数}：
@@ -25,31 +26,43 @@
 	参见第\ref{sec:so:appjnilib}节；
 \end{enumerate}
 
+表~\ref{table:so:fun}列出了libgame.so中涉及的5类函数的个数及所占比例。
+\begin{table}[H]
+\begin{center}
+\caption{\hei{各类符号的数目及比例}}
+\label{table:so:fun}
+\begin{tabular}{|c|c|c|}
+\hline 类别 & 该类符号的数目 & 100\% \\
+\hline cocos2d-x游戏库函数& 8431 & 52.69\%  \\
+\hline  lua vm 提供的API & 74 & 0.45\% \\
+\hline C/C++与lua之间的绑定函数 & 79 &  0.4808\% \\
+\hline 与JNI相关的函数(不含接口JNI) & 69 & 0.42\%\\
+\hline 接口JNI & 21 & 0.128\%\\
+\hline 总符号 & 16431 & 100\%  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
 \subsection{cocos2d-x游戏库函数}
 \label{sec:so:cocolib}
 
-\begin{table}[H]
-\caption{\hei{Properties of Different Paging Modes}}
-\begin{tabular}{|c|c|c|c|}
-\hline 类别 & 该类符号的数目 & \% & .so中所有的符号数目\\
-\hline cocos2d-x游戏库函数& 8431 & 0.52690 & 16431  \\
-\hline  lua vm 提供的API & 74 & 0.00450 & 16431 \\
-\hline C/C++与lua之间的绑定函数 & 79 &  0.004808 & 16431 \\
-\hline 与JNI相关的函数(不含接口JNI) & 69 & 0.00420 & 16431 \\
-\hline 接口JNI & 21 & 0.00128 & 16431 \\
-\hline
-\end{tabular}
-\end{table}
+首先根据
 
-首先根据objdump -T libgame.so|grep ".text" > \_text.txt 命令得到的文件\_text.txt，\\
+objdump -T libgame.so|grep ".text" > \_text.txt \\
+命令得到文件\_text.txt，
 此文件中的每一行的最后一项均表示一个游戏在运行过程中可能用到的函数名。
+然后我们查看该文件，发现共有16431行，
+也就是说游戏运行过程中可能用到16431个函数。
 
-然后我们查看该文件，发现共有16431行，也就是说游戏运行过程中可能用到16431个函数。\\
-而通过:\\
-cat \_text.txt | grep  "\_Z" > \_z.txt\\
+而通过执行:
+
+cat \_text.txt | grep  "\_Z" > \_z.txt
+
 cat \_z.txt | grep "cocos2dx" > cocos2dx.txt\\
-通过查看cocos2dx.txt，发现共有8431行，cocos2d-x游戏库提供了大概8431个函数，这些
-函数都是经过编译器去除面向对象特性的函数。
+查看得到的cocos2dx.txt，发现共有8431行，
+从而得到cocos2d-x游戏引擎提供8431个库函数，
+这些函数在都是经过编译器去除面向对象特性的函数。
  
 e.g.:\\
       \_ZTSN7cocos2d9extension9CCBReaderE\\

@@ -1,12 +1,49 @@
 \section{Android游戏软件案例分析概述}
-本文档中对于Android游戏软件的分析主要是基于以下两个方向进行，一个是从dex文件本身入手，利用dex文件解析结果进行案例分析，参见第\ref{dexanalysis}节；另外一个是从游戏软件包含的动态链接库入手，分析动态链接库包含的信息，参见第\ref{soanalysis}节。
+本文档中对于Android游戏软件的分析主要是基于以下两个方向进行，
+一个是从dex文件本身入手，利用dex文件解析结果进行案例分析，
+参见第\ref{dexanalysis}节；
+另外一个是从游戏软件包含的动态链接库入手，分析动态链接库包含的信息，参见第\ref{soanalysis}节。
 
-dex文件解析基于DexAnalysis[\ref{dextools}]工具对dex文件进行解析，将游戏软件中调用的方法进行分类，主要分为自定义方法和库方法，再进一步分析自定义方法中的native method。分析过程首先对需要进行分析的游戏软件进行信息收集，包括游戏软件apk大小、dex文件大小、动态链接库及其大小，参见第\ref{sec:dexanalysis:case}节，然后基于DexAnalysis对游戏软件的dex文件进行解析，统计游戏软件中自定义方法、库方法和native方法以及这些方法对应的类信息，并作相应的总结，参见第\ref{sec:dexanalysis:casestudy}节。
+我们对游戏软件分析的\hei{主要过程}是：
+首先对需要进行分析的游戏软件进行信息收集，
+包括游戏软件apk文件的大小，其中包含的dex文件的大小、动态链接库及其大小，
+参见第\ref{sec:dexanalysis:case}节；
+然后基于DexAnalyzer对游戏软件的dex文件进行解析，
+统计游戏软件中自定义方法、库方法和自定义的native方法
+以及这些方法所属的类信息，并作相应的总结，
+参见第\ref{sec:dexanalysis:casestudy}节。
 
-动态链接库分析是利用objdump工具对游戏软件的动态链接库包含的函数等进行深入分析。将其中的函数分成五类：游戏引擎库函数、Lua运行时函数、系统级JNI本地函数、C++与Lua之间的绑定函数、应用级JNI本地函数，参见第\ref{sec:so:cocolib}节到第\ref{sec:so:appjnilib}节，然后就每一类函数进行分析总结。
+dex文件解析是使用我们自己编写的DexAnalyzer工具对dex文件进行解析。
+DexAnalyzer能统计游戏软件的dex文件中调用的各类方法及其从属的类信息，
+各类方法主要分为游戏软件自身定义的方法和使用的库方法，
+对于自定义方法进一步识别出其中的native method。
 
-本文档中以MoonWarriors游戏软件为例，对其classes.dex文件和动态链接库libgame.so进行分析。依据dex文件解析数据，我们发现有关lua的函数没有出现在dex字节码中，随后从动态链接库中查看，这些lua函数的实现均包含在动态链接库中，参见第\ref{sec:so:lualib}节和第\ref{sec:so:bindlib}节。而对于native方法，在dex字节中出现但没有具体的实现，其实现也是包含在动态链接库中，参见\ref{sec:so:appjnilib}。
+动态链接库分析是利用objdump工具对游戏软件的动态链接库文件(.so文件)
+所包含的函数等进行深入分析。
+我们将其中的函数分成五类：
+游戏引擎库函数、
+Lua运行时函数、
+系统级JNI本地函数、
+C++与Lua之间的绑定函数、
+应用级JNI本地函数，
+参见第\ref{sec:so:cocolib}节到第\ref{sec:so:appjnilib}节；
+然后就每一类函数进行分析总结。
 
-第\ref{dexanalysis}节和第\ref{soanalysis}节对MoonWarriors游戏软件的分析使得我们对Android游戏软件中调用的类和方法的信息有了初步的了解，在第\ref{sec:dexanalysis:conclusion}节和第\ref{sec:so:conclusion}节给出初步的总结。基于课题组的研究，后续还需要进行更深入的分析总结。
+本文档中以MoonWarriors游戏软件为例，
+对其classes.dex文件和动态链接库libgame.so进行分析。
+依据dex文件解析数据，
+我们发现有关lua的函数没有出现在dex字节码中；
+随后从动态链接库文件中查看，
+这些lua函数的实现均包含在动态链接库中，
+参见第\ref{sec:so:lualib}节和第\ref{sec:so:bindlib}节。
+而对于native方法，在dex字节中出现但没有具体的实现，
+其实现也是包含在动态链接库中，参见\ref{sec:so:appjnilib}。
+
+通过第\ref{dexanalysis}节和第\ref{soanalysis}节
+对MoonWarriors游戏软件的分析使得
+我们对Android游戏软件中调用的类和方法的信息有了初步的了解，
+在第\ref{sec:dexanalysis:conclusion}节和第\ref{sec:so:conclusion}节
+给出初步的总结。
+%基于课题组的研究，后续还需要进行更深入的分析总结。
 
 

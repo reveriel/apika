@@ -1,6 +1,6 @@
-\section{基于dex文件解析的游戏软件案例分析}
+\section{游戏软件案例分析: dex文件解析}
 \label{dexanalysis}
-\subsection{游戏案例介绍}
+\subsection{游戏软件案例介绍}
 \label{sec:dexanalysis:case}
 \begin{table}[H]
 \caption{\hei{游戏软件信息}}
@@ -34,9 +34,17 @@ MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
 
 \subsection{数据分析}
 \label{sec:dexanalysis:casestudy}
-我们使用DexAnalysis对2个游戏软件的classes.dex文件进行解析，解析得到的文件位于android-work/survey/casestudy/result，游戏dex文件的解析结果保存在对应游戏名字的目录下面，其中libMethod.txt是库方法及其对应类的信息；userMethod.txt是程序自定义方法及其对应类的信息;nativeMethod.txt是native方法对应的类及其对应类的信息。
+我们使用DexAnalyzer对2个游戏软件的classes.dex文件进行解析，
+解析得到的文件位于本调研报告所在目录的result子目录下。
+游戏软件的dex文件的解析结果保存在对应游戏名字的目录下面，
+其中：
+\begin{itemize}
+\item libMethod.txt是库方法及其对应类的信息；
+\item userMethod.txt是程序自定义方法及其对应类的信息;
+\item nativeMethod.txt是native方法对应的类及其对应类的信息。
+\end{itemize}
 
-根据解析结果文件，统计数据得到表格如表~\ref{analysisresult}所示
+根据解析结果文件，统计得到如表~\ref{analysisresult}所示的数据。
 \begin{table}[htbp]
 \centering
 \caption{\label{analysisresult}游戏软件dex解析数据}
@@ -64,69 +72,102 @@ MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
 \hline
 \end{supertabular}
 \end{table}
-\newpage
-下面以MoonWarriors为例对表~\ref{analysisresult}中的数据进行分析，可以发现其中调用的库方法有299个，对应的类有87个;程序自定义的方法有385个，对应的类有61个，在这些自定义方法中有21个native方法,对应的类有6个。
 
-对调用的库方法进行总结，将其对应的类进行归类，如表~\ref{libclass}所示
+下面以MoonWarriors为例对表~\ref{analysisresult}中的数据进行说明，
+MoonWarriors的dex字节码调用的库方法有299个，这些库方法分别属于87个类；
+程序自定义的方法有385个，分别归属61个类；
+在这些自定义方法中有21个native方法，归属到6个类。
+
+我们进一步对MoonWarriors调用的库方法进行总结，
+将其所属的类进行归类，结果如表~\ref{libclass}所示。
 \begin{table}[H]
 \caption{\label{libclass}\hei{库方法分类}}
-\begin{supertabular}{|p{2cm}|p{4.7cm}|p{7.2cm}|}
+\begin{small}
+\begin{supertabular}{|p{1.8cm}|p{4.7cm}|p{7.1cm}|}
 \hline
-API类型 & 包 & 包含的类\\
+类库 & 包路径 (所含类数) & 包含的类\\
 \hline
-\multirow{17}{*}{Android包} & android/app & \small{Activity AlertDialog\$Builder AlertDialog Dialog}\\
+\multirow{17}{*}{android(58)} & android/app (4)& 
+\small{Activity, AlertDialog\$Builder, AlertDialog, Dialog}\\
 \cline{2-3}
-& android/content & \small{Context Intent SharedPreferences\$Editor SharedPreferences}\\
+& android/content (4)& 
+\small{Context, Intent, SharedPreferences\$Editor, SharedPreferences}\\
 \cline{2-3}
-& android/content/res & \small{AssetFileDescriptor AssetManager Resources}\\
+& android/content/res (3)& 
+\small{AssetFileDescriptor, AssetManager, Resources}\\
 \cline{2-3}
-& android/database & \small{Cursor}\\
+& android/database (1)& \small{Cursor}\\
 \cline{2-3}
-& android/database/sqlite & \small{SQLiteDatabase SQLiteOpenHelper}\\
+& android/database/sqlite (2)& 
+\small{SQLiteDatabase, SQLiteOpenHelper}\\
 \cline{2-3}
-& android/graphics & \small{Bitmap Canvas Paint Rect Typeface}\\
+& android/graphics (5)& 
+\small{Bitmap, Canvas, Paint, Rect, Typeface}\\
 \cline{2-3}
-& android/graphics/drawable & \small{ColorDrawable}\\
+& android/graphics/drawable (1)& \small{ColorDrawable}\\
 \cline{2-3}
-& android/hardware & \small{Sensor SensorManager}\\
+& android/hardware (2)& \small{Sensor, SensorManager}\\
 \cline{2-3}
-& android/media & \small{MediaPlayer SoundPool}\\
+& android/media (2)& \small{MediaPlayer, SoundPool}\\
 \cline{2-3}
-& android/net & \small{ConnectivityManager NetworkInfo Uri wifi/WifiInfo wifi/WifiManager}\\
+& android/net (5)& 
+\small{ConnectivityManager, NetworkInfo, Uri, wifi/WifiInfo, wifi/WifiManager}\\
 \cline{2-3}
-& android/opengl & \small{ETC1Util\$ETC1Texture ETC1Util GLSurfaceView}\\
+& android/opengl (3)& 
+\small{ETC1Util\$ETC1Texture, ETC1Util, GLSurfaceView}\\
 \cline{2-3}
-& android/os & \small{Handler Message Process Vibrator}\\
+& android/os (4)& 
+\small{Handler, Message, Process, Vibrator}\\
 \cline{2-3}
-& android/telephony & \small{TelephonyManager}\\
+& android/telephony (1)& \small{TelephonyManager}\\
 \cline{2-3}
-& android/text & \small{Editable InputFilter\$LengthFilter TextPaint TextUtils}\\
+& android/text (4)& 
+\small{Editable, InputFilter\$LengthFilter, TextPaint, TextUtils}\\
 \cline{2-3}
-& android/util & \small{DisplayMetrics FloatMath Log}\\
+& android/util (3)& \small{DisplayMetrics, FloatMath, Log}\\
 \cline{2-3}
-& android/view & \small{Display KeyEvent MotionEvent ViewGroup\$LayoutParams Window WindowManager inputmethod/InputMethodManager}\\
+& android/view (7)& 
+\small{Display, KeyEvent, MotionEvent, ViewGroup\$LayoutParams, Window, 
+WindowManager, inputmethod/InputMethodManager}\\
 \cline{2-3}
-& android/widget & \small{EditText FrameLayout LinearLayout\$LayoutParams LinearLayout ProgressBar RelativeLayout\$LayoutParams TextView}\\
+& android/widget (7)& 
+\small{EditText, FrameLayout, LinearLayout\$LayoutParams, LinearLayout, 
+ProgressBar, RelativeLayout\$LayoutParams, TextView}\\
 \hline
-\multirow{5}{*}{java包} & java/io & \small{File FileInputStream InputStream PrintStream}\\
+\multirow{5}{*}{java包(28)} & java/io (4)& 
+\small{File, FileInputStream, InputStream, PrintStream}\\
 \cline{2-3}
-& java/lang & \small{CharSequence Class Exception Integer Math Object String StringBuilder System ref/WeakReference}\\
+& java/lang (10)& 
+\small{CharSequence, Class, Exception, Integer, Math, Object, String, 
+StringBuilder, System, ref/WeakReference}\\
 \cline{2-3}
-& java/net & \small{HttpURLConnection URL}\\
+& java/net (2)& \small{HttpURLConnection, URL}\\
 \cline{2-3}
-& java/nio & \small{ByteBuffer ByteOrder}\\
+& java/nio (2)& \small{ByteBuffer, ByteOrder}\\
 \cline{2-3}
-& java/util & \small{ArrayList HashMap Iterator LinkedList Locale Map\$Entry Map Set Vector concurrent/Semaphore}\\
+& java/util (10) & 
+\small{ArrayList, HashMap, Iterator, LinkedList, Locale, Map\$Entry, 
+Map, Set, Vector, concurrent/Semaphore}\\
 \hline
-第三方包 & org/json & \small{JSONObject}\\
+第三方(1)& org/json (1) & \small{JSONObject}\\
 \hline
 \end{supertabular}
+\end{small}
 \end{table}
 \newpage
 
-Android核心库中主要有4类API：Java标准API(java包)、Java扩展API(javax包)、Android包以及企业和组织提供的Java类库(org包等)。依据表~\ref{libclass}的分类，MoonWarriors游戏软件调用的库方法中没有涉及到对java扩展包的引用，第三方的包中只调用了org/json/JSONObject的toString()方法，JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式,介绍JSON的网站：\url{http://www.json.org/json-zh.html}.库方法的调用主要集中在Android包以及java包中方法的调用。
+Android核心库中主要有4类API：
+Java标准API(java包)、Java扩展API(javax包)、
+Android包以及企业和组织提供的Java类库(org包等)。
+依据表~\ref{libclass}的分类，
+MoonWarriors游戏软件调用的库方法中没有涉及到对java扩展包的引用，
+第三方的包中只调用了org/json/JSONObject的toString()方法。
+JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式,
+介绍JSON的网站：\url{http://www.json.org/json-zh.html}。
+库方法的调用主要集中在Android包以及java包中方法的调用。
 
-程序自定义方法中调用的native method的较少，只有21个native方法，具体如下所示：
+MoonWarriors游戏软件中程序自定义方法调用的native method较少，
+只有21个native方法，具体如下所示：
 \begin{lstlisting}
 Lorg/cocos2dx/lib/Cocos2dxAccelerometer;.onSensorChanged:(FFFJ)V
 Lorg/cocos2dx/lib/Cocos2dxBitmap;.nativeInitBitmapDC:(II[B)V
@@ -150,28 +191,38 @@ Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesCancel:([I[F[F)V
 Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesEnd:(IFF)V
 Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesMove:([I[F[F)V
 \end{lstlisting}
-这些native方法均对应于与游戏引擎cocos2dx相关的6个类,包括加速器、位图、渲染相关的类
-
-org/cocos2dx/lib/Cocos2dxAccelerometer:主要是提供sensor的监测
-
-Lorg/cocos2dx/lib/Cocos2dxBitmap：主要是创建TextBitmap
-
-Lorg/cocos2dx/lib/Cocos2dxETCLoader:cocos2d-x对etc1图片显示的支持，etc1图片是android下通用的压缩纹理
-
-Lorg/cocos2dx/lib/Cocos2dxHelper：被ndk层创建Cocos2dxAcceleromete， Cocos2dxMusic，Cocos2dxSound，并提供相关的操作，同时提供一些Cocos2dxPrefsFile.Xml的配置信息
-
-Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge: LUA与java互调
-
-Lorg/cocos2dx/lib/Cocos2dxRenderer:利用androidGLSurfaceview 的生命周期创造cocos2d的生命周期，并画图
+这些native方法均对应于与游戏引擎cocos2dx相关的6个类,
+包括加速器、位图、渲染相关的类：
+\begin{itemize}
+\item org/cocos2dx/lib/Cocos2dxAccelerometer:主要是提供sensor的监测
+\item org/cocos2dx/lib/Cocos2dxBitmap：主要是创建TextBitmap
+\item org/cocos2dx/lib/Cocos2dxETCLoader:
+	cocos2d-x对etc1图片显示的支持，etc1图片是android下通用的压缩纹理
+\item org/cocos2dx/lib/Cocos2dxHelper：
+	被ndk层创建Cocos2dxAcceleromete、Cocos2dxMusic、Cocos2dxSound，
+	并提供相关的操作，同时提供一些Cocos2dxPrefsFile.Xml的配置信息
+\item org/cocos2dx/lib/Cocos2dxLuaJavaBridge: LUA与java互调
+\item org/cocos2dx/lib/Cocos2dxRenderer：
+	利用androidGLSurfaceview 的生命周期创造cocos2d的生命周期，
+	并画图
+\end{itemize}
 
 \url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper用于衔接org.cocos2dx.lib.Cocos2dxHelper类
  
 \subsection{总结}
 \label{sec:dexanalysis:conclusion}
-通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方
+通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，
+其中涉及到的库方法与自定义方法都有几千个，
+人工从其中辨别哪些方法可以优化是很困难的。
+要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方。
 
-游戏软件中，自定义方法中调用的native method的方法相对来说比较少，基本与游戏引擎以及第三方提供的游戏插件有关，从这些方法中进行人工分析的难度低的多，但仍然需要对这些native method方法特征进行进一步分析
+游戏软件中，自定义方法中调用的native method的方法相对来说比较少，
+基本与游戏引擎以及第三方提供的游戏插件有关，
+从这些方法中进行人工分析的难度低得多，
+但仍然需要对这些native method方法特征进行进一步分析。
 
-另外一个方面需要考虑，游戏软件中方法的调用之间是否存在一定的模式，从调用模式入手思考可以优化的点
+另外需要考虑的一个方面是，
+游戏软件中方法的调用之间是否存在一定的模式，
+从调用模式入手思考可以优化的点。
 
 
