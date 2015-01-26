@@ -2,7 +2,7 @@
 我们以MoonWarriors软件包含的动态链接库libgame.so为例，
 对该动态链接库包含的函数等进行深入分析。
 我们用objdump命令，从libgame.so中导出符号表。
-符号表中的信息可以参见\ref{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
+符号表中的信息可以参见\href{https://ring0.me/2014/12/linkers-loaders-library-notes/}文章最后的表格\\
 我们将其中的函数分成如下五类，依次在下面各小节中分别说明:
 \begin{enumerate}
 \item \hei{游戏引擎库函数}：
@@ -57,7 +57,6 @@ e.g.:
       \_ZNK7cocos2d13CCDictElement9getStrKeyEv\\
       \_ZN7\_JNIEnv16CallObjectMethodEP8\_jobjectP10\_jmethodIDz\\
 这些函数都有一个共同特点:\\
-即如上所言，为去除面向对象特性而遵循一定命名规范\ref{http://www.kegel.com/mangle.html },\\
 以\_ZN7\_JNIEnv16CallObjectMethodEP8\_jobjectP10\_jmethodIDz 为例,它就是编译器将名字空间JNIEnv中
 的CallObjectMethod(unsigned char，\_jobject* ,\_jmethod* )函数去除面向对象特征转换后得到的，
 能唯一标识的符号名字.\\
@@ -177,37 +176,43 @@ resumeAllEffectsJNI
 \item JNI\_Onload
 \end{itemize}
 
-通过对.so利用objudmp -D反汇编，我们可以察看到由libgame.so文件导出表的所有汇编代码。
+
 
 \subsubsection{以JNI结尾的函数}
+通过对.so利用objudmp -D反汇编，我们可以察看到由libgame.so文件导出表的所有汇编代码。
+
+
 以playBackgroundMusicJNI为例子,从反汇编得到的汇编代码可分析得到
 如下的函数调用关系：
 \begin{itemize}
 \item playBackgroundMusicJNI
-  \begin{itemize}
-  \item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv|
-  \item \verb|_ZN7cocos2d7CCPointC1Eff|
-  \item \verb|_ZN7cocos2d6CCSizeC1Eff|
-  \item \verb|_ZN7cocos2d6CCRect7setRectEffff|
-  \item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv| 
-	自身递归
-  \end{itemize}
-\item \verb|<android_setCpuArm+0x94c>|
-\item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv|
-  \begin{itemize}
-  \item \verb|pthread_key_create@plt|
-  \item \verb|__android_log_print@plt|
-  \item \verb|pthread\_getspecific@plt|
-  \item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv| 自身递归
-  \end{itemize}
-\item \verb|__android_log_print@plt|
-\item 其他一些\verb|xxx@plt|函数
-\item \verb|_ZN7_JNIEnv14DeleteLocalRefEP8_jobject|
-\item \verb|_ZN7_JNIEnv20Cal33lStaticVoidMethodEP7_jclassP10_jmethodIDz|
-  \begin{itemize}
-  \item ......
-  \end{itemize}
-\item ......
+  	\begin{itemize}
+  	\item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv|
+		\begin{itemize}
+  		\item \verb|_ZN7cocos2d7CCPointC1Eff|
+   		\item \verb|_ZN7cocos2d6CCSizeC1Eff|
+   		\item \verb|_ZN7cocos2d6CCRect7setRectEffff|
+  		\item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv| 
+		自身递归
+%	\end{itemize}
+%%  \end{itemize}
+		\item \verb|<android_setCpuArm+0x94c>|
+		\item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv|
+  			\begin{itemize}
+ 			\item \verb|pthread_key_create@plt|
+  			\item \verb|__android_log_print@plt|
+  			\item \verb|pthread\_getspecific@plt|
+  			\item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv| 自身递归
+  			\end{itemize}
+		\item \verb|__android_log_print@plt|
+		\item 其他一些\verb|xxx@plt|函数
+		\end{itemize}
+   	\item \verb|_ZN7_JNIEnv14DeleteLocalRefEP8_jobject|
+   	\item \verb|_ZN7_JNIEnv20Cal33lStaticVoidMethodEP7_jclassP10_jmethodIDz|
+  		\begin{itemize}
+  		\item ......
+  		\end{itemize}
+	\end{itemize}
 \end{itemize}
 详细说明如下:\\
 该函数会调用如下三个函数\\
@@ -354,11 +359,11 @@ objdump -T libgame.so |grep "Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDelete
 
 目前存在的一些疑问:\\
 1.就目前基于cocos2d-x开发的游戏而言，是否有在linux+android studio上开发的呢？而新版的android studio在linux下存在各种问题，在导入工程后，居然没法将cocos2d-x游戏中的需要的一些文件包含进工程中。不知道是不是和gradle build system 有关。环境很重要，不然以后即使修改了代码也不能测试到底修改成功与否。\\
-    我知道在android studio推出之前，是有linux+eclipse的，此eclipse当时也可以在\ref{http://developer.android.com/sdk/index.html#Other} 找到，但是自从android studio 推出后，貌似之前的google版本的eclipse就下架了\\
-作为例证:\ref{http://www.cnblogs.com/lonkiss/archive/2012/11/17/2775440.html} 该网页可以说明此事\\
+    我知道在android studio推出之前，是有linux+eclipse的，此eclipse当时也可以在\href{http://developer.android.com/sdk/index.html#Other} 找到，但是自从android studio 推出后，貌似之前的google版本的eclipse就下架了\\
+作为例证:\href{http://www.cnblogs.com/lonkiss/archive/2012/11/17/2775440.html} 该网页可以说明此事\\
 
 
-3.cocos2d-x中的lua解释器代码是否就是\ref{http://www.lua.org/download.html}上提供的，如果经过修改，不知道修改过哪些东西？\\
+3.cocos2d-x中的lua解释器代码是否就是\href{http://www.lua.org/download.html}上提供的，如果经过修改，不知道修改过哪些东西？\\
 该代码路径为cocos2d-x/external/lua/lua。
 
 
