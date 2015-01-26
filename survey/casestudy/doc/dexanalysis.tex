@@ -1,32 +1,132 @@
-\section{DexAnalysis}
-依据apk文件在ART中的安装过程，我们对apk文件的优化关注于第2阶段：由dex到oat的转换过程。dex到中间代码的转换是从dex文件中提取类和方法开始，所以我们希望能够对dex文件有更多的了解和认识。在android SDK中提供了一个名为dexdump的工具，可以打印DEX文件的信息,它的源代码在dalvik目录中。但是dexdump得到的信息不能够满足我们的需求，因此通过修改dexdump工具得到了一个新的工具DexAnalysis，关于DexAnalysis的介绍参考android-work/tools/DexAnalysis/doc中的文档介绍。
-\subsection{案例分析}
-使用DexAnalysis对2个游戏软件的classes.dex文件进行解析，解析得到的文件位于android-work/survey/casestudy/result，游戏dex文件的解析结果保存在对应游戏名字的目录下面，其中libMethod.txt是库方法及其对应类的信息；userMethod.txt是程序自定义方法及其对应类的信息;nativeMethod.txt是native方法对应的类及其对应类的信息。
+\section{基于dex文件解析的游戏软件案例分析}
+\label{dexanalysis}
 
-\begin{itemize}
-\item MoonWarriors\\
-MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo，源代码发布在Cocos2d-x官网的引擎示例当中：\url{http://cn.cocos2d-x.org/tutorial/show?id=2254}
+\subsection{游戏案例介绍}
 
-根据解析结果文件，统计数据得到表格如下：
-\begin{table}[htbp]
-\centering
-\caption{\label{MoonWarriors}MoonWarriors方法统计}
-\begin{tabular}{|c|c|c|c|}
+\begin{table}[H]
+\caption{\hei{游戏软件信息}}
+\begin{tabular}{|p{2.5cm}|p{2cm}|p{2.1cm}|p{2cm}|p{2cm}|}
 \hline
-方法 & 数目 & 类 & 数目\\
+\multirow{2}{*}{软件名称} & \multirow{2}{*}{apk大小}  & \multirow{2}{*}{dex文件大小} & \multicolumn{2}{|c|}{lib目录} \\
+\cline{4-5}
+& & & so文件名 & so文件大小\\
 \hline
-lib method & 299 & lib class & 87\\
+MoonWarriors & 10.5 MB & 83.9 KB & libgame.so & 8.5 MB \\
 \hline
-self-define method & 385 & self-define & 61\\
-\hline
-native method & 21 & native class & 6\\
-\hline
-methods sum & 684 & classes sum & 148\\
+\multirow{2}{*}{Temple Run} & \multirow{2}{*}{116.9 MB} & \multirow{2}{*}{1.1 MB} & libmono.so & 84.0 KB\\
+\cline{4-5}
+& & & libunity.so & 43.0 KB\\
 \hline
 \end{tabular}
 \end{table}
 
-由表格数据，MoonWarriors中调用的库方法有299个，对应的类有87个;程序自定义的方法有385个，对应的类有61个，在这些自定义方法中有21个native方法,对应的类有6个，这21个native方法具体如下所示：
+\begin{itemize}
+\item MoonWarriors\\
+MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
+
+源代码发布在Cocos2d-x官网的引擎示例当中：\url{http://cn.cocos2d-x.org/tutorial/show?id=2254}
+
+\item Temple Run\\
+神庙逃亡（Temple Run）是由 Imangi Studios开发的没有终点的动作类视频游戏,在Android平台采用统一的Unity游戏引擎
+
+源代码：\url{http://temple-run.cn.uptodown.com/android}
+
+\end{itemize}
+
+\subsection{数据分析}
+我们使用DexAnalysis对2个游戏软件的classes.dex文件进行解析，解析得到的文件位于android-work/survey/casestudy/result，游戏dex文件的解析结果保存在对应游戏名字的目录下面，其中libMethod.txt是库方法及其对应类的信息；userMethod.txt是程序自定义方法及其对应类的信息;nativeMethod.txt是native方法对应的类及其对应类的信息。
+
+根据解析结果文件，统计数据得到表格如表~\ref{analysisresult}所示
+\begin{table}[htbp]
+\centering
+\caption{\label{analysisresult}游戏软件dex解析数据}
+\begin{supertabular}{|p{2.5cm}|p{3cm}|p{1cm}|p{3cm}|p{1cm}|}
+\hline
+\multirow{2}{*}{游戏软件} & \multicolumn{2}{c|}{方法信息} & \multicolumn{2}{c|}{类信息}\\
+\cline{2-5}
+&方法 & 数目 & 类 & 数目\\
+\hline
+\multirow{4}{*}{MoonWarriors} & lib method & 299 & lib class & 87\\
+\cline{2-5}
+& self-define method & 385 & self-define class & 61\\
+\cline{2-5}
+& native method & 21 & native class & 6\\
+\cline{2-5}
+& methods sum & 684 & classes sum & 148\\
+\hline
+\multirow{4}{*}{Temple Run} & lib method & 1748 & lib class & 412\\
+\cline{2-5}
+& self-define method & 7214 & self-define class & 1190\\
+\cline{2-5}
+& native method & 99 & native class & 10\\
+\cline{2-5}
+& methods sum & 8962 & classes sum & 1602\\
+\hline
+\end{supertabular}
+\end{table}
+\newpage
+下面以MoonWarriors为例对表~\ref{analysisresult}中的数据进行分析，可以发现其中调用的库方法有299个，对应的类有87个;程序自定义的方法有385个，对应的类有61个，在这些自定义方法中有21个native方法,对应的类有6个。
+
+对调用的库方法进行总结，将其对应的类进行归类，如表~\ref{libclass}所示
+\begin{table}[H]
+\caption{\label{libclass}\hei{库方法分类}}
+\begin{supertabular}{|p{2cm}|p{4.7cm}|p{7.2cm}|}
+\hline
+API类型 & 包 & 包含的类\\
+\hline
+\multirow{17}{*}{Android包} & android/app & \small{Activity AlertDialog\$Builder AlertDialog Dialog}\\
+\cline{2-3}
+& android/content & \small{Context Intent SharedPreferences\$Editor SharedPreferences}\\
+\cline{2-3}
+& android/content/res & \small{AssetFileDescriptor AssetManager Resources}\\
+\cline{2-3}
+& android/database & \small{Cursor}\\
+\cline{2-3}
+& android/database/sqlite & \small{SQLiteDatabase SQLiteOpenHelper}\\
+\cline{2-3}
+& android/graphics & \small{Bitmap Canvas Paint Rect Typeface}\\
+\cline{2-3}
+& android/graphics/drawable & \small{ColorDrawable}\\
+\cline{2-3}
+& android/hardware & \small{Sensor SensorManager}\\
+\cline{2-3}
+& android/media & \small{MediaPlayer SoundPool}\\
+\cline{2-3}
+& android/net & \small{ConnectivityManager NetworkInfo Uri wifi/WifiInfo wifi/WifiManager}\\
+\cline{2-3}
+& android/opengl & \small{ETC1Util\$ETC1Texture ETC1Util GLSurfaceView}\\
+\cline{2-3}
+& android/os & \small{Handler Message Process Vibrator}\\
+\cline{2-3}
+& android/telephony & \small{TelephonyManager}\\
+\cline{2-3}
+& android/text & \small{Editable InputFilter\$LengthFilter TextPaint TextUtils}\\
+\cline{2-3}
+& android/util & \small{DisplayMetrics FloatMath Log}\\
+\cline{2-3}
+& android/view & \small{Display KeyEvent MotionEvent ViewGroup\$LayoutParams Window WindowManager inputmethod/InputMethodManager}\\
+\cline{2-3}
+& android/widget & \small{EditText FrameLayout LinearLayout\$LayoutParams LinearLayout ProgressBar RelativeLayout\$LayoutParams TextView}\\
+\hline
+\multirow{5}{*}{java包} & java/io & \small{File FileInputStream InputStream PrintStream}\\
+\cline{2-3}
+& java/lang & \small{CharSequence Class Exception Integer Math Object String StringBuilder System ref/WeakReference}\\
+\cline{2-3}
+& java/net & \small{HttpURLConnection URL}\\
+\cline{2-3}
+& java/nio & \small{ByteBuffer ByteOrder}\\
+\cline{2-3}
+& java/util & \small{ArrayList HashMap Iterator LinkedList Locale Map\$Entry Map Set Vector concurrent/Semaphore}\\
+\hline
+第三方包 & org/json & \small{JSONObject}\\
+\hline
+\end{supertabular}
+\end{table}
+\newpage
+
+Android核心库中主要有4类API：Java标准API(java包)、Java扩展API(javax包)、Android包以及企业和组织提供的Java类库(org包等)。依据表~\ref{libclass}的分类，MoonWarriors游戏软件调用的库方法中没有涉及到对java扩展包的引用，第三方的包中只调用了org/json/JSONObject的toString()方法，JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式,介绍JSON的网站：\url{http://www.json.org/json-zh.html}.库方法的调用主要集中在Android包以及java包中方法的调用。
+
+程序自定义方法中调用的native method的较少，只有21个native方法，具体如下所示：
 \begin{lstlisting}
 Lorg/cocos2dx/lib/Cocos2dxAccelerometer;.onSensorChanged:(FFFJ)V
 Lorg/cocos2dx/lib/Cocos2dxBitmap;.nativeInitBitmapDC:(II[B)V
@@ -50,45 +150,22 @@ Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesCancel:([I[F[F)V
 Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesEnd:(IFF)V
 Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesMove:([I[F[F)V
 \end{lstlisting}
-这些native方法均对应于游戏引擎cocos2dx相关的类 
+这些native方法均对应于与游戏引擎cocos2dx相关的6个类,包括加速器、位图、渲染相关的类
+
+org/cocos2dx/lib/Cocos2dxAccelerometer:主要是提供sensor的监测
+
+Lorg/cocos2dx/lib/Cocos2dxBitmap：主要是创建TextBitmap
+
+Lorg/cocos2dx/lib/Cocos2dxETCLoader:cocos2d-x对etc1图片显示的支持，etc1图片是android下通用的压缩纹理
+
+Lorg/cocos2dx/lib/Cocos2dxHelper：被ndk层创建Cocos2dxAcceleromete， Cocos2dxMusic，Cocos2dxSound，并提供相关的操作，同时提供一些Cocos2dxPrefsFile.Xml的配置信息
+
+Lorg/cocos2dx/lib/Cocos2dxLuaJavaBridge: LUA与java互调
+
+Lorg/cocos2dx/lib/Cocos2dxRenderer:利用androidGLSurfaceview 的生命周期创造cocos2d的生命周期，并画图
+
+\url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，其中提到这些类对应的java层的实现，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper:衔接org.cocos2dx.lib.Cocos2dxHelper类
  
-\item Temple Run\\
-神庙逃亡（Temple Run）是由 Imangi Studios开发的没有终点的动作类视频游戏,在Android平台采用统一的Unity游戏引擎。下载来源：\url{http://temple-run.cn.uptodown.com/android}
-
-根据解析结果文件，统计数据得到表格如下：
-\begin{table}[htbp]
-\centering
-\caption{\label{Temple Run}Temple Run方法统计}
-\begin{tabular}{|c|c|c|c|}
-\hline
-方法 & 数目 & 类 & 数目\\
-\hline
-lib method & 1748 & lib class & 412\\
-\hline
-self-define method & 7214 & self-define & 1190\\
-\hline
-native method & 99 & native class & 10\\
-\hline
-methods sum & 8962 & classes sum & 1602\\
-\hline
-\end{tabular}
-\end{table}
-由表格数据，Temple Run中调用的库方法有1748个，对应的类有412个;程序自定义的方法有7214个，对应的类有1190个，在这些自定义方法中有99个native方法,对应的类有10个，对应的这10个类具体如下所示：
-\begin{lstlisting}
-Lcom/amazon/ags/jni/AGSJniHandler;
-Lcom/amazon/ags/jni/achievements/AchievementsJni;
-Lcom/amazon/ags/jni/leaderboards/LeaderboardsJni;
-Lcom/amazon/ags/jni/profiles/ProfilesJni;
-Lcom/amazon/ags/jni/whispersync/WhisperSyncJni;
-Lcom/unity3d/player/PlayerPrefs;
-Lcom/unity3d/player/UnityJavaRunnable;
-Lcom/unity3d/player/UnityPlayer;
-Lcom/unity3d/player/WWW;
-Lorg/fmod/FMODAudioDevice;
-\end{lstlisting}
-这10个类中除了游戏引擎unity3d直接对应的类，还有2个amazon和fmod是相关的游戏插件。
-\end{itemize}
-
 \subsection{总结}
 通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方
 

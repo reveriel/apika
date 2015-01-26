@@ -1,0 +1,70 @@
+\subsection{dex文件反编译工具}
+表~\ref{fig:dextools}列出几种关于dex文件反编译的工具
+\begin{table}[H]
+\caption{\label{fig:dextools}\hei{dex反编译工具}}
+\begin{tabular}{|p{2cm}|p{8cm}|}
+\hline
+工具 & 描述\\
+\hline
+dex2jar & 将classes.dex反编译出jar文件，即apk的源程序文件的java字节码，然后可以使用jdgui查看dex2jar反编译出的jar文件\\
+\hline
+Dedexer & 可以读取dex格式的文件，生成一种类似于汇编语言的输出。这种输出与jasmin的输出相似，但包含的是Dalvik的字节码\\
+\hline
+androguard & androguard是基于python的，将apk文件中的dex文件，类，方法等都映射为python的对象\\\hline
+dexdump & Android自身提供的一个dex文件的反编译工具\\
+\hline
+DexAnalysis & 基于dexdump修改之后的dex文件解析工具，能够提取dex文件中的类和方法，并作相应的分类\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item dex2jar\\
+将classes.dex拷贝到dex2jar目录下，使用命令：
+
+./dex2jar.sh classes.dex
+
+得到classes\_dex2jar.jar文件
+
+打开jdgui，导入文件classes\_dex2jar.jar，就可以查看反编译的jar文件
+
+\item Dedexer\\
+Dedexer的网站：\url{http://dedexer.sourceforge.net}
+
+\item androguard\\
+网站：\url{http://code.google.com/p/androguard/wiki/Installation}
+
+安装完成后androguard目录下的所有py文件都是一个工具，然后可以利用这些工具分析apk文件获取相应的信息，比如androdd.py用来生成apk文件中每个类的方法的调用流程图；androlyze.py是一个强大的静态分析工具，它提供的一个独立的Shell环境来辅助分析人员执行分析工作。在终端提示符下执行“./androlyze.py -s”会进入androlyze 的Shell交互环境，分析人员可以在其中执行不同的命令，来满足不同情况下的分析需求。androlyze.py通过访问对象的字段与方法的方式来提供反馈结果，分析过程中可能会用到3个对象：apk文件对象、dex文件对象、分析结果对象。这3个对象是通过androlyze.py的Shell环境（以下简称Shell环境）来获取的。
+
+\item dexdump\\
+在android SDK中提供了一个名为dexdump的工具，可以打印DEX文件的信息,它的源代码在dalvik目录中。dexdump工具提供了一些命令行参数来帮助用户输出相应的dex文件信息，相应的参数如下：
+
+-c： 验证DEX文件的校验和
+
+-d :  反汇编代码段
+
+-f : 显示文件头摘要
+
+-h : 显示文件头详细信息
+
+-i : 忽略文件校验
+
+-l : 输出格式，可以是'plain'或者'xml'格式
+
+-m :  打印出寄存器图
+
+-t : 临时文件名称
+
+\item DexAnalysis\\
+DexAnalysis是我们在dexdump基础上做修改之后的dex文件解析工具，除了原有的dexdump所能输出的信息之外新增了以下信息的输出：
+
+-a ：表示要进行方法的输出
+
+-s：输出程序自定义的方法以及类
+
+-k：输出程序中的库方法及对应的类
+
+-n：输出native方法及对应的类
+
+\end{itemize}
+

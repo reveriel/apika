@@ -1,11 +1,29 @@
-\section{dex文件结构}
+\subsection{dex文件结构}
+\begin{table}[H]
+\caption{\label{fig:dex}\hei{dex文件结构}}
+\begin{tabular}{|p{1.6cm}|p{2.7cm}|p{8.5cm}|}
+\hline
+名称 & 格式 & 描述\\
+\hline
+header & header\_item & 文件头\\
+\hline
+string\_ids & string\_id\_item[] & 字符串标识符列表。这里标志了当前DEX文件所有字符串使用的标志，也有一些内部名称（例如.,类型描述）或者代码段引用的一些常量对象。这个表按照字符串常量进行排序，字符串使用UTF-16进行编码（不在本地敏感方式），并且这个表不包含任何复制项。\\
+\hline
+type\_ids & type\_id\_item[] & 类型标识项。这里是此文件中所有类型的标识（类，队列，或者主类型），无论在文件中是否定义。这个表按照字符串标识索引进行排序，它不包含任何复制项。\\
+\hline
+proto\_ids & proto\_id\_item[] & 函数原型标识表。这里定义了此文件中所用引用的原型标识。这个表按照类型标识索引进行排序，并且参数也是通过类型标识索引进行排序。此表不包含复制项。\\
+\hline
+field\_ids & field\_id\_item[] & 区域标识符列表。这里定义了在此文件中的所有区域定义，此表按照类型标识索引进行主排序，并且按照区域名称作为中排序，按照类型作为子排序。并不包含复制项。\\
+\hline
+method\_ids & method\_id\_item[] & 函数标识表。定义了此文件引用的方法标识。按照类型标识索引作为主排序，按照方法名作为辅排序，按照方法原型作为子排序。不包含复制项。\\
+\hline
+class\_defs & class\_def\_item[] & 类标识表。引用这些类的父类以及接口前必须要经过排序。并且此列表中不能出现重复的类名。\\
+\hline
+data & ubyte[] & 以上表列出的数据，在此进行保存。\\
+\hline
+link\_data & ubyte[] & 静态链接数据段。如果此节为空则没有静态链接文件。\\
+\hline
+\end{tabular}
+\end{table}
 
-\begin{figure}[hbpt]
-\centering
-\includegraphics[width=\textwidth]{img/dex.png}
-\caption{dex文件结构}
-\label{fig:dex}
-\end{figure}
-
-dex文件格式如图~\ref{fig:dex}所示,具体参考dalvik虚拟机源代码介绍官网\url{https://source.android.com/devices/tech/dalvik/dex-format.html}
-
+dex文件格式如表~\ref{fig:dex}所示,具体参考dalvik虚拟机源代码介绍官网\url{https://source.android.com/devices/tech/dalvik/dex-format.html}
