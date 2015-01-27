@@ -1,21 +1,26 @@
 \section{问题}
 \redt{dex文件解析问题：}
 
-1.Android核心库中主要有4类API：Java标准API(java包)、Java扩展API(javax包)、Android包以及企业和组织提供的Java类库(org包等)。从2个例子解析结果来看游戏软件中调用的库方法在这4类API都有覆盖，不可能对所有的核心库都做优化
+1.Android核心库中主要有4类API：Java标准API(java包)、Java扩展API(javax包)、Android包以及企业和组织提供的Java类库(org包等)。从2个例子解析结果来看游戏软件中调用的库方法在这4类API都有覆盖，不可能对所有的核心库都做优化。
 
-2.通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方
+2.通过对比两个游戏的统计数据，对于大型一点的游戏，比如Temle Run，其中涉及到的库方法与自定义方法都有几千个，人工从其中辨别哪些方法可以优化是很困难的。要想从库方法入手进行优化还需要进行其他方面的调研来总结是否有可以优化的地方。
 
-3.因为我们有一个想法是探寻Android游戏软件中I/O角度的并行性，所以打算对dex文件解析的结果做进一步筛选，只提取输入输出相关的类方法，这个暂时还没有进行，目前还不能给出结论。希望能够了解商业应用中是否针对游戏软件中调用核心库方法有一些关注的焦点或者相关的内容
+3.因为我们有一个想法是探寻Android游戏软件中I/O角度的并行性，所以打算对dex文件解析的结果做进一步筛选，只提取输入输出相关的类方法，这个暂时还没有进行，目前还不能给出结论。希望能够了解商业应用中是否针对游戏软件中调用核心库方法有一些关注的焦点或者相关的内容。
 
 \redt{cocos2d-x中lua相关的问题:}
 
-1.就目前基于cocos2d-x开发的游戏而言，是否有在linux+android studio上开发的呢？而新版的android studio在linux下存在各种问题，在导入工程后，居然没法将cocos2d-x游戏中的需要的一些文件包含进工程中。不知道是不是和gradle build system 有关。环境很重要，不然以后即使修改了代码也不能测试修改到底成功与否。
+1.就目前基于cocos2d-x开发的游戏而言，是否有在linux+android studio上开发的呢？而新版的android studio在linux下存在各种问题，
+在导入工程后，没法将cocos2d-x游戏中的需要的一些文件包含进工程中。
+不知道是不是和gradle build system 有关？
+%环境很重要，不然以后即使修改了代码也不能测试修改到底成功与否。
 
-我知道在android studio推出之前，是有linux+eclipse的，此eclipse当时也可以在\\
-\url{http://developer.android.com/sdk/index.html#Other} 找到，但是自从android studio 推出后，貌似之前的google版本的eclipse就下架了。
-
+在android studio推出之前，是有linux+eclipse的，此eclipse当时也可以在
+\url{http://developer.android.com/sdk/index.html#Other} 找到，
+但是自从android studio 推出后，之前的google版本的eclipse就下架了。
 作为例证:\url{http://www.cnblogs.com/lonkiss/archive/2012/11/17/2775440.html} 该网页可以说明此事。
 
-2.cocos2d-x中的lua解释器代码是否就是\url{http://www.lua.org/download.html}上提供的，如果经过修改，不知道修改过哪些东西？\\
-该代码路径为cocos2d-x/external/lua/lua。
+2. cocos2d-x中的lua解释器代码是否就是
+\url{http://www.lua.org/download.html}上提供的？
+如果经过修改，不知道修改过哪些东西？
+该代码在cocos2d-x源码中的路径为cocos2d-x/external/lua/lua。
 

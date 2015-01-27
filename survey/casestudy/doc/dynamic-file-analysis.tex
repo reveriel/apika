@@ -64,48 +64,47 @@ cat \_text.txt | grep  "\_Z" > \_z.txt
 cat \_z.txt | grep "cocos2dx" > cocos2dx.txt\\
 查看得到的cocos2dx.txt，发现共有8431行，
 可以推出cocos2d-x游戏引擎提供了8431个库函数，
-这些函数都是经过编译器去除面向对象特性后得到的函数。
+这些函数都是经过编译器去除面向对象特性后得到的函数。例如：
  
 \begin{lstlisting}
-e.g.:
-      _ZTSN7cocos2d9extension9CCBReaderE
-      _ZN7cocos2d10CCDirector13setProjectionENS_20ccDirectorProjectionE
-      _ZTVN7cocos2d8CCActionE
-      _ZTIN7cocos2d8CCLiquidE
-      _ZNK7cocos2d13CCDictElement9getStrKeyEv
-      _ZN7_JNIEnv16CallObjectMethodEP8_jobjectP10_jmethodIDz
+  _ZTSN7cocos2d9extension9CCBReaderE
+  _ZN7cocos2d10CCDirector13setProjectionENS_20ccDirectorProjectionE
+  _ZTVN7cocos2d8CCActionE
+  _ZTIN7cocos2d8CCLiquidE
+  _ZNK7cocos2d13CCDictElement9getStrKeyEv
+  _ZN7_JNIEnv16CallObjectMethodEP8_jobjectP10_jmethodIDz
 \end{lstlisting}
 
-这些函数的特点如下:
+这些函数的函数名特点如下:
 	
 以\_ZN7\_JNIEnv16CallObjectMethodEP8\_jobjectP10\_jmethodIDz 为例,它就是编译器将名字空间JNIEnv中
-的CallObjectMethod(unsigned char，\_jobject* ,\_jmethod* )函数去除面向对象特征转换后得到的
+的CallObjectMethod(unsigned char，\_jobject* ,\_jmethodID* )函数去除面向对象特征转换后得到的
 能唯一标识的符号名字。
+\begin{enumerate}
+\item \_Z 是所有改名后的符号的开始符号；
+\item N表示其后跟的是namespace或者类名；
+\item 7\_JNIEnv 表示长度为7个字符的类名或名字空间\_JNIEnv；
+\item 16CallObectMethod表示由16个字符组成的函数名；
+\item 再接下去就是函数参数类型列表，依次描述每个参数的类型：
+\begin{itemize}
+\item E 表示第1个参数为unsigned char类型；
+\item P 表示指针类型，由于其后是8\_jobject，故第2个参数类型为\_jobject *；
+\item 同理有第3个参数类型为\_jmethodID *；
+\item z表示参数类型列表的结束。
+\end{itemize}
+\end{enumerate}	
+如果想了解这类函数名的具体信息，可以查看我们提供的cocos.txt文件
+(位于本调研文档所在目录中的result/MoonWarriors文件夹中)。
+这类函数应该不止这些，还有一些未包含cocos关键字，这里没有列举出来。
 
-1.\_Z 是所有改名后的符号的开始符号.
 
-2. N表示namespace，在这里指的就是\_JNIEnv 名字空间.
-
-3. CallObectMethod表示的就是原来的那个函数名.
-
-4.再接下去就是函数参数列表中的参数类型，E 表示unsigned char
-P 表示指针，由于其后是\_jobject ，故此指针为\_jobject *
-同理有指针\_jmethodIDz *.
-	
-如果想了解第一类函数名的具体信息，可以查看我们提供的cocos.txt文件
-(cocos.txt文件位于本调研文档所在目录中的result子目录下的MoonWarriors游戏文件夹中)。
-第一类函数应该不止这些，还有一些未包含cocos关键字，这里没有列举出来。
-
-
-\subsection{lua vm提供的API}
+\subsection{Lua VM提供的API}
 \label{sec:so:lualib}
 
-lua vm提供的API位于cocos2d-x-3.3/external/lua/lua目录下,
-这些函数是lua 提供的接口，帮助lua成为一门小巧方便的嵌入语言。
-
+Lua VM提供的API的实现源码位于cocos2d-x-3.3/external/lua/lua目录下,
+这些函数是Lua 提供的接口，帮助lua成为一门小巧方便的嵌入语言。
 举例如下:
 \begin{lstlisting}
-e.g.:
 	luaL_ref
 	luaL_unref
 	luaL_checkany
@@ -115,14 +114,16 @@ e.g.:
 	luaopen_io
 	...
 \end{lstlisting}
-总之，该类函数名形式为:luaL\_(.)+ luaopen\_(.)+.
-可以参见luaopen\_prefix.txt和lua\_prefix.txt文件.
-(位于本调研文档所在目录中的result子目录下的MoonWarriors游戏文件夹中)。
+该类函数名形式为:luaL\_*或luaopen\_*，
+在libgame.so中出现的这类函数的函数名信息可参见luaopen\_prefix.txt
+和lua\_prefix.txt文件
+(位于本调研文档所在目录中的result/MoonWarriors文件夹中)。
 
 \subsection{系统级JNI本地函数}
 \label{sec:so:sysjnilib}
 系统级JNI本地函数是cocos2d-x中针对android系统中的JNI函数给出的本地函数实现，
-这类函数位于cocos2d-x-3.3/cocos/platform/android目录下。
+这类函数的实现源码位于cocos2d-x-3.3/cocos/platform/android目录下。
+利用objdump查看libgame.so中可得到相关的这类函数的部分符号信息如下：
 \begin{lstlisting}
 001f12d0 g    DF .text  00000068 openKeyboardJNI
 001f1338 g    DF .text  00000068 closeKeyboardJNI
@@ -149,21 +150,22 @@ e.g.:
 \end{lstlisting}
 
 上面的符号可以进一步分成如下3类:
-\begin{itemize}
-\item 1.以JNI结尾的函数,这些函数我们目前推测是由cocos2d-x引擎对
+\begin{enumerate}
+\item 以JNI结尾的函数,这些函数我们目前推测是由cocos2d-x引擎对
 android平台提供的Java接口的C++/C实现，并且是基于JNI机制实现的。
-\item 2.经过编译器为去除面向对象特征而转换得到的函数，暂时还不清楚这些函数的具体作用
+\item 经过编译器为去除面向对象特征而转换得到的函数，
+暂时还不清楚这些函数的具体作用。例如：
 \begin{lstlisting}
-e.g.
 _Z19terminateProcessJNIv
 _Z22enableAccelerometerJNIv
 ...
 \end{lstlisting}
-\item 3.JNI\_Onload
+\item JNI\_Onload：
+当Android的VM(Virtual Machine)执行到应用软件里的 
+System.loadLibrary(``libgame.so'')函数时，
+首先会去执行应用软件的动态链接库libgame.so里的JNI\_OnLoad()函数。
+它的用途如下：
 
-当Android的VM(Virtual Machine)执行到C组件(即*.so文件)里的 System.loadLibrary()函数时，
-首先会去执行C组件里的JNI\_OnLoad()函数。它的用途如下：
- 
 1） 告诉VM此C组件使用哪一个JNI版本。如果你的*.so文件没有提供JNI\_OnLoad() 函数，
     VM会默认该*.so是使用最老的JNI 1.1版本。由于新版的JNI做了许多扩充，
     如果需要使用JNI的新版功能，例如JNI 1.4的 java.nio.ByteBuffer, 
@@ -171,8 +173,9 @@ _Z22enableAccelerometerJNIv
 
 2） 由于VM执行到System.loadLibrary()函数时，就会立即先呼叫JNI\_OnLoad()，
     所以C 组件的开发者可以借由JNI\_OnLoad()来进行C组件内的初期值之设定(Initialization)。\\
-\end{itemize}
-下面我们仅以那些以JNI结尾的函数为例得到了它们的调用树.
+\end{enumerate}
+
+下面我们仅以那些以JNI结尾的函数为例来进行进一步的分析。
 
 \subsubsection{以JNI结尾的函数的具体分析}
 首先,我们将这些函数全部罗列如下:
@@ -203,10 +206,13 @@ resumeAllEffectsJNI
 \end{lstlisting}
 
 通过对.so利用objudmp -D反汇编，我们可以查看到libgame.so文件导出表的
-所有汇编代码。以playBackgroundMusicJNI为例子,从反汇编得到的汇编代码中,
-为了得到该函数所调用的函数，我们只关心跳转指令。
-
-最终我们得到了函数playBackgroundMusicJNI调用关系如下：
+所有汇编代码。
+以playBackgroundMusicJNI为例子,
+为了得到该函数所调用的函数，
+从反汇编得到的汇编代码中,
+我们只需查看其中的跳转指令。
+最终，通过查看被调用函数的汇编代码及其跳转指令，
+我们得到了函数playBackgroundMusicJNI调用关系如下：
 
 \begin{itemize}
 \item playBackgroundMusicJNI
@@ -216,8 +222,8 @@ resumeAllEffectsJNI
   		\item \verb|_ZN7cocos2d7CCPointC1Eff|
    		\item \verb|_ZN7cocos2d6CCSizeC1Eff|
    		\item \verb|_ZN7cocos2d6CCRect7setRectEffff|
-  		\item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv| 
-		\item 调用自身,这里指\verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv|
+  		\item \verb|_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv|：
+		即调用自身
 		\item \verb|<android_setCpuArm+0x94c>|
 		\item \verb|_ZN7cocos2d9JniHelper9getJavaVMEv|
   			\begin{itemize}
@@ -248,36 +254,41 @@ resumeAllEffectsJNI
 而对自身的调用会被插入第1个函数与第2个函数之间,
 或第2个函数与第3个函数之间或第3个函数以后。
 
-深入函数1.\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsE,我们发现函数
-\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsEv会调用的函数
+深入函数1.\_ZN13CocosDenshion17SimpleAudioEngine14stopAllEffectsE,
+我们发现该函数
+调用的函数
 包括如下5个函数以及其自身。
 \begin{lstlisting}
-1._ZN7cocos2d7CCPointC1Eff
-2._ZN7cocos2d6CCSizeC1Eff
-3._ZN7cocos2d6CCRect7setRectEffff>
-4.android_setCpuArm+0x94c
-5._ZN7cocos2d9JniHelper9getJavaVMEv
+_ZN7cocos2d7CCPointC1Eff
+_ZN7cocos2d6CCSizeC1Eff
+_ZN7cocos2d6CCRect7setRectEffff>
+android_setCpuArm+0x94c
+_ZN7cocos2d9JniHelper9getJavaVMEv
 \end{lstlisting}
 
-见上表,同样的我们分析5.\_ZN7cocos2d9JniHelper9getJavaVMEv,可以发现 
+同样的，我们分析5.\_ZN7cocos2d9JniHelper9getJavaVMEv,可以发现 
 该函数会对如下函数及其自身进行调用。
 
 \begin{lstlisting}
-1.pthread_key_create@plt
-2.__android_log_print@plt
-3.pthread_getspecific@plt
+pthread_key_create@plt
+__android_log_print@plt
+pthread_getspecific@plt
 \end{lstlisting}
 
 \subsection{C/C++层与Lua之间的绑定函数}
 \label{sec:so:bindlib}
 这些函数名的形式为tolua\_XXX.这些函数是用于将C/C++写的函数
-自动注册到lua vm中,供lua脚本语言调用。这些函数位于
+自动注册到Lua VM中, 供Lua脚本语言调用。
+这些函数的实现源码位于
 cocos2d-x-3.3/external/lua/tolua目录下。
 
-而针对这里,我们也许可以在保持接口不变的情况下,从逃逸分析的角度给出优化方法。
-之所以认为这是一种可能的优化策略,主要是因为在那些lua写的
-代码(基于cocos2d-x引擎)中存在对C++层对象的调用,而这里会
-通过malloc将其放在堆上.
+而针对这类函数,
+我们也许可以在保持接口不变的情况下,
+从逃逸分析的角度给出优化方法。
+之所以认为这是一种可能的优化策略, 
+主要是因为在那些用Lua编写的
+代码(基于cocos2d-x引擎)中存在对C++层对象的调用, 
+而这类函数会通过malloc将其放在堆上。
 
 tolua\_XXX函数例如:\\
 \begin{lstlisting}
@@ -288,9 +299,12 @@ tolua_classevents
 
 \subsection{应用级JNI本地函数}
 \label{sec:so:appjnilib}
-这类函数是cocos2d-x直接面向android平台的native function，是dex文件中的native属性的方法的具体实现。
-而且我们暂时估计这些方法是一些由cocos2d-x提供的用于cocos2d-x与android平台建立联系的接口函数，所有与
-引擎相关的native函数或者第三方提供的sqlite，web，socket，ssl，openssl等native函数均通过这些
+这类函数是游戏软件中本地函数的具体实现，
+即是游戏软件的dex文件中具有native属性的自定义方法的具体实现。
+而且我们暂时估计这些方法是一些由cocos2d-x提供的、
+用于cocos2d-x与android平台建立联系的接口函数，
+所有与引擎相关的native函数或者
+第三方提供的sqlite，web，socket，ssl，openssl等native函数均通过这些
 接口函数,最终作用于android平台。
 
 这类函数位于cocos2d-x-3.3/cocos/platform/android目录下。
@@ -350,14 +364,18 @@ objdump -T libgame.so |grep "Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeDelete
 
 \subsection{总结}
 \label{sec:so:conclusion}
-通过以上对.so文件中的符号表进行分类，我们推测，应该说基本笃定如果要对基于cocos2d-x的游戏进行优化，
-可以只对lua vm做优化，保持其对cocos2d-x的使用接口不变.
-本身对lua vm的优化就可能存在多种方案，当然基于整体cocos2d-x游戏的优化
+通过以上对.so文件中的符号表进行分类，我们推测，
+如果要对基于cocos2d-x的游戏进行优化，
+可以只通过对Lua VM做优化，保持其对cocos2d-x的使用接口不变。
+对Lua VM进行优化可能存在多种方案;
+当然基于整体cocos2d-x游戏的优化
 也未必一定是针对lua vm的优化，一切暂时还是未知。
 
-另一方面，也许我们也可能从一个或若干个通过NDK编译得到的.so单独剥离出liblua.so,
-然后替换为我们修改lua vm得到的那份新的liblua.so。
-这里提到的liblua.so指的都是lua vm编译得到的.so文件，只是可能需要进行修改。
-而对其进行剥离也可能会在我们的考虑之内，甚至可能成为要开展的工作之一.\\
+另一方面，
+为了将优化后的Lua VM能快速替换游戏软件中所使用的Lua VM版本，
+我们可以尝试从一个或若干个通过NDK编译得到的.so单独剥离出liblua.so,
+然后替换为我们修改Lua vm得到的那份新的liblua.so。
+这里提到的liblua.so指的都是Lua vm编译得到的.so文件，只是可能需要进行修改。
+而对其进行剥离也可能会在我们的考虑之内，甚至可能成为要开展的工作之一。
 
 

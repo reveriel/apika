@@ -1,10 +1,11 @@
 \section{APK结构}
 APK文件：Android application package文件。每个要安装到Android平台的应用都要被编译打包为一个单独的文件，后缀名为.apk，其中包含了应用的二进制代码、资源、配置文件等。
 
-apk文件实际是一个zip压缩包，可以通过解压缩工具解开。一般解压后的结构如下所示：
+apk文件实际是一个zip压缩包，可以通过解压缩工具解开。
+一般解压后的结构如表~\ref{tab:apk}所示：
 \begin{table}[htbp]
 \centering
-\caption{\label{apk}apk组成}
+\caption{\label{tab:apk}\hei{apk组成}}
 \begin{tabular}{|c|c|}
 \hline
 文件或目录 & 作用\\
@@ -55,7 +56,4 @@ res和assets文件夹来存放不需要系统编译成二进制的文件，例�
 1.assets:不会在R.java文件下生成相应的标记，assets文件夹可以自己创建文件夹，必须使用AssetsManager类进行访问，存放到这里的资源在运行打包的时候都会打入程序安装包中。
 
 2.res：会在R.java文件下生成标记，这里的资源会在运行打包操作的时候判断哪些被使用到了，没有被使用到的文件资源是不会打包到安装包中的。
-
-
-
 

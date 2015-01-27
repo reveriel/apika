@@ -2,8 +2,9 @@
 \label{dexanalysis}
 \subsection{游戏软件案例介绍}
 \label{sec:dexanalysis:case}
-\begin{table}[H]
+\begin{table}[htbp]
 \caption{\hei{游戏软件信息}}
+\label{tab:games}
 \begin{tabular}{|p{2.5cm}|p{2cm}|p{2.1cm}|p{2cm}|p{2cm}|}
 \hline
 \multirow{2}{*}{软件名称} & \multirow{2}{*}{apk大小}  & \multirow{2}{*}{dex文件大小} & \multicolumn{2}{|c|}{lib目录} \\
@@ -19,16 +20,15 @@ MoonWarriors & 10.5 MB & 83.9 KB & libgame.so & 8.5 MB \\
 \end{tabular}
 \end{table}
 
+我们对表~\ref{tab:games}中列的两个游戏软件进行案例分析。
 \begin{itemize}
 \item MoonWarriors\\
-MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
-
-源代码发布在Cocos2d-x官网的引擎示例当中：\url{http://cn.cocos2d-x.org/tutorial/show?id=2254}
+MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo。
+源代码发布在Cocos2d-x官网的引擎示例当中：\url{http://cn.cocos2d-x.org/tutorial/show?id=2254}。
 
 \item Temple Run\\
-神庙逃亡（Temple Run）是由 Imangi Studios开发的没有终点的动作类视频游戏,在Android平台采用统一的Unity游戏引擎
-
-源代码：\url{http://temple-run.cn.uptodown.com/android}
+神庙逃亡（Temple Run）是由 Imangi Studios开发的没有终点的动作类视频游戏,在Android平台采用统一的Unity游戏引擎。
+源代码位于\url{http://temple-run.cn.uptodown.com/android}。
 
 \end{itemize}
 
@@ -44,10 +44,10 @@ MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
 \item nativeMethod.txt是native方法对应的类及其对应类的信息。
 \end{itemize}
 
-根据解析结果文件，统计得到如表~\ref{analysisresult}所示的数据。
+根据解析结果文件，统计得到如表~\ref{tab:games:analysis}所示的数据。
 \begin{table}[htbp]
 \centering
-\caption{\label{analysisresult}游戏软件dex解析数据}
+\caption{\label{tab:games:analysis}\hei{游戏软件dex解析数据}}
 \begin{supertabular}{|p{2.5cm}|p{3cm}|p{1cm}|p{3cm}|p{1cm}|}
 \hline
 \multirow{2}{*}{游戏软件} & \multicolumn{2}{c|}{方法信息} & \multicolumn{2}{c|}{类信息}\\
@@ -73,15 +73,15 @@ MoonWarriors是一个使用Cocos2d-x LUA开发的类似雷电战机的游戏Demo
 \end{supertabular}
 \end{table}
 
-下面以MoonWarriors为例对表~\ref{analysisresult}中的数据进行说明，
+下面以MoonWarriors为例对表~\ref{tab:games:analysis}中的数据进行说明，
 MoonWarriors的dex字节码调用的库方法有299个，这些库方法分别属于87个类；
 程序自定义的方法有385个，分别归属61个类；
 在这些自定义方法中有21个native方法，归属到6个类。
 
 我们进一步对MoonWarriors调用的库方法进行总结，
-将其所属的类进行归类，结果如表~\ref{libclass}所示。
-\begin{table}[H]
-\caption{\label{libclass}\hei{库方法分类}}
+将其所属的类进行归类，结果如表~\ref{tab:games:libclass}所示。
+\begin{table}[htbp]
+\caption{\label{tab:games:libclass}\hei{库方法分类}}
 \begin{small}
 \begin{supertabular}{|p{1.8cm}|p{4.7cm}|p{7.1cm}|}
 \hline
@@ -154,7 +154,6 @@ Map, Set, Vector, concurrent/Semaphore}\\
 \end{supertabular}
 \end{small}
 \end{table}
-\newpage
 
 Android核心库中主要有4类API：
 Java标准API(java包)、Java扩展API(javax包)、
@@ -166,8 +165,10 @@ JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式,
 介绍JSON的网站：\url{http://www.json.org/json-zh.html}。
 库方法的调用主要集中在Android包以及java包中方法的调用。
 
+\newpage
 MoonWarriors游戏软件中程序自定义方法调用的native method较少，
 只有21个native方法，具体如下所示：
+
 \begin{lstlisting}
 Lorg/cocos2dx/lib/Cocos2dxAccelerometer;.onSensorChanged:(FFFJ)V
 Lorg/cocos2dx/lib/Cocos2dxBitmap;.nativeInitBitmapDC:(II[B)V
@@ -207,7 +208,7 @@ Lorg/cocos2dx/lib/Cocos2dxRenderer;.nativeTouchesMove:([I[F[F)V
 	并画图
 \end{itemize}
 
-\url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper用于衔接org.cocos2dx.lib.Cocos2dxHelper类
+\url{http://blog.csdn.net/jacklam200/article/details/8965457}中介绍android程序和cocos2dx协作，比如Java\_org\_cocos2dx\_lib\_Cocos2dxHelper用于衔接org.cocos2dx.lib.Cocos2dxHelper类。
  
 \subsection{总结}
 \label{sec:dexanalysis:conclusion}
