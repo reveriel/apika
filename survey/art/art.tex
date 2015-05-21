@@ -1,0 +1,141 @@
+\section{Android ART analysis}
+Android源码目前更新到5.1.1\_r2,\url{http://socialcompare.com/en/comparison/android-versions-comparison}
+上给出了Android历史版本的比较，这里截取了5.0版本之后的比较，如表\ref{androidcompare}所示：
+\begin{table}[H]
+\caption{\label{androidcompare}\hei{android version comparison}}
+\begin{tabular}{|p{2cm}|p{5cm}|p{3.5cm}|p{2.5cm}|}
+\hline
+version & key user features added & key developer features added & release date\\
+\hline
+android5.0 & New design (Material design); 
+Speed improvement; 
+Battery consumption improvement 
+& Several new API; 
+Tracking battery consumption app & 2014 Oct 17\\
+\hline
+android5.0.1 & bug fixes, fix issues with video playback and password failures & & 2014 Dec 2\\
+\hline
+android5.0.2 & Performance improvements and bug fixes & & 2014 Dec 19\\
+\hline
+android5.1 & Multiple SIM cards support;
+Quick settings shortcuts to join Wi-Fi networks or control Bluetooth devices;
+Lock protection if lost or stolen;
+High Definition voice call
+Stability and performance enhancements & & 2015 Mar 9\\
+\hline
+android5.1.1 & Speed improvement;
+Bug fixes & & 2015 April 21\\
+\hline
+\end{tabular}
+\end{table}
+
+本文档分析的源码版本是android5.0.0\_r7,简单看了一下5.0到5.1.1版本的更新日志
+\url{http://changes.droidsec.org/},关于ART的修改是在5.0.0到5.0.1；
+5.0.2到5.1.0，主要是一些细节的修改。本文档主要是分析ART运行过程的大体框架，没有涉及到
+一些细节的深入分析，所以与最新版本应该没有太大出入（\redt{后面再重新结合最新的源码修改本文档}）。
+
+\subsection{Android Runtime}
+Android系统init进程启动过程中会运行app\_process进程，app\_process对应的源码
+位于/frameworks/base/cmds/app\_main.cpp,在main函数中会启动Zygote:
+\begin{lstlisting}
+if (zygote) {
+	        runtime.start("com.android.internal.os.ZygoteInit", args);
+}
+\end{lstlisting}
+runtime是AppRuntime的实例，AppRuntime继承自AndroidRuntime.进入AndroidRuntime
+类的start函数（位于/frameworks/base/core/jni/AndroidRuntime.cpp），部分代码
+如下：
+\begin{lstlisting}
+void AndroidRuntime::start(const char* className, const Vector<String8>& options)
+{
+	......
+
+	JniInvocation jni_invocation;					  
+  jni_invocation.Init(NULL);
+	JNIEnv* env;
+    if (startVm(&mJavaVM, &env) != 0) {
+     		return;
+	}
+       
+	......
+}
+\end{lstlisting}	
+调用JniInvocation类的Init函数（位于/libnativehelper/JniInvocation.cpp），
+部分代码如下：
+\begin{lstlisting}
+bool JniInvocation::Init(const char* library) {
+  library = GetLibrary(library);
+
+  handle_ = dlopen(library, RTLD_NOW);
+  
+  ......
+
+  if (!FindSymbol(reinterpret_cast<void**>(&JNI_GetDefaultJavaVMInitArgs_),
+                  "JNI_GetDefaultJavaVMInitArgs")) {
+    return false;
+  }
+  if (!FindSymbol(reinterpret_cast<void**>(&JNI_CreateJavaVM_),
+                  "JNI_CreateJavaVM")) {
+    return false;
+  }
+  if (!FindSymbol(reinterpret_cast<void**>(&JNI_GetCreatedJavaVMs_),
+                  "JNI_GetCreatedJavaVMs")) {
+    return false;
+  }
+  return true;
+}
+\end{lstlisting}
+Init通过GetLibrary函数从属性系统获得名为persist.sys.dalvik.vm.lib的属性值，
+dalvik模式，其值为libdvm.so,art模式下，其值为libart.so.通过dlopen打开对应的
+库文件，这里我们只考虑libart.so.然后调用FindSymbol函数从打开的libart.so文件
+中搜索到对应的导出符号，比如JNI\_CreateJavaVM对应的是
+/art/runtime/jni\_internal.cc中的JNI\_CreateJavaVM函数。
+回到AndroidRuntime::start函数，接着会调用startVM函数启动虚拟机，该函数最终
+会调用JNI\_CreateJavaVM函数，ART模式对应的部分代码如下：
+\begin{lstlisting}
+extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
+	const JavaVMInitArgs* args = static_cast<JavaVMInitArgs*>(vm_args);
+	......
+	RuntimeOptions options;
+    for (int i = 0; i < args->nOptions; ++i) {
+		JavaVMOption* option = &args->options[i];
+	   	options.push_back(std::make_pair(std::string(option->optionString),
+					    	option->extraInfo));
+  	}
+	if (!Runtime::Create(options, ignore_unrecognized)) {
+		......
+	}
+	Runtime* runtime = Runtime::Current();
+	bool started = runtime->Start();
+	......
+}
+\end{lstlisting}
+JNI\_CreateJavaVM函数首先解析虚拟机启动参数存入到Runtime::Options实例中，
+根据解析的参数信息，调用Create函数创建Runtime实例，获取Runtime的当前实例，
+接着调用Runtime的Start函数(位于art/runtime/runtime.cc)，该函数代码如下：
+\begin{lstlisting}
+bool Runtime::Start() {
+	......
+	Thread* self = Thread::Current();
+    self->TransitionFromRunnableToSuspended(kNative);
+    ......
+	InitNativeMethods();
+	......
+	if (is_zygote_) {
+		if (!InitZygote()) {
+		   	return false;
+		}
+	 } else {
+		 DidForkFromZygote(...);
+     }
+	StartDaemonThreads();
+    ......
+}
+\end{lstlisting}
+Start函数获取当前运行线程，将该线程状态从Runnable切换到Suspend，通过
+InitNativeMethods完成Native函数的注册。调用InitZygote完成一些文件系统的
+增加。最后调用StartDaemonThreads启动守护进程。
+
+
+
+

@@ -1,0 +1,69 @@
+\subsection{PackageManagerService}
+PackageManagerService在Android系统中负责APK包的管理和相关信息查询及应用程序
+的安装、卸载，这个服务负责扫描系统中特定的目录，找到里面的应用程序文件，
+即以Apk为后缀的文件，然后对这些文件进解析，得到应用程序的相关信息，
+完成应用程序的安装过程。dex到oat的转换过程就是在PackageManagerService中完成的。
+PackageManagerService（frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java）
+由SystemServer（frameworks/base/services/java/com/android/server/SystemServer.java）
+创建。
+在创建PackageManagerService的实例时，会在PackageManagerService类的构造函数中开始执行
+安装应用程序的过程。通过调用scanDirLI函数扫描以下几个目录中的apk文件：
+
+/system/framework
+
+/system/app
+
+/system/priv-app
+
+/vendor/app
+
+/vendor/overlay
+
+/oem/app
+
+接着调用scanPackageLI函数对apk文件进行解析和安装。scanPackageLI通过创建PackageParser实例，
+调用这个实例的parsePackage方法解析apk文件。parsePackage代码位于：
+frameworks/base/core/java/android/content/pm/PackageParser.java。该函数通过解析apk中的配置
+文件AndroidManifest.xml完成解析任务，最后将解析得到的信息保存到PackageManagerService服务中。
+这样，应用程序都注册到了PackageManagerService中，接着需要将这些应用程序在桌面上显示出来。
+Android中Launcher负责从PackageManagerService服务中把这些安装好的应用程序取出来，
+并在桌面上展现出来。Launcher由ActivityManagerService启动，
+ActivityManagerService和PackageManagerService一样，都是在开机时由SystemServer组件启动的。
+
+在PackageManagerService处理过程中，会通过调用另外一个类Installer的成员函数dexopt对APK内的dex字节码
+进行优化（frameworks/base/services/core/java/com/android/server/pm/Installer.java）。
+Installer向守护进程installd发送一个dexopt请求，由installd内的do\_dexopt函数
+来处理,do\_dexopt调用dexopt函数（位于frameworks/native/cmds/installd/commands.c).
+dexopt函数的部分代码如下：
+\begin{lstlisting}
+int dexopt(const char *apk_path, uid_t uid, bool is_public,
+           const char *pkgname, const char *instruction_set,
+           bool vm_safe_mode, bool is_patchoat)
+{
+    ......
+
+    property_get("persist.sys.dalvik.vm.lib.2", persist_sys_dalvik_vm_lib, "libart.so");
+
+    ......
+
+    if (strncmp(persist_sys_dalvik_vm_lib, "libdvm", 6) == 0) {
+            run_dexopt(input_fd, out_fd, input_file, out_path);
+        } else if (strncmp(persist_sys_dalvik_vm_lib, "libart", 6) == 0) {
+            if (is_patchoat) {
+                run_patchoat(input_fd, out_fd, input_file, out_path, pkgname, instruction_set);
+            } else {
+                run_dex2oat(input_fd, out_fd, input_file, out_path, pkgname, instruction_set,
+                            vm_safe_mode);
+            }
+        } else {
+            exit(69);   /* Unexpected persist.sys.dalvik.vm.lib value */
+        }
+     
+    ......
+}
+\end{lstlisting}
+dexopt通过property\_get函数读取系统属性persist.sys.dalvik.vm.lib的值。如果该值为libdvm.so,
+就会调用函数run\_dexopt即运行/system/bin/dexopt将dex文件优化成odex文件；如果是libart.so，
+接着判断is\_patchoat的值，为真，调用run\_patchoat即运行/system/bin/patchoat对已经编译
+过的oat文件进行重定位relocation，改变其基地址base address；
+为假，则调用run\_dex2oat级运行/system/bin/dex2oat将dex文件转换为oat文件。

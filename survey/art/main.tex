@@ -1,0 +1,31 @@
+\newcommand\showchange{TT}%{TT FL}%
+\newcommand\hasalgo{FL}%{TT FL}%
+%\documentclass[preprint]{../../share/sigplanconf}
+\documentclass[a4paper,11pt,titlepage]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Including standard latex packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\input local
+\input clocal
+
+\begin{document}
+\title{\kai{Android ART分析}}
+\author{周坤\thanks{984040887@qq.com}}
+\affil{\hei{中国科学技术大学~~计算机科学与技术学院}}
+
+\maketitle
+\tableofcontents
+\setcounter{tocdepth}{3}
+\newpage
+% turn on page numbers
+%\pagestyle{empty}
+\pagenumbering{arabic}
+
+\input art
+\input packageservice
+\input dex2oat
+\input oat
+
+\end{document}

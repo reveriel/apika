@@ -1,0 +1,284 @@
+\subsection{dex2oat}
+/system/bin/dex2oat对应的源码文件位于/art/dex2oat/dex2oat.cc。main函数直接
+调用art命名空间下的dex2oat函数，dex2oat函数的主要结构如下所示：
+\begin{lstlisting}
+//command-line argument parsing
+......
+
+//create oat file but not write data
+std::unique_ptr<File> oat_file;
+......
+
+//create Dex2Oat
+Dex2Oat::Create(...);
+......
+
+//extract classes.dex file
+std::vector<const DexFile*> dex_files;
+......
+
+//create oat format file
+dex2oat->CreateOatFile(...);
+......
+
+//create image file
+dex2oat->CreateImageFile(...);
+......
+\end{lstlisting}
+dex2oat函数代码比较长，前面一部分都是在解析
+参数，对一些不正确的参数组合会调用Usage函数打印dex2oat的使用方法并退出。
+在完成参数的解析判断之后会创建一个指向oat\_location的文件指针，代码如下：
+\begin{lstlisting}
+std::unique_ptr<File> oat_file;
+bool create_file = !oat_unstripped.empty();
+if (create_file) {
+	oat_file.reset(OS::CreateEmptyFile(oat_unstripped.c_str()));
+	if (oat_location.empty()) {
+		oat_location = oat_filename;
+	}
+ } else {
+	 oat_file.reset(new File(oat_fd, oat_location));
+	 oat_file->DisableAutoClose();
+	 oat_file->SetLength(0);
+ }
+\end{lstlisting}
+声明文件指针变量oat\_file,if和else分支都是在创建一个File实例并赋值给oat\_file
+,这部分代码仅仅是创建了一个File实例，没有真正写入oat格式的文件数据。
+
+接着开始完成dex到oat的转换工作,声明指向Dex2Oat的指针p\_dex2oat,类Dex2Oat的定义
+位于art/dex2oat/dex2oat.cc中,接着调用Dex2Oat的Create方法,
+\begin{lstlisting}
+Dex2Oat* p_dex2oat;
+if (!Dex2Oat::Create(&p_dex2oat,
+                       runtime_options,
+                       *compiler_options,
+                       compiler_kind,
+                       instruction_set,
+                       instruction_set_features,
+                       verification_results.get(),
+                       &method_inliner_map,
+                       thread_count)) {
+    LOG(ERROR) << "Failed to create dex2oat";
+    return EXIT_FAILURE;
+  }
+}
+\end{lstlisting}
+Dex2Oat的Create方法代码如下：
+\begin{lstlisting}
+static bool Create(Dex2Oat** p_dex2oat,...){
+	SHARED_TRYLOCK_FUNCTION(true, Locks::mutator_lock_) {
+		CHECK(verification_results != nullptr);
+		CHECK(method_inliner_map != nullptr);
+		std::unique_ptr<Dex2Oat> dex2oat(new  Dex2Oat(&compiler_options,...))
+		if (!dex2oat->CreateRuntime(runtime_options,instruction_set)) {
+			*p_dex2oat = nullptr;
+			return false;
+		}
+		*p_dex2oat = dex2oat.release();
+		return true;
+	}
+}
+\end{lstlisting}
+Create方法调用CreateRuntime函数获取Runtime类的实例，Runtime使用单例模式，所以获取Runtime
+实例前会先获取锁。接着创建Dex2Oat的实例，Dex2Oat的构造函数比较简单，只是一些
+类成员的赋值，如下所示：
+\begin{lstlisting}
+explicit Dex2Oat(const CompilerOptions* compiler_options,...)
+      : compiler_options_(compiler_options),
+        compiler_kind_(compiler_kind),
+        instruction_set_(instruction_set),
+        instruction_set_features_(instruction_set_features),
+        verification_results_(verification_results),
+        method_inliner_map_(method_inliner_map),
+        runtime_(nullptr),
+        thread_count_(thread_count),
+        start_ns_(NanoTime()) {
+    CHECK(compiler_options != nullptr);
+    CHECK(verification_results != nullptr);
+    CHECK(method_inliner_map != nullptr);
+  }
+\end{lstlisting}
+其中start\_ns\_记录实例化的时间。
+
+回到dex2oat函数，接着将p\_dex2oat赋值给dex2oat变量，获取当前线程，将线程从
+runnable切换到suspend状态，释放掉之前Dex2Oat创建时获得的锁。
+WellKnownClasses::Init函数用来完成一些JNI类、函数、以及字段的初始化操作，函数
+代码位于art/runtime/well\_known\_classes.cc.
+
+接着声明vector变量dex\_files保存相应的DexFile实例，if分支的GetBootClassPath函数
+以及else分支的DexFile::OpenFromZip函数都是获取相应的dex文件。
+
+接着通过EnableWrite()将dex文件设置为可写,保证能够进行dex到dex的优化转换。
+
+最后调用CreateOatFile和CreateImageFile函数来分别创建oat文件和镜像文件。这里我们
+只关心CreateOatFile函数的实现过程。
+\begin{lstlisting}
+const CompilerDriver* CreateOatFile(...) {
+    ......
+    std::unique_ptr<CompilerDriver> driver(new CompilerDriver(...));
+    driver->GetCompiler()->SetBitcodeFileName(*driver.get(), bitcode_filename);
+    driver->CompileAll(class_loader, dex_files, &timings);
+
+    OatWriter oat_writer(...);
+    ......
+
+    if (!driver->WriteElf(android_root, is_host, dex_files, &oat_writer, oat_file)) {
+    ......
+    }
+
+    ......
+}
+\end{lstlisting}
+CreateOatFile函数创建CompilerDriver实例，调用CompilerDriver类的CompileAll方法
+（源码位于/art/compiler/driver/compiler\_driver.cc)来完成dex到IR的转换。
+CompileAll方法的代码如下：
+\begin{lstlisting}
+void CompilerDriver::CompileAll(jobject class_loader,
+                                const std::vector<const DexFile*>& dex_files,
+                                TimingLogger* timings) {
+  DCHECK(!Runtime::Current()->IsStarted());
+  std::unique_ptr<ThreadPool> thread_pool(new ThreadPool("Compiler driver thread pool", thread_count_ - 1));
+  PreCompile(class_loader, dex_files, thread_pool.get(), timings);
+  Compile(class_loader, dex_files, thread_pool.get(), timings);
+  if (dump_stats_) {
+    stats_->Dump();
+  }
+}
+\end{lstlisting}
+CompileAll主要包含两个函数：PreCompile和Compile。
+ProCompile函数的代码：
+\begin{lstlisting}
+void CompilerDriver::PreCompile(jobject class_loader,
+             const std::vector<const DexFile*>& dex_files,
+             ThreadPool* thread_pool, TimingLogger* timings) {
+    LoadImageClasses(timings);
+    Resolve(class_loader, dex_files, thread_pool, timings);
+    if (!compiler_options_->IsVerificationEnabled()) {
+    LOG(INFO) << "Verify none mode specified, skipping verification.";
+     SetVerified(class_loader, dex_files, thread_pool, timings);
+     return;
+   }
+ 
+  Verify(class_loader, dex_files, thread_pool, timings);
+ 
+  InitializeClasses(class_loader, dex_files, thread_pool, timings);
+ 
+   UpdateImageClasses(timings);
+ }
+
+\end{lstlisting}
+PreCompile主要是进行编译前的一些预操作，主要是类的加载、解析、校验和初始化等。
+
+Compile函数直接调用CompileDexFile函数，该函数的代码：
+\begin{lstlisting}
+void CompilerDriver::CompileDexFile(jobject class_loader, const DexFile& dex_file,
+                                    const std::vector<const DexFile*>& dex_files,
+                                    ThreadPool* thread_pool, TimingLogger* timings) {
+  TimingLogger::ScopedTiming t("Compile Dex File", timings);
+  ParallelCompilationManager context(Runtime::Current()->GetClassLinker(), class_loader, this,
+                                     &dex_file, dex_files, thread_pool);
+  context.ForAll(0, dex_file.NumClassDefs(), CompilerDriver::CompileClass, thread_count_);
+}
+\end{lstlisting}
+通过类ParallelCompilationManager并行编译dex文件中的各个类。
+CompileClass通过调用CompilerDriver类的CompileMethod来编译每个类对应的
+direct methods和vitual methods。CompileMethod方法的代码如下：
+\begin{lstlisting}
+void CompilerDriver::CompileMethod(const DexFile::CodeItem* code_item, uint32_t access_flags,
+                                   InvokeType invoke_type, uint16_t class_def_idx,
+                                   uint32_t method_idx, jobject class_loader,
+                                   const DexFile& dex_file,
+                                   DexToDexCompilationLevel dex_to_dex_compilation_level) {
+  CompiledMethod* compiled_method = nullptr;
+  uint64_t start_ns = kTimeCompileMethod ? NanoTime() : 0;
+
+  if ((access_flags & kAccNative) != 0) {
+    if (!compiler_options_->IsCompilationEnabled() &&
+        (instruction_set_ == kX86_64 || instruction_set_ == kArm64)) {
+    } else {
+      compiled_method = compiler_->JniCompile(access_flags, method_idx, dex_file);
+      CHECK(compiled_method != nullptr);
+    }
+  } else if ((access_flags & kAccAbstract) != 0) {
+  } else {
+    MethodReference method_ref(&dex_file, method_idx);
+    bool compile = verification_results_->IsCandidateForCompilation(method_ref, access_flags);
+    if (compile) {     
+      compiled_method = compiler_->Compile(code_item, access_flags, invoke_type, class_def_idx,
+                                           method_idx, class_loader, dex_file);
+    }
+    if (compiled_method == nullptr && dex_to_dex_compilation_level != kDontDexToDexCompile) {
+      (*dex_to_dex_compiler_)(*this, code_item, access_flags,
+                              invoke_type, class_def_idx,
+                              method_idx, class_loader, dex_file,
+                              dex_to_dex_compilation_level);
+    }
+  }
+
+  ......
+
+  Thread* self = Thread::Current();
+  if (compiled_method != nullptr) {
+    MethodReference ref(&dex_file, method_idx);
+    DCHECK(GetCompiledMethod(ref) == nullptr) << PrettyMethod(method_idx, dex_file);
+    {
+      MutexLock mu(self, compiled_methods_lock_);
+      compiled_methods_.Put(ref, compiled_method);
+    }
+    DCHECK(GetCompiledMethod(ref) != nullptr) << PrettyMethod(method_idx, dex_file);
+  }
+
+  if (self->IsExceptionPending()) {
+    ScopedObjectAccess soa(self);
+    LOG(FATAL) << "Unexpected exception compiling: " << PrettyMethod(method_idx, dex_file) << "\n"
+        << self->GetException(nullptr)->Dump();
+  }
+}
+\end{lstlisting}
+对于本地方法native method，如果编译选项IsCompilationEnabled为假并且指令集为
+64位X86或者64位Arm时不做任何处理会触发通用的JNI调用，其他情况会调用编译器的
+JniCompile方法，Android ART中存在两种JniCompile方法：一种位于
+/art/compiler/compiler.cc,通过调用ArtLLVMJniCompileMethod
+（位于/art/compiler/llvm/compiler\_llvm.cc）完成。ArtLLVMJniCompileMethod
+是通过调用llvm JNI编译器的Compile方法（源码位于
+/art/compiler/jni/portable/jni\_compiler.cc）来完成本地方法的编译。
+另外一种位于/art/compiler/compilers.cc，通过调用ArtQuickCompileMethod
+（位于/art/compiler/dex/frontend.cc）完成。ArtQuickCompileMethod最终是通过
+调用CompileMethod方法完成编译工作。CompileMethod（/art/compiler/dex/frontend.cc）
+主要是通过创建MIR Graph，对MIR Graph进行处理来完成方法的编译。
+
+对于抽象方法，不做任何处理。
+
+其他方法通过调用编译器的Compile方法进行处理。因为编译器选项有3个值：
+Quick、Optimizing、Portable,所以对应的有3种Compile方法。
+QuickCompiler::Compile(源码位于/art/compiler/compilers.cc）先调用
+TryCompileWithSeaIR得到method，若method为空，则返回ArtQuickCompileMethod。
+TryCompileWithSeaIR最终是调用CompileMethodWithSeaIr
+（源码位于/art/compiler/sea\_ir/frontend.cc），
+通过得到dex文件的SeaGraph，基于SeaGraph进行操作，完成方法的编译。
+
+OptimizingCompiler::Compile（源码位于/art/compiler/compilers.cc）先调用
+TryCompile，如果得到的method为空，则调用QuickCompiler::Compile完成编译。
+TryCompile位于/art/compiler/optimizing/optimizing\_compiler.cc,TryCompile
+的代码比较复杂，主要包含两个部分：
+通过HGraphBuilder构建HGraph（方法对应的控制流图），基于HGraph进行一系列处理
+包括构建支配树、转换为SSA形式、活跃分析等；
+通过CodeGenerator创建代码生成器。
+
+PortableCompiler::Compile（源码位于/art/compiler/compiler.cc）先调用           
+TryCompileWithSeaIR得到method，若method为空，则返回ArtCompileMethod。
+ArtCompileMethod调用CompileMethod方法完成方法的编译。
+CompileMethod的处理流程：
+
+1、创建CompilationUnit对象来存放一次编译中需要的信息，compilationunit相应成员的初始化； 
+
+2、将dex文件中的Dalvik字节码解码为DecodedInstruction（这个结构体的定义位于
+/art/compiler/dex/mir\_graph.h），并创建对应的MIR节点；
+
+3、定位基本块的边界，并创建相应的BasicBlock对象，将MIR塞进去； 
+
+4、确定控制流关系，将基本块连接起来构成控制流图（CFG），并添加恢复解释器状态和异常处理用的基本块；
+ 
+5、将基本块都加到CompilationUnit里去；
+
+6、MIR优化（带有局部优化和全局优化）
