@@ -1,0 +1,40 @@
+\documentclass{article}
+
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[left=2.5cm,right=2.5cm,top=3cm,bottom=3cm]{geometry}
+
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+
+\renewcommand\footrulewidth{0.6pt}
+\renewcommand\figurename{图}
+\renewcommand\tablename{表}
+\renewcommand\contentsname{目录}
+\renewcommand\refname{参考文献}
+
+\title{安卓 Socket API 调研\footnote{编程环境为Android Studio} }
+\author{王轩}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{申请网络权限}
+为了使用Socket API，首先需要申请网络使用权限，
+在项目的AndroidManifest.xml的manifest标签下添加以下标签：
+\begin{verbatim}
+<uses-permission android:name="android.permission.INTERNET"/>
+\end{verbatim}
+
+\section{socket HTTP request的实现}
+
+首先，安装6.0以上不再允许网络操作运行在主线程(GUI线程)上，否则会报
+
+\end{document} 
