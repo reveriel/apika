@@ -1,0 +1,11 @@
+*.pdf
+*.toc
+*.aux
+*.bbl
+*.log
+*.blg
+*.sav
+*.bak
+*.synctex
+
+auto

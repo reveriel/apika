@@ -13,43 +13,43 @@
 \cfoot{\thepage}
 
 \renewcommand\footrulewidth{0.6pt}
-\renewcommand\figurename{Í¼}
-\renewcommand\tablename{±í}
-\renewcommand\contentsname{Ä¿Â¼}
-\renewcommand\refname{²Î¿¼ÎÄÏ×}
+\renewcommand\figurename{å›¾}
+\renewcommand\tablename{è¡¨}
+\renewcommand\contentsname{ç›®å½•}
+\renewcommand\refname{å‚è€ƒæ–‡çŒ®}
 
-\title{°²×¿ Socket API µ÷ÑĞ\footnote{±à³Ì»·¾³ÎªAndroid Studio} }
-\author{ÍõĞù}
+\title{å®‰å“ Socket API è°ƒç ”\footnote{ç¼–ç¨‹ç¯å¢ƒä¸ºAndroid Studio} }
+\author{ç‹è½©}
 
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\section{ÉêÇëÍøÂçÈ¨ÏŞ}
-ÎªÁËÊ¹ÓÃSocket API£¬Ê×ÏÈĞèÒªÉêÇëÍøÂçÊ¹ÓÃÈ¨ÏŞ£¬
-ÔÚÏîÄ¿µÄAndroidManifest.xmlµÄmanifest±êÇ©ÏÂÌí¼ÓÒÔÏÂ±êÇ©£º
+\section{ç”³è¯·ç½‘ç»œæƒé™}
+ä¸ºäº†ä½¿ç”¨Socket APIï¼Œé¦–å…ˆéœ€è¦ç”³è¯·ç½‘ç»œä½¿ç”¨æƒé™ï¼Œ
+åœ¨é¡¹ç›®çš„AndroidManifest.xmlçš„manifestæ ‡ç­¾ä¸‹æ·»åŠ ä»¥ä¸‹æ ‡ç­¾ï¼š
 \begin{verbatim}
 <uses-permission android:name="android.permission.INTERNET"/>
 \end{verbatim}
 
-\section{Socket×î¼òµ¥µÄÀı×Ó}
+\section{Socketæœ€ç®€å•çš„ä¾‹å­}
 
-ÒÔÏÂÊÇÒ»¸öSocketµÄ×î¼òµ¥µÄÀı×Ó£¬
-º¯ÊıSocketHttpTest() Ïò202.38.64.40(test.ustc.edu.cn) ·¢ËÍÒ»¸öHTTPÇëÇó£¬
-»ñµÃÏìÓ¦ºó½«Ô­Ê¼ÏìÓ¦±¨ÎÄ×÷Îª×Ö·û´®·µ»Ø¡£
-ËäÈ»¼òµ¥£¬µ«ÊÇ°üº¬ÁËsocket´´½¨¡¢Ê¹ÓÃ¡¢¹Ø±ÕµÈ¹Ø¼ü²½Öè¡£
+ä»¥ä¸‹æ˜¯ä¸€ä¸ªSocketçš„æœ€ç®€å•çš„ä¾‹å­ï¼Œ
+å‡½æ•°SocketHttpTest() å‘202.38.64.40(test.ustc.edu.cn) å‘é€ä¸€ä¸ªHTTPè¯·æ±‚ï¼Œ
+è·å¾—å“åº”åå°†åŸå§‹å“åº”æŠ¥æ–‡ä½œä¸ºå­—ç¬¦ä¸²è¿”å›ã€‚
+è™½ç„¶ç®€å•ï¼Œä½†æ˜¯åŒ…å«äº†socketåˆ›å»ºã€ä½¿ç”¨ã€å…³é—­ç­‰å…³é”®æ­¥éª¤ã€‚
 
 \begin{verbatim}
     private String SocketHttpGetTest() {
         String msg = "";
         try{
-            // ´´½¨Socket¶ÔÏó£¬Ö¸¶¨Í¨ĞÅ¶Ô·½µÄIPºÍ¶Ë¿Ú
+            // åˆ›å»ºSocketå¯¹è±¡ï¼ŒæŒ‡å®šé€šä¿¡å¯¹æ–¹çš„IPå’Œç«¯å£
             Socket socket = new Socket("202.38.64.40",80);
-            // »ñÈ¡¸ÃSocketµÄÊäÈëÊä³öÁ÷
+            // è·å–è¯¥Socketçš„è¾“å…¥è¾“å‡ºæµ
             DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
             DataInputStream reader = new DataInputStream( socket.getInputStream());
-            // ·¢ËÍÇëÇó±¨ÎÄ(HTTPÇëÇóÍ·)
+            // å‘é€è¯·æ±‚æŠ¥æ–‡(HTTPè¯·æ±‚å¤´)
             writer.writeUTF("GET / HTTP/1.1\n" +
                     "Host: test.ustc.edu.cn\n" +
                     "Upgrade-Insecure-Requests: 1\n" +
@@ -58,7 +58,7 @@
                     "Accept: text/html\n" +
                     "Accept-Encoding: deflate, sdch\n" +
                     "Accept-Language: zh-CN,zh;q=0.8\n\n");
-            // ½ÓÊÜ32ĞĞÏìÓ¦Êı¾İ
+            // æ¥å—32è¡Œå“åº”æ•°æ®
             while((line=reader.readLine())!=null){
                 msg += line + "\n";
             }
@@ -70,30 +70,30 @@
     }
 \end{verbatim}
 
-ÆäÖĞ£¬×îÖ÷ÒªµÄ²½Öè¾ÍÊÇ´´½¨socket£¨Í¬Ê±Ö¸¶¨Í¨ĞÅ¶Ô·½µÄIPºÍ¶Ë¿Ú£©£¬´ò¿ªÊäÈëÊä³öÁ÷£¬
-Í¨¹ı¶ÔÁ÷µÄ¶ÁĞ´ÊµÏÖsocket·¢ËÍºÍ½ÓÊÕÊı¾İ¡£×îºó¹Ø±Õsocket¡£
+å…¶ä¸­ï¼Œæœ€ä¸»è¦çš„æ­¥éª¤å°±æ˜¯åˆ›å»ºsocketï¼ˆåŒæ—¶æŒ‡å®šé€šä¿¡å¯¹æ–¹çš„IPå’Œç«¯å£ï¼‰ï¼Œæ‰“å¼€è¾“å…¥è¾“å‡ºæµï¼Œ
+é€šè¿‡å¯¹æµçš„è¯»å†™å®ç°socketå‘é€å’Œæ¥æ”¶æ•°æ®ã€‚æœ€åå…³é—­socketã€‚
 
 \newpage
 
-\section{½«socket²âÊÔÌí¼Óµ½ÏîÄ¿}
+\section{å°†socketæµ‹è¯•æ·»åŠ åˆ°é¡¹ç›®}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=.46\textwidth]{App.png}
-\caption{²âÊÔÑùÀıAppµÄ½çÃæ}
+\caption{æµ‹è¯•æ ·ä¾‹Appçš„ç•Œé¢}
 \end{figure}
 
-ÔÚÑùÀıAppÖĞ£¬µã»÷HTTP GET°´Å¥£¬Ò»¶ÎÊ±¼äºó»á³öÏÖÔ­Ê¼µÄsocketÏìÓ¦±¨ÎÄ¡£
+åœ¨æ ·ä¾‹Appä¸­ï¼Œç‚¹å‡»HTTP GETæŒ‰é’®ï¼Œä¸€æ®µæ—¶é—´åä¼šå‡ºç°åŸå§‹çš„socketå“åº”æŠ¥æ–‡ã€‚
 
-°²×¿6.0ÒÔÉÏ²»ÔÙÔÊĞíÍøÂç²Ù×÷ÔËĞĞÔÚÖ÷Ïß³Ì(GUIÏß³Ì)ÉÏ£¬
-·ñÔòÔËĞĞÊ±»áÅ×³öNetworkOnMainThreadException¡£
-ÕâÖÖ»úÖÆµÄÔ­ÒòÊÇÖ÷Ïß³Ì¸ºÔğÔËĞĞGUIÊÂ¼şÓëÏàÓ¦£¬Èô±»ÍøÂçIO×èÈûÌ«¾Ã£¬GUI»á¿¨¶Ù£¬Ó°ÏìÓÃ»§ÌåÑé¡£
-Òò´Ë£¬SocketHttpGetTest()·½·¨ÊÇĞèÒªÔÚÒ»¸ö×ÓÏß³Ìµ÷ÓÃµÄ¡£
+å®‰å“3.0ä»¥ä¸Šä¸å†å…è®¸ç½‘ç»œæ“ä½œè¿è¡Œåœ¨ä¸»çº¿ç¨‹(GUIçº¿ç¨‹)ä¸Šï¼Œ
+å¦åˆ™è¿è¡Œæ—¶ä¼šæŠ›å‡ºNetworkOnMainThreadExceptionã€‚
+è¿™ç§æœºåˆ¶çš„åŸå› æ˜¯ä¸»çº¿ç¨‹è´Ÿè´£è¿è¡ŒGUIäº‹ä»¶ä¸ç›¸åº”ï¼Œè‹¥è¢«ç½‘ç»œIOé˜»å¡å¤ªä¹…ï¼ŒGUIä¼šå¡é¡¿ï¼Œå½±å“ç”¨æˆ·ä½“éªŒã€‚
+å› æ­¤ï¼ŒSocketHttpGetTest()æ–¹æ³•æ˜¯éœ€è¦åœ¨ä¸€ä¸ªå­çº¿ç¨‹è°ƒç”¨çš„ã€‚
 
-ÁíÍâ£¬socket ÏìÓ¦½áÊøºó±»¹Ø±Õ£¬ÏàÓ¦µÄÏß³ÌÒ²ÖÕÖ¹¡£
-ÔÚÖÕÖ¹Ç°£¬ÎªÁË½«»ñµÃµÄÏìÓ¦×Ö·û´®ÏÔÊ¾ÔÚGUI¿Ø¼şÉÏ£¬ĞèÒªÏòÖ÷Ïß³Ì·¢ËÍÒ»¸öÏûÏ¢£¬
-ÕâĞèÒªÓÃµ½MessageºÍHandlerÀà¡£
+å¦å¤–ï¼Œsocket å“åº”ç»“æŸåè¢«å…³é—­ï¼Œç›¸åº”çš„çº¿ç¨‹ä¹Ÿç»ˆæ­¢ã€‚
+åœ¨ç»ˆæ­¢å‰ï¼Œä¸ºäº†å°†è·å¾—çš„å“åº”å­—ç¬¦ä¸²æ˜¾ç¤ºåœ¨GUIæ§ä»¶ä¸Šï¼Œéœ€è¦å‘ä¸»çº¿ç¨‹å‘é€ä¸€ä¸ªæ¶ˆæ¯ï¼Œ
+è¿™éœ€è¦ç”¨åˆ°Messageå’ŒHandlerç±»ã€‚
 
-ÒòÎªÕâ²»ÊÇsocket API±¾Éí£¬´Ë´¦²»×ö×¸Êö£¬Ïê¼û´úÂë¡£
+å› ä¸ºè¿™ä¸æ˜¯socket APIæœ¬èº«ï¼Œæ­¤å¤„ä¸åšèµ˜è¿°ï¼Œè¯¦è§ä»£ç ã€‚
 
 \end{document} 

@@ -10,8 +10,9 @@ import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.View;
 
-import java.io.*;
-import java.net.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
