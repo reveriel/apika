@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage[colorlinks=true]{hyperref}
 
 
 \title{Sensor API in Android}
@@ -72,6 +73,11 @@ Important Classes:
 {
   \small
   \paragraph{note:}
+  \begin{itemize}
+
+\item 
+\textbf{Unregister sensor listeners}
+
   Always make sure to disable sensors you don't need especially when your
   activity is paused. Failling to do so can drain the battery in just a few hours.
   Note that the system will not desable sensors automatically when the screen
@@ -84,17 +90,9 @@ Important Classes:
   because some sensors have substantial power requirements and can use up battery
   power quickly. The system will not disable sensors automatically when the screen
   turns off.
-
-  Unregister sensor listeners
-
-  Be sure to unregister a sensor's listener
-  when you are done using the sensor or when the sensor activity pauses. If a
-  sensor listener is registered and its activity is paused, the sensor will
-  continue to acquire data and use battery resources unless you unregister the
-  sensor. The following code shows how to use the onPause() method to unregister a
-  listener:
-
-  Don't block the onSensorChanged() method
+  
+\item 
+\textbf{Don't block the onSensorChanged() method}
 
   Sensor data can change at a high rate, which means the system may call the
   onSensorChanged(SensorEvent) method quite often. As a best practice, you should
@@ -102,6 +100,9 @@ Important Classes:
   don't block it. If your application requires you to do any data filtering or
   reduction of sensor data, you should perform that work outside of the
   onSensorChanged(SensorEvent) method.
+
+\item 
+  \textbf{Wakelock for non-wake-up sensors}
 
   In the case of non-wake-up sensors, the events are only delivered while the
   Application Processor (AP) is not in suspend mode. See isWakeUpSensor() for more
@@ -111,6 +112,8 @@ Important Classes:
   is asleep. Note that although events might be lost while the AP is asleep, the
   sensor will still consume power if it is not explicitly deactivated by the
   application.
+
+  \end{itemize}
 }
 
 \subsection{Documents targeted at manufacturers}
