@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage[colorlinks=true]{hyperref}
+
+\begin{document}
+About Sensor, GPS, WakeLock, or other energy related resources usage in Android Program.
+
+\section{What is keeping my phone awake?: characterizing and detecting no-sleep
+  energy bugs in smartphone apps}
+
+\href{http://dl.acm.org/citation.cfm?id=2307661}{link}
+
+Purdue University. MobiSys 2012, cited by 185
+
+
+\textbf{Abstract:}
+
+Despite their immense popularity in recent years, smartphones are and will
+remain severely limited by their battery life. Preserving this critical resource
+has driven smartphone OSes to undergo a paradigm shift in power management: by
+default every component, including the CPU, stays off or in an idle state,
+unless the app explicitly instructs the OS to keep it on! Such a policy
+encumbers app developers to explicitly juggle power control APIs exported by the
+OS to keep the components on, during their active use by the app and off
+otherwise. The resulting power-encumbered programming unavoidably gives rise to
+a new class of software energy bugs on smartphones called no-sleep bugs, which
+arise from mis-handling power control APIs by apps or the framework and result
+in significant and unexpected battery drainage.
+
+This paper makes the first advances towards understanding and automatically
+detecting software energy bugs on smartphones. It makes the following three
+contributions: (1) we present the first comprehensive study of real world
+no-sleep energy bug characteristics; (2) we propose the first automatic solution
+to detect these bugs based on the classic reaching definitions dataflow analysis
+algorithm; (3) we provide experimental data showing that our tool accurately
+detected all 17 known instances of no-sleep bugs and found 34 new bugs in the 73
+apps examined.
+
+\textbf{Bug Patterns:}
+\begin{itemize}
+\item No-Sleep Code Path
+  \begin{itemize}
+  \item forget to release the wakelock throught the code
+  \item some excution path doesn't have a release operation (\textbf{common})
+  \item some higher level condition (like a deadlock) prevent the execution from
+    reaching the release point
+  \item do not undertand the life-cycle of Android processes (\textbf{most
+      common})
+  \end{itemize}
+\item No-Sleep Race Condition, caused by race conditions in multi-threaded apps.
+\item No-Sleep Dilation, hold wkaelock for longer than needed.
+\end{itemize}
+
+\textbf{Solution:
+}dataflow analysis. % TODO
+
+
+
+\section{Where has my battery gone? Finding sensor related energy black holes in
+  smartphone applications}
+
+\href{http://ieeexplore.ieee.org/abstract/document/6526708/}{link}
+
+GreenDroid, HKUST, NanJing, PerCom 2013, Cited by 52
+
+\href{http://www.cse.ust.hk/~andrewust/}{Yepang Liu}
+
+based on Java PathFinder
+
+assumption: sensory data should be efficiently used.
+
+challenge: 1. Event driven programming paradigm; 2. how to analyze the
+utilization of sensory data.
+
+`` To address the first challenge, we derive an application execution model from
+Android specifications. This model captures application-generic temporal rules
+that specify calling relationships between event handlers. Enforcing these rules
+would enable JPF to realistically execute an Android application. To address the
+second challenge, we monitor an application’s execution, and perform dynamic
+data flow tracking at a bytecode instruction level. ''
+
+Contributions:
+\begin{itemize}
+\item We propose a runtime analysis technique to automatically analyze sensory
+  data utilization at different states of an Android application.
+\item We present an application execution model that captures
+  application-generic temporal rules for event handler scheduling. This model is
+  general enough to be used in other Android application analysis techniques.
+\item We implement a prototype tool called GreenDroid. To the best of our
+  knowledge, GreenDroid is the first JPF extension that is able to verify
+  Android applications.
+\item We evaluate GreenDroid using six popular Android applications. GreenDroid
+  successfully located real energy inefficiency problems in four applications,
+  and reported new problems for the remaining two.
+\end{itemize}
+
+
+
+
+
+\end{document}
