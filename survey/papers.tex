@@ -248,13 +248,47 @@ reduce energy consumption while using certain categories of Android APIs and
 patterns.
 
 \section{Towards verifying android apps for the absence of no-sleep energy bugs}
-\href{http://dl.acm.org/citation.cfm?id=2387872}{link} and 
+\href{http://dl.acm.org/citation.cfm?id=2387872}{link} and
+\href{https://www.usenix.org/conference/hotpower12/workshop-program/presentation/vekris}{presentation}
+and
 \href{https://www.usenix.org/system/files/conference/hotpower12/hotpower12-final27.pdf}{pdf}
 
 Univ of California, San Diego, short paper, USENIX 2012, cited by 31
 
 Wakelock, pricise inter-procedural data flow analysis framework. \emph{no-sleep}
 bugs. use WALA.
+
+IMPORTANT. TO BE COMPLETED.
+
+
+\textbf{Contributions}:
+\begin{itemize}
+\item First, we have studied the lifecycle of different kinds of components in
+  Android applications, and \textbf{use this information to precisely define a
+    set of resource management policies specifying the correct usage of wake
+    locks.}
+\item Second, compared to prior work we apply more precise analysis techniques
+  for handling asynchronous calls, which are ubiquitous in Android.
+\item Third, to evaluate our techniques we run our tool on 328 real world
+  Android applications and verify that 145 of those are exempt from the specific
+  kind of no-sleep bug (w.r.t. our policies).
+\end{itemize}
+
+
+\section{Static control-flow analysis of user-driven callbacks in Android
+  applications}
+
+\href{http://dl.acm.org/citation.cfm?id=2818768}{link}
+
+Ohio State University, Atanas Rountev, ICSE 15, cited by 56
+
+
+
+
+
+
+
+
 
 
 

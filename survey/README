@@ -1,7 +1,9 @@
 survey about Android
 
-- api            android API
+- papers          related papers survey.
 
-- art            Android Runtime
+- api/            android API
 
-- casestudy      ??
+- art/            Android Runtime
+
+- casestudy/      ??
