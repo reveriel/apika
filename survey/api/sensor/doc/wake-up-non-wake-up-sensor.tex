@@ -8,10 +8,18 @@
 
 \begin{document}
 \section{With getDefaultSensor Method}
-根据\href{https://source.android.com/devices/sensors/sensor-types.html}{文档}
-getDefaultSensor函数接收一个宏定义指示需要的sensor类型并返回一个指定类型的
+根据
+\href{https://source.android.com/devices/sensors/sensor-types.html}
+     {Sensor-Types文档}
+和
+\href{https://developer.android.com/reference/android/hardware/SensorManager.html}{SensorManager文档}
+calss SensorManager.getDefaultSensor(int type)
+函数接收一个整数指示需要的sensor类型并返回一个指定类型的
 Android Sensor，下面列出了文档中提到的可能的sensor类型，以及通过该函数返回
 的特定类型sensor是wake-up的还是non-wake-up的。
+此外，SensorManager.getDefaultSensor(int type,bool wakeUp)函数的第二个参数
+可以明确指定返回wake-up或者non-wake-up的Android Sensor(每一种Android Sensor
+都会对应一个wake-up和一个non-wake-up的版本)。
 \begin{itemize}
   \item Base Sensors
     \begin{itemize}
