@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs}
+
+
+\title{How to get a wake-up or a non-wake-up sensor}
+
+\begin{document}
+\section{With getDefaultSensor Method}
+根据\href{https://source.android.com/devices/sensors/sensor-types.html}{文档}
+getDefaultSensor函数接收一个宏定义指示需要的sensor类型并返回一个指定类型的
+Android Sensor，下面列出了文档中提到的可能的sensor类型，以及通过该函数返回
+的特定类型sensor是wake-up的还是non-wake-up的。
+\begin{itemize}
+  \item Base Sensors
+    \begin{itemize}
+    \item non-wake-up
+      \begin{itemize}
+        \item SENSOR\_TYPE\_ACCELEROMETER
+        \item SENSOR\_TYPE\_AMBIENT\_TEMPERATURE
+        \item SENSOR\_TYPE\_MAGNETIC\_FIELD == SENSOR\_TYPE\_MAGNETIC\_FIELD
+        \item SENSOR\_TYPE\_GYROSCOPE
+        \item SENSOR\_TYPE\_HEART\_RATE
+        \item SENSOR\_TYPE\_LIGHT
+        \item SENSOR\_TYPE\_PRESSURE
+        \item SENSOR\_TYPE\_RELATIVE\_HUMIDITY
+      \end{itemize}
+    \item wake-up
+      \begin{itemize}
+        \item SENSOR\_TYPE\_PROXIMITY
+      \end{itemize}
+    \end{itemize}
+  \item Activity Composite Sensors
+    \begin{itemize}
+    \item non-wake-up
+      \begin{itemize}
+      \item SENSOR\_TYPE\_LINEAR\_ACCELERATION
+      \item SENSOR\_TYPE\_STEP\_DETECTOR
+      \item SENSOR\_TYPE\_STEP\_COUNTER
+      \end{itemize}
+    \item wake-up
+      \begin{itemize}
+      \item SENSOR\_TYPE\_SIGNIFICANT\_MOTION
+      \item SENSOR\_TYPE\_TILT\_DETECTOR
+      \end{itemize}
+    \end{itemize}
+  \item Attitude Composite Sensors
+    \begin{itemize}
+    \item non-wake-up
+      \begin{itemize}
+      \item SENSOR\_TYPE\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_GAME\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_GRAVITY
+      \item SENSOR\_TYPE\_GEOMAGNETIC\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_ORIENTATION (deprecated)
+      \end{itemize}
+    \item wake-up (None)
+    \end{itemize}
+  \item Uncalibrated Sensors
+    \begin{itemize}
+    \item non-wake-up
+      \begin{itemize}
+      \item SENSOR\_TYPE\_GYROSCOPE\_UNCALIBRATED
+      \item SENSOR\_TYPE\_MAGNETIC\_FIELD\_UNCALIBRATED
+      \end{itemize}
+    \item wake-up (None)
+    \end{itemize}
+  \item Interaction Composite Sensors
+    \begin{itemize}
+    \item non-wake-up (None)
+    \item wake-up
+      \begin{itemize}
+      \item SENSOR\_TYPE\_WAKE\_GESTURE
+      \item SENSOR\_TYPE\_PICK\_UP\_GESTURE
+      \item SENSOR\_TYPE\_GLANCE\_GESTURE
+      \end{itemize}
+    \end{itemize}
+\end{itemize}
+\end{document}
