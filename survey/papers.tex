@@ -256,9 +256,18 @@ and
 Univ of California, San Diego, short paper, USENIX 2012, cited by 31
 
 Wakelock, pricise inter-procedural data flow analysis framework. \emph{no-sleep}
-bugs. use WALA.
+bugs. use WALA. no code. 
 
-IMPORTANT. TO BE COMPLETED.
+Pollcy: (Component, Callback, Expected WakeLock state). 
+
+Data Fact: the wakelock instances at this program point it may hold. the set
+should be empty at certain program point(like \textbf{onPause} in Activity).
+
+Asynchronous Calls: only explicit intents in which a single terget component is
+specified.
+
+Lifecycles: the exit ICFG node of a callback method is connected to every entry
+CFG node of each of its successor method in the component’s lifecycle.
 
 
 \textbf{Contributions}:
@@ -283,11 +292,32 @@ IMPORTANT. TO BE COMPLETED.
 Ohio State University, Atanas Rountev, ICSE 15, cited by 56
 
 
+\section{WLCleaner: Reducing Energy Waste Caused by WakeLock Bugs at Runtime}
+
+WLCleaner, runtime fix. DASC 2014,
 
 
+\section{LEAKPOINT: Pinpointing the Causes of Memory Leaks}
 
+LEAKPOINT, conventional software, ICSE 2010
 
+\section{eDoctor Automatically Diagnosing Abnormal Battery Drain Issues on
+  Smartphones.}
 
+eDoctor, NSDI 2013
+
+\section{Effective Interprocedural Resource Leak Detection}
+
+Java, IBM, ICSE 2010
+
+\section{Learning Resource Management Specifications in Smartphones}
+
+ICPADS 2015
+
+IMPORTANT, TO BE COMPLETED.
+
+statically analyzes Android apps to mine resource management specifications
+(i.e., the correct order of resource operations)
 
 
 

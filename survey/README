@@ -3,7 +3,11 @@ survey about Android
 - papers          related papers survey.
 
 - api/            android API
+                  API case study, including 
+                    - sensor, doc and sample code
+                    - socket, doc and sample code, 
 
 - art/            Android Runtime
 
 - casestudy/      ??
+
