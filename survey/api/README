@@ -1,6 +1,8 @@
 
 API case study
 
-- sensor
+you can `make` here to get all pdfs in sensor/ subdir
 
-- socket
+- sensor : about sensor
+
+- socket : about socket, an tiny android program source and a doc for that
