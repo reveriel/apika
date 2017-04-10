@@ -1,0 +1,83 @@
+
+* Processes and Threads
+  ref : [[https://developer.android.com/guide/components/processes-and-threads.html][link: dev > API Guides > App Components > Processes and Threads]]
+  
+  By default, all components of the same application run in the same process and
+  thread (called the "main" thread). However, you can arrange for different
+  components in your application to run in separate processes, and you can
+  create additional threads for any process.
+
+** Processes
+   In manifest file, each type of component element (e.g. ~<activity>~) and
+   ~<application>~ supports an ~android:process~ attribute that can specify a
+   process in which that component should run.
+** Threads
+   A main thread is created when an application is launched. This thread is in
+   charge of dispatching events to UI widgets and interactions with UI
+   components from the Android UI toolkit. As such, the main thread is also
+   called the UI thread.
+   
+   There are two rules to Android's single thread model:
+   1. Do not block the UI thread. no events can be dispatched (including drawing)
+      when blocked. Blocking 5 seconds causes "application not responding",
+   2. Do not access the Android UI toolkit from outside the UI thread. They are
+      not thread-safe.
+
+***  Worker threads
+    Do blocking task in a new ~Thread~ and post UI update operations by methods
+    such as ~Activity.runOnUiThread(Runnable)~ , ~View.post(Runnable)~,
+    ~View.postDelayed(Runnable, long)~. Or use ~AsyncTask~ to make this process
+    easier.
+    
+*** TODO Thread-safe methods 
+  
+** TODO Interproceess Communication
+   Android offers a mechanism for interprocess communication (IPC) using remote
+   procedure calls (RPCs), in which a method is called by an activity or other
+   application component, but executed remotely (in another process), with any
+   result returned back to the caller. Data must be understood by the operating
+   system to be moved from the address space of one process to another.
+   
+   
+** Other Event based libraries
+   ref : [[http://wale.oyediran.me/2015/07/16/event-driven-android/][blog: Event Driven Android]]
+
+   - [[http://greenrobot.github.io/EventBus/][github: EventBus]] Android optimized event bus that simplifies communication
+     between Activities, Fragments, Threads, Services, etc.
+   - [[http://square.github.io/otto/][github: Otto]] An enhanced event bus with emphasis on Android support
+
+
+* Lifecycle of components
+  
+  ref : [[https://developer.android.com/guide/topics/processes/process-lifecycle.html][link: dev > API Guides > Process-lifecycle]]
+
+  "It is important that application developers understand how different
+  application components (in particular Activity, Service, and
+  BroadcastReceiver) impact the lifetime of the application's process. Not using
+  these components correctly can result in the system killing the application's
+  process while it is doing important work."
+
+  *lifecycle bugs*
+
+** Activity
+   ref : [[https://developer.android.com/guide/components/activities/activity-lifecycle.html][link: dev > API Guides > App Components > Activities]]
+
+   For example, good implementation of the lifecycle callbacks can help ensure
+   that your app avoids:
+   - Crashing if the user receives a phone call or switches to another app while
+     using your app.
+   - Consuming valuable system resources when the user is not actively using it.
+   - Losing the user's progress if they leave your app and return to it at a later
+     time.
+   - Crashing or losing the user's progress when the screen rotates between
+   landscape and portrait orientation.
+
+** Service
+
+** BroadcastReceiver
+
+** ContentProvider
+
+
+
+
