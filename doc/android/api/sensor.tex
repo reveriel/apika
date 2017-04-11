@@ -1,0 +1,225 @@
+
+% \title{Sensor API in Android}
+
+\section{Offical Documents for Sensors}
+
+\subsection{SDK referecnce (for developers)}
+
+
+\href{https://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-monitor} {Sensor~Overview}
+\begin{itemize}
+\item
+  \href{https://developer.android.com/guide/topics/sensors/sensors_motion.html}
+  {Motion Sensors}
+  
+  The accelerometer and gyroscope sensors are always hardware-based.
+  
+  The gravity, linear acceleration, rotation vector, significant motion, step
+  counter, and step detector sensors are either hardware-based or
+  software-based.
+   
+  
+\item
+  \href{https://developer.android.com/guide/topics/sensors/sensors_position.html}
+  {Position Sensors}
+
+  geomegnetic field sensor, orientation sensor and proximity sensor.
+
+\item
+  \href{https://developer.android.com/guide/topics/sensors/sensors_environment.html}
+  {Environment Sensors}
+
+  ambient temperature, light, pressure, relative humidity and temperature sensors.
+\end{itemize}
+
+
+Important Classes:
+
+\begin{description}
+\item [  \href{https://developer.android.com/reference/android/hardware/SensorManager.html}{SensorManager}]
+
+  You can use this class to create an instance of the sensor service. This class
+  provides various methods for accessing and listing sensors, registering and
+  unregistering sensor event listeners, and acquiring orientation information.
+  This class also provides several sensor constants that are used to report sensor
+  accuracy, set data acquisition rates, and calibrate sensors.
+
+\item [
+  \href{https://developer.android.com/reference/android/hardware/Sensor.html}{Sensor}]
+
+  You can use this class to create an instance of a specific sensor. This class
+  provides various methods that let you determine a sensor's capabilities.
+
+\item[\href{https://developer.android.com/reference/android/hardware/SensorEvent.html}{SensorEvent}]
+
+  The system uses this class to create a sensor event object, which provides
+  information about a sensor event. A sensor event object includes the following
+  information: the raw sensor data, the type of sensor that generated the event,
+  the accuracy of the data, and the timestamp for the event.
+
+\item[\href{https://developer.android.com/reference/android/hardware/SensorEventListener.html}{SensorEventListener}]
+
+  You can use this interface to create two callback methods that receive
+  notifications (sensor events) when sensor values change or when sensor accuracy
+  changes.
+\end{description}
+
+
+{
+  \small
+  \paragraph{note:}
+  \begin{itemize}
+
+  \item \textbf{Unregister sensor listeners} from document:
+    \href{https://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-monitor}
+    {Sensors Overview}
+
+  Always make sure to disable sensors you don't need especially when your
+  activity is paused. Failling to do so can drain the battery in just a few hours.
+  Note that the system will not desable sensors automatically when the screen
+  turns off.
+
+  It's also important to note that this example uses the onResume() and onPause()
+  callback methods to register and unregister the sensor event listener. As a best
+  practice you should always disable sensors you don't need, especially when your
+  activity is paused. Failing to do so can drain the battery in just a few hours
+  because some sensors have substantial power requirements and can use up battery
+  power quickly. The system will not disable sensors automatically when the screen
+  turns off.
+  
+\item 
+\textbf{Don't block the onSensorChanged() method}
+  from document: \href{https://developer.android.com/guide/topics/sensors/sensors_overview.html#sensors-practices}
+  {Sensors Overview}
+
+  Sensor data can change at a high rate, which means the system may call the
+  onSensorChanged(SensorEvent) method quite often. As a best practice, you should
+  do as little as possible within the onSensorChanged(SensorEvent) method so you
+  don't block it. If your application requires you to do any data filtering or
+  reduction of sensor data, you should perform that work outside of the
+  onSensorChanged(SensorEvent) method.
+
+\item 
+  \textbf{Wakelock for non-wake-up sensors}
+  from document: \href{https://developer.android.com/reference/android/hardware/SensorManager.html#registerListener(android.hardware.SensorEventListener,%20android.hardware.Sensor,%20int,%20int)}
+    {SensorManager}
+
+
+  In the case of non-wake-up sensors, the events are only delivered while the
+  Application Processor (AP) is not in suspend mode.
+  %See isWakeUpSensor() for more details.
+  To ensure delivery of events from non-wake-up sensors even when the
+  screen is OFF, the application registering to the sensor must hold a partial
+  wake-lock to keep the AP awAke, otherwise some events might be lost while the AP
+  is asleep. Note that although events might be lost while the AP is asleep, the
+  sensor will still consume power if it is not explicitly deactivated by the
+  application.
+
+  \end{itemize}
+}
+
+\subsection{Documents targeted at manufacturers}
+
+\href{https://source.android.com/devices/sensors/index.html}{Sensors}
+\begin{itemize}
+\item \href{https://source.android.com/devices/sensors/suspend-mode.html}
+  {Suspend mode} (non-wake-up and wake-up sensors)
+  
+\item \href{https://source.android.com/devices/sensors/batching.html}
+  {Batching} (FIFO)
+\end{itemize}
+
+
+\subsection{Sensor's type}
+
+\textbf{Type by functionality.} 
+\vspace*{.5cm}
+
+{\scriptsize
+\begin{tabular}{llll}
+% TYPE_DEVICE_PRIVATE_BASE
+% The lowest sensor type vendor defined sensors can use.
+  \toprule
+  Constant                            & sensor type                                 & API level & others                      \\
+  \midrule
+  TYPE\_ACCELEROMETER                 & an accelerometer sensor type                & 3         &                           \\
+  TYPE\_ACCELEROMETER\_UNCALIBRATED   & an uncalibrated accelerometer sensor        & O         &                           \\
+  TYPE\_ALL                           & all sensor types                            & 3         &                           \\
+  TYPE\_AMBIENT\_TEMPERATURE          & an ambient temperature sensor type          & 14        &                           \\
+  TYPE\_GAME\_ROTATION\_VECTOR        & an uncalibrated rotation vector sensor type & 18        &                           \\
+  TYPE\_GEOMAGNETIC\_ROTATION\_VECTOR & a geo-magnetic rotation vector              & 19        &                           \\
+  TYPE\_GRAVITY                       & a gravity sensor type                       & 9         &                           \\
+  TYPE\_GYROSCOPE                     & a gyroscope sensor type                     & 3         &                           \\
+  TYPE\_GYROSCOPE\_UNCALIBRATED       & an uncalibrated gyroscope sensor type       & 18        &                           \\
+  TYPE\_HEART\_BEAT                   & a motion detect sensor                      & 24        &                           \\
+  TYPE\_HEART\_RATE                   & a heart rate monitor                        & 20        &                           \\
+  TYPE\_LIGHT                         & a light sensor type                         & 3         &                           \\
+  TYPE\_LINEAR\_ACCELERATION          & a linear acceleration sensor type           & 9         &                           \\
+  TYPE\_LOW\_LATENCY\_OFFBODY\_DETECT & a low latency off-body detect sensor        & O         &                           \\
+  TYPE\_MAGNETIC\_FIELD               & a magnetic field sensor type                & 3         &                           \\
+  TYPE\_MAGNETIC\_FIELD\_UNCALIBRATED & an uncalibrated magnetic field sensor type  & 18        &                           \\
+  TYPE\_MOTION\_DETECT                & a motion detect sensor                      & 24        &                           \\
+  TYPE\_ORIENTATION                   &                                             & 3         & Deprecated in API level 8 \\
+  TYPE\_POSE\_6DOF                    & a pose sensor with 6 degrees of freedom     & 24        &                           \\
+  TYPE\_PRESSURE                      & a pressure sensor type                      & 3         &                           \\
+  TYPE\_PROXIMITY                     & a proximity sensor type                     & 3         & wake up sensor            \\
+  TYPE\_RELATIVE\_HUMIDITY            & a relative humidity sensor type             & 14        &                           \\
+  TYPE\_ROTATION\_VECTOR              & a rotation vector sensor type               & 9         &                           \\
+  TYPE\_SIGNIFICANT\_MOTION           & a significant motion trigger sensor         & 18        & wake up sensor            \\
+  TYPE\_STATIONARY\_DETECT            & a stationary detect sensor                  & 24        &                           \\
+  TYPE\_STEP\_COUNTER                 & a step counter sensor                       & 19        &                           \\
+  TYPE\_STEP\_DETECTOR                & a step detector sensor                      & 19        &                           \\
+  TYPE\_TEMPERATURE                   &                                             & 3         & Deprecated in API 14      \\
+  \bottomrule
+\end{tabular} 
+}
+
+\textbf{Type by hardware feature}
+\begin{itemize}
+\item \textbf{Non-wake-up sensors}
+
+  Non-wake-up sensors are sensors that do not prevent the SoC from going into
+  suspend mode and do not wake the SoC up to report data. In particular, the
+  drivers are not allowed to hold wake-locks. It is the responsibility of
+  applications to keep a partial wake lock should they wish to receive events
+  from non-wake-up sensors while the screen is off. While the SoC is in suspend
+  mode, the sensors must continue to function and generate events, which are put
+  in a hardware FIFO.
+  %(See Batching for more details.)
+  The events in the FIFO are delivered to the applications when the SoC wakes
+  up. If the FIFO is too small to store all events, the older events are lost;
+  the oldest data is dropped to accommodate the latest data. In the extreme case
+  where the FIFO is nonexistent, all events generated while the SoC is in
+  suspend mode are lost. One exception is the latest event from each on-change
+  sensor: the last event must be saved outside of the FIFO so it cannot be lost.
+
+  As soon as the SoC gets out of suspend mode, all events from the FIFO are
+  reported and operations resume as normal.
+
+  Applications using non-wake-up sensors should either hold a wake lock to
+  ensure the system doesn't go to suspend, unregister from the sensors when they
+  do not need them, or expect to lose events while the SoC is in suspend mode.
+
+\item \textbf{Wake-up sensors}
+
+  In opposition to non-wake-up sensors, wake-up sensors ensure that their data
+  is delivered independently of the state of the SoC. While the SoC is awake,
+  the wake-up sensors behave like non-wake-up-sensors. When the SoC is asleep,
+  wake-up sensors must wake up the SoC to deliver events. They must still let
+  the SoC go into suspend mode, but must also wake it up when an event needs to
+  be reported. That is, the sensor must wake the SoC up and deliver the events
+  before the maximum reporting latency has elapsed or the hardware FIFO gets
+  full. %See Batching for more details.
+
+  To ensure the applications have the time to receive the event before the SoC
+  goes back to sleep, the driver must hold a "timeout wake lock" for 200
+  milliseconds each time an event is being reported. That is, the SoC should not
+  be allowed to go back to sleep in the 200 milliseconds following a wake-up
+  interrupt. This requirement will disappear in a future Android release, and we
+  need this timeout wake lock until then.
+\end{itemize}
+
+
+
+
+

@@ -1,7 +1,0 @@
-auto/
-*.aux
-*.log
-*.out
-*.pdf
-*.fls
-*.gdb_latexmk
