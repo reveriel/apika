@@ -1,14 +1,5 @@
-\documentclass{article}
-\usepackage[colorlinks=true]{hyperref}
-\usepackage[margin=2cm]{geometry}
-\usepackage{booktabs}
 
-
-\title{How to get a wake-up or a non-wake-up sensor}
-
-\begin{document}
-\section{Use SensorManager to Acquire Sensors}
-\subsection{Use SensorManager.getDefaultSensor}
+\subsubsection{Use SensorManager.getDefaultSensor}
 根据
 \href{https://source.android.com/devices/sensors/sensor-types.html}
      {Sensor-Types文档}
@@ -87,13 +78,12 @@ Android Sensor，下面列出了文档中提到的可能的sensor类型，以及
     \end{itemize}
 \end{itemize}
 
-\subsection{Use SensorManager.getSensorList}
+\subsubsection{Use SensorManager.getSensorList}
 List<Sensor> SensorManager.getSensorList(int type)返回指定类型的所有可用的
 Android Sensors，其中包括了wake-up sensor和non-wake-up sensor，可以使用
 bool Sensor.isWakeUpSensor()函数判断其wake-up propertity.
 
-\subsection{Use SensorManager.getDynamicSensorList}
+\subsubsection{Use SensorManager.getDynamicSensorList}
 List<Sensor> SensorManager.getDynamicSensorList(int type)类似
 getSensorList暂不清楚什么是dynamic sensor。
 
-\end{document}
