@@ -1,13 +1,13 @@
 all:
-		latexmk -pdfxe -pv
+	latexmk -pdf -xelatex -pv
 
 # continuous preview, recompile when detecting file changed
 pvc:
-		latexmk -pdfxe -pvc
+	latexmk -pdf -xelatex -pvc
 
 clean:
-		latexmk -c
+	latexmk -c
 
 realclean:
-		latexmk -C
+	latexmk -C
 

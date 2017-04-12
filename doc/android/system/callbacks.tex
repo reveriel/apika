@@ -71,21 +71,61 @@ process while it is doing important work."
 
 \textbf{lifecycle bugs}
 
+
+
 \subsection{Activity}
 \label{sec:orgheadline8}
 ref : \href{https://developer.android.com/guide/components/activities/activity-lifecycle.html}{link: dev > API Guides > App Components > Activities}
 
+\begin{wrapfigure}{R}{0.5\textwidth}
+  \centering
+  \includegraphics[width=.5\textwidth]{img/activity_lifecycle}
+  \caption{The Lifecycle of Activity}
+\end{wrapfigure}
+
 For example, good implementation of the lifecycle callbacks can help ensure
 that your app avoids:
 \begin{itemize}
-\item Crashing if the user receives a phone call or switches to another app while
-using your app.
-\item Consuming valuable system resources when the user is not actively using it.
-\item Losing the user's progress if they leave your app and return to it at a later
-time.
+\item Crashing if the user receives a phone call or switches to another app
+  while using your app.
+\item Consuming valuable system resources when the user is not actively using
+  it.
+\item Losing the user's progress if they leave your app and return to it at a
+  later time.
 \item Crashing or losing the user's progress when the screen rotates between
+  landscape and portrait orientation.
 \end{itemize}
-landscape and portrait orientation.
+
+
+The \emph{entire lifetime} is between \texttt{onCreate()} and
+\texttt{onDestroy()}. The \emph{visible lifetime} is between
+\texttt{onStart()} and \texttt{onStop()}. The \emph{foreground lifetime} is
+between \texttt{onResume()} and \texttt{onPause()}
+
+Activity is a class. User extends this class will implement \texttt{onCreate()}
+to do their initial setup. You should always call up to your superclass when
+implementing these methods.
+
+
+\subsubsection{Starting Activities and Getting Results}
+
+\begin{itemize}
+\item 
+  \texttt{startActvity(Intent)} : start an activity on the top of the activity
+  stack, \texttt{Intent} describes the activity to be executed.
+\item
+  \texttt{startActvitiyForResult(Intent, int)} : start an activity with a second
+  integer parameter identifying the call.
+\item 
+  \texttt{onActivityResult(int, int, Intent)} : callback where you get the result.
+\item 
+  \texttt{setResult(int)} : use this to return data
+\end{itemize}
+
+  
+  
+
+
 
 
 
