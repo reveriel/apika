@@ -1,14 +1,5 @@
-\documentclass{article}
-\usepackage[colorlinks=true]{hyperref}
-\usepackage[margin=2cm]{geometry}
-\usepackage{booktabs}
 
-
-\title{Semantics of SensorManager API}
-
-\begin{document}
-
-\section{How to get a wakeup or non-wakeup sensor}
+\subsection{How to get a wakeup or non-wakeup sensor}
 class SensorManager提供的获取sensor的API有
 \begin{lstlisting}
 Sensor getDefaultSensor(int type)
@@ -85,8 +76,8 @@ Sensor getDefaultSensor(int type)
       \end{itemize}
 \end{itemize}
 
-\section{Sensor Registration and Unregistration}
-\subsection{Registration}
+\subsection{Sensor Registration and Unregistration}
+\subsubsection{Registration}
 Class SensorManager中用于sensor registration的API有
 \begin{lstlisting}
 boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs)
@@ -120,7 +111,7 @@ boolean registerListener(SensorEventListener listener, Sensor sensor, int sampli
 \end{itemize}
 
 
-\subsection{Unregistration}
+\subsubsection{Unregistration}
 Class SensorManager中用于sensor registration的API有
 \begin{lstlisting}
 void unregisterListener(SensorEventListener listener)
@@ -129,7 +120,7 @@ void unregisterListener(SensorEventListener listener, Sensor sensor)
 //unregister a listener for the sensors with which it is registered
 \end{lstlisting}
 
-\subsection{TODO}
+\subsubsection{TODO}
 这里是一些文档中提到的good practice，或许能作为TODO
 \begin{itemize}
   \item 文档提到不要将registerListener函数用于one shot trigger sensor such as
@@ -142,16 +133,16 @@ one shot两种(不同功能类型不同)，TODO)
     \end{itemize}
 \end{itemize}
 
-\section{Bizarre Usage Examples}
+\subsection{Bizarre Usage Examples}
 这一节通过实际运行一些反常的例子来进一步了解上述API的语义。
-\subsection{On SensorManager Instance}
+\subsubsection{On SensorManager Instance}
 \begin{lstlisting}
 m1=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
 m2=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
 //m1==m2
 \end{lstlisting}
 
-\subsection{On Getting Sensors}
+\subsubsection{On Getting Sensors}
 \begin{lstlisting}
 m=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
 s1=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
@@ -171,7 +162,7 @@ l2=m.getSensorList(SENSOR\_TYPE\_ALL)
 //l1==l2
 \end{lstlisting}
 
-\subsection{On Registration}
+\subsubsection{On Registration}
 \begin{lstlisting}
 SensorEventListener l //suppose initialized
 s=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
@@ -182,4 +173,3 @@ m.registerListener(l,s,rate)
 m.unregisterListener(l,s1,rate) //function type of s1 != function type of s
 //debug: m.mSensorListeners.size = 1
 \end{lstlisting}
-\end{document}
