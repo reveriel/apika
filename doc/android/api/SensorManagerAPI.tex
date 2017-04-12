@@ -1,0 +1,185 @@
+\documentclass{article}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs}
+
+
+\title{Semantics of SensorManager API}
+
+\begin{document}
+
+\section{How to get a wakeup or non-wakeup sensor}
+class SensorManager提供的获取sensor的API有
+\begin{lstlisting}
+Sensor getDefaultSensor(int type)
+Sensor getDefaultSensor(int type, boolean wakeup)
+List<Sensor> getSensorList(int type)
+\end{lstlisting}
+此外class Sensor没有构造函数，其public method方法名
+都是get开头的，也就是说获取sensor的相关信息，所以也不太可能
+通过class Sensor的接口对sensor进行配置。下面详细介绍
+三个函数的语义。
+\par{
+如果指定功能类型的wakeup/non-wakeup sensor
+确实存在，那么
+\begin{lstlisting}
+Sensor getDefaultSensor(type,true/false)
+\end{lstlisting}
+该功能类型的wakeup/non-wakeup sensor引用，
+否则返回null。
+}
+\par{
+\begin{lstlisting}
+List<Sensor> getSensorList(int type)
+\end{lstlisting}
+返回所有的指定功能类型的sensor，同时包括了
+wakeup和non-wakeup sensor，程序员可能需要用
+\begin{lstlisting}
+Sensor.isWakeUpSensor(void)
+\end{lstlisting}
+方法确定返回的列表中的sensor是否是wakeup的。
+}
+
+\par{
+根据
+\href{https://source.android.com/devices/sensors/sensor-types.html}
+     {Sensor-Types文档}
+和
+\href{https://developer.android.com/reference/android/hardware/SensorManager.html}{SensorManager文档}
+calss SensorManager.getDefaultSensor(int type)
+\begin{lstlisting}
+Sensor getDefaultSensor(int type)
+\end{lstlisting}
+的行为由下面的内容描述，如果落在wakeup/non-wakeup类别中的
+某一个功能类型的sensor不存在，那么函数返回null
+\begin{itemize}
+    \item non-wakeup
+      \begin{itemize}
+      \item SENSOR\_TYPE\_ACCELEROMETER
+      \item SENSOR\_TYPE\_AMBIENT\_TEMPERATURE
+      \item SENSOR\_TYPE\_MAGNETIC\_FIELD == SENSOR\_TYPE\_MAGNETIC\_FIELD
+      \item SENSOR\_TYPE\_GYROSCOPE
+      \item SENSOR\_TYPE\_HEART\_RATE
+      \item SENSOR\_TYPE\_LIGHT
+      \item SENSOR\_TYPE\_PRESSURE
+      \item SENSOR\_TYPE\_RELATIVE\_HUMIDITY
+      \item SENSOR\_TYPE\_LINEAR\_ACCELERATION
+      \item SENSOR\_TYPE\_STEP\_DETECTOR
+      \item SENSOR\_TYPE\_STEP\_COUNTER
+      \item SENSOR\_TYPE\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_GAME\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_GRAVITY
+      \item SENSOR\_TYPE\_GEOMAGNETIC\_ROTATION\_VECTOR
+      \item SENSOR\_TYPE\_ORIENTATION (deprecated)
+      \item SENSOR\_TYPE\_GYROSCOPE\_UNCALIBRATED
+      \item SENSOR\_TYPE\_MAGNETIC\_FIELD\_UNCALIBRATED
+      \end{itemize}
+    \item wakeup
+      \begin{itemize}
+      \item SENSOR\_TYPE\_PROXIMITY
+      \item SENSOR\_TYPE\_SIGNIFICANT\_MOTION
+      \item SENSOR\_TYPE\_TILT\_DETECTOR
+      \item SENSOR\_TYPE\_WAKE\_GESTURE
+      \item SENSOR\_TYPE\_PICK\_UP\_GESTURE
+      \item SENSOR\_TYPE\_GLANCE\_GESTURE
+      \end{itemize}
+\end{itemize}
+
+\section{Sensor Registration and Unregistration}
+\subsection{Registration}
+Class SensorManager中用于sensor registration的API有
+\begin{lstlisting}
+boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs)
+
+boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs)
+
+boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, Handler handler)
+
+boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs, Handler handler)
+\end{lstlisting}
+其中参数、返回值的含义是
+\begin{itemize}
+  \item listener: omitted
+  \item sensor: omitted
+  \item samplingPeriodUs:The rate sensor events are delivered at. 
+    应该注意这个参数并不是指硬件的采样频率。此外这个参数对于Android System
+    而言只是一个hint，实际events被deliver的频率可以快于或者慢于这个参数
+    指定的频率(通常是快于)。实参的值可以是
+      \begin{itemize}
+        \item SENSOR\_DELAY\_NORMAL
+        \item SENSOR\_DELAY\_UI
+        \item SENSOR\_DELAY\_GAME
+        \item SENSOR\_DELAY\_FASTEST
+      \end{itemize}
+      或者以microseconds为单位的期望的值。
+  \item maxReportLatencyUs:当sensor event到达后，最大的可以延迟该event delivery
+    的时间，单位是microseconds，如果这个参数是0那么等价于调用
+    registerListener(listener,sensor,samplingPeriodUs)。
+  \item handler: the handler the sensor event will be delivered to
+  \item 返回值: true if the sensor is supported and successfully enabled
+\end{itemize}
+
+
+\subsection{Unregistration}
+Class SensorManager中用于sensor registration的API有
+\begin{lstlisting}
+void unregisterListener(SensorEventListener listener)
+//unregisters a listener for all sensors
+void unregisterListener(SensorEventListener listener, Sensor sensor)
+//unregister a listener for the sensors with which it is registered
+\end{lstlisting}
+
+\subsection{TODO}
+这里是一些文档中提到的good practice，或许能作为TODO
+\begin{itemize}
+  \item 文档提到不要将registerListener函数用于one shot trigger sensor such as
+SENSOR\_TYPE\_SIGNIFICANT\_MOTION。(sensor event提交的方式被分为continuous和
+one shot两种(不同功能类型不同)，TODO)
+  \item samplingPeriodUs和maxReportLatencyUs的值
+    \begin{itemize}
+      \item 是否non-positive
+      \item maxReportLatencyUs不为0意味着有FIFO buffer存储sensor events
+    \end{itemize}
+\end{itemize}
+
+\section{Bizarre Usage Examples}
+这一节通过实际运行一些反常的例子来进一步了解上述API的语义。
+\subsection{On SensorManager Instance}
+\begin{lstlisting}
+m1=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
+m2=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
+//m1==m2
+\end{lstlisting}
+
+\subsection{On Getting Sensors}
+\begin{lstlisting}
+m=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
+s1=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
+s2=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
+s3=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER,false) //non-wakeup
+s4=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER,true)  //I have not got this
+//s4==null && s1==s2 && s2==s3
+
+s1=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY)  //wakeup
+s2=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY)  //wakeup
+s3=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY,true) //wakeup
+s4=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY,false)  //non-wakeup
+//s1==s2 && s2==s3 && s4!=null && s4!=s1
+
+l1=m.getSensorList(SENSOR\_TYPE\_ALL)
+l2=m.getSensorList(SENSOR\_TYPE\_ALL)
+//l1==l2
+\end{lstlisting}
+
+\subsection{On Registration}
+\begin{lstlisting}
+SensorEventListener l //suppose initialized
+s=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
+m.registerListener(l,s,rate)
+//debug: m.mSensorListeners.size = 1
+m.registerListener(l,s,rate)
+//debug: m.mSensorListeners.size = 1
+m.unregisterListener(l,s1,rate) //function type of s1 != function type of s
+//debug: m.mSensorListeners.size = 1
+\end{lstlisting}
+\end{document}
