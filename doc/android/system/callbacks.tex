@@ -13,6 +13,7 @@ create additional threads for any process.
 In manifest file, each type of component element (e.g. \texttt{<activity>}) and
 \texttt{<application>} supports an \texttt{android:process} attribute that can specify a
 process in which that component should run.
+
 \subsection{Threads}
 \label{sec:orgheadline4}
 A main thread is created when an application is launched. THsi thread is in
@@ -74,10 +75,10 @@ process while it is doing important work."
 
 
 \subsection{Activity}
-\label{sec:orgheadline8}
+
 ref : \href{https://developer.android.com/guide/components/activities/activity-lifecycle.html}{link: dev > API Guides > App Components > Activities}
 
-\begin{wrapfigure}{r}{0.5\textwidth}
+\begin{wrapfigure}[20]{r}{0.5\textwidth}
   % \centering
   \includegraphics[width=.5\textwidth]{img/activity_lifecycle}
   \caption{The Lifecycle of Activity}
@@ -106,23 +107,53 @@ Activity is a class. User extends this class will implement \texttt{onCreate()}
 to do their initial setup. You should always call up to your superclass when
 implementing these methods.
 
-
 \subsubsection{Starting Activities and Getting Results}
 
 \begin{itemize}
-\item 
-  \texttt{startActvity(Intent)} : start an activity on the top of the activity
-  stack, \texttt{Intent} describes the activity to be executed.
-\item
-  \texttt{startActvitiyForResult(Intent, int)} : start an activity with a second
-  integer parameter identifying the call.
-\item 
-  \texttt{onActivityResult(int, int, Intent)} : callback where you get the result.
-\item 
-  \texttt{setResult(int)} : use this to return data
+\item \texttt{startActvity(Intent)} : start an activity on the top of the
+  activity stack, \texttt{Intent} describes the activity to be executed.
+\item \texttt{startActvitiyForResult(Intent, int)} : start an activity with a
+  second integer parameter identifying the call.
+\item \texttt{onActivityResult(int, int, Intent)} : callback where you get the
+  result.
+\item \texttt{setResult(int)} : use this to return data
 \end{itemize}
 
+\subsubsection{Process Lifecycle Based on Activity Lifecycle}
+\begin{enumerate}
+\item \textbf{Foreground activity} : visible, interactive
+\item \textbf{Visible activity} : visible, not interactive, such as one sitting
+  behind a foreground dialog.
+\item \textbf{Backfround activity} : invisible, so the system may safely kill
+  its process to reclaim memory.
+\item \textbf{Empty process} : a process hosting no activites or other
+  application components.
+\end{enumerate} 
+
+
+\subsection{Service}
+
+% ref : \href{https://developer.android.com/reference/android/app/Service.html}
+% {link: dev > API Guides > App Components > Activities}
+
+Service is not a separate process, neither a thread. It is running in the
+application's main process unless otherwise specified. Service is a facility for
+the application to tell the system about something it wants to be doing in the
+background to expose some of its functionality to other apps.
+
+
+
+\subsection{Content Providers}
+
+
+
+
+
+
+
+
   
+
 
 
 

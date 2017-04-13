@@ -1,11 +1,15 @@
 
 \subsection{How to get a wakeup or non-wakeup sensor}
-class SensorManager提供的获取sensor的API有
+
+\texttt{SensorManager} provides three ways to get a \texttt{Sensor} (not
+dynamic)
+
 \begin{lstlisting}
 Sensor getDefaultSensor(int type)
 Sensor getDefaultSensor(int type, boolean wakeup)
 List<Sensor> getSensorList(int type)
 \end{lstlisting}
+
 此外class Sensor没有构造函数，其public method方法名
 都是get开头的，也就是说获取sensor的相关信息，所以也不太可能
 通过class Sensor的接口对sensor进行配置。下面详细介绍
@@ -44,11 +48,12 @@ Sensor getDefaultSensor(int type)
 的行为由下面的内容描述，如果落在wakeup/non-wakeup类别中的
 某一个功能类型的sensor不存在，那么函数返回null
 \begin{itemize}
+  \scriptsize
     \item non-wakeup
       \begin{itemize}
       \item SENSOR\_TYPE\_ACCELEROMETER
       \item SENSOR\_TYPE\_AMBIENT\_TEMPERATURE
-      \item SENSOR\_TYPE\_MAGNETIC\_FIELD == SENSOR\_TYPE\_MAGNETIC\_FIELD
+      \item SENSOR\_TYPE\_MAGNETIC\_FIELD
       \item SENSOR\_TYPE\_GYROSCOPE
       \item SENSOR\_TYPE\_HEART\_RATE
       \item SENSOR\_TYPE\_LIGHT
@@ -80,13 +85,14 @@ Sensor getDefaultSensor(int type)
 \subsubsection{Registration}
 Class SensorManager中用于sensor registration的API有
 \begin{lstlisting}
-boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs)
-
-boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs)
-
-boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, Handler handler)
-
-boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs, Handler handler)
+boolean registerListener(SensorEventListener listener, Sensor sensor,
+                        int samplingPeriodUs)
+boolean registerListener(SensorEventListener listener, Sensor sensor,
+                        int samplingPeriodUs, int maxReportLatencyUs)
+boolean registerListener(SensorEventListener listener, Sensor sensor,
+                        int samplingPeriodUs, Handler handler)
+boolean registerListener(SensorEventListener listener, Sensor sensor,
+                        int samplingPeriodUs, int maxReportLatencyUs, Handler handler)
 \end{lstlisting}
 其中参数、返回值的含义是
 \begin{itemize}
@@ -103,16 +109,15 @@ boolean registerListener(SensorEventListener listener, Sensor sensor, int sampli
         \item SENSOR\_DELAY\_FASTEST
       \end{itemize}
       或者以microseconds为单位的期望的值。
-  \item maxReportLatencyUs:当sensor event到达后，最大的可以延迟该event delivery
-    的时间，单位是microseconds，如果这个参数是0那么等价于调用
-    registerListener(listener,sensor,samplingPeriodUs)。
+  \item maxReportLatencyUs : 当 sensor event 到达后，最大的可以延迟该 event delivery
+    的时间，单位是 microseconds，如果这个参数是0那么等价于调用
+    registerListener ( listener, sensor, samplingPeriodUs ) 。
   \item handler: the handler the sensor event will be delivered to
   \item 返回值: true if the sensor is supported and successfully enabled
 \end{itemize}
 
-
 \subsubsection{Unregistration}
-Class SensorManager中用于sensor registration的API有
+Class SensorManager 中用于 sensor registration 的 API 有
 \begin{lstlisting}
 void unregisterListener(SensorEventListener listener)
 //unregisters a listener for all sensors
@@ -123,18 +128,18 @@ void unregisterListener(SensorEventListener listener, Sensor sensor)
 \subsubsection{TODO}
 这里是一些文档中提到的good practice，或许能作为TODO
 \begin{itemize}
-  \item 文档提到不要将registerListener函数用于one shot trigger sensor such as
-SENSOR\_TYPE\_SIGNIFICANT\_MOTION。(sensor event提交的方式被分为continuous和
-one shot两种(不同功能类型不同)，TODO)
-  \item samplingPeriodUs和maxReportLatencyUs的值
+  \item 文档提到不要将 registerListener 函数用于 one shot trigger sensor such as
+SENSOR\_TYPE\_SIGNIFICANT\_MOTION。(sensor event 提交的方式被分为 continuous 和
+one shot 两种 ( 不同功能类型不同 )，TODO)
+  \item samplingPeriodUs 和 maxReportLatencyUs 的值
     \begin{itemize}
-      \item 是否non-positive
-      \item maxReportLatencyUs不为0意味着有FIFO buffer存储sensor events
+      \item 是否 non-positive
+      \item maxReportLatencyUs 不为 0 意味着有 FIFO buffer 存储 sensor events
     \end{itemize}
 \end{itemize}
 
 \subsection{Bizarre Usage Examples}
-这一节通过实际运行一些反常的例子来进一步了解上述API的语义。
+这一节通过实际运行一些反常的例子来进一步了解上述 API 的语义。
 \subsubsection{On SensorManager Instance}
 \begin{lstlisting}
 m1=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
@@ -145,27 +150,27 @@ m2=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
 \subsubsection{On Getting Sensors}
 \begin{lstlisting}
 m=getSystemService(SENSOR_SERVICE) //get a SensorManager instance
-s1=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
-s2=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
-s3=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER,false) //non-wakeup
-s4=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER,true)  //I have not got this
+s1=m.getDefaultSensor(SENSOR_TYPE_ACCELEROMETER)  //non-wakeup
+s2=m.getDefaultSensor(SENSOR_TYPE_ACCELEROMETER)  //non-wakeup
+s3=m.getDefaultSensor(SENSOR_TYPE_ACCELEROMETER,false) //non-wakeup
+s4=m.getDefaultSensor(SENSOR_TYPE_ACCELEROMETER,true)  //I have not got this
 //s4==null && s1==s2 && s2==s3
 
-s1=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY)  //wakeup
-s2=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY)  //wakeup
-s3=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY,true) //wakeup
-s4=m.getDefaultSensor(SENSOR\_TYPE\_PROXIMITY,false)  //non-wakeup
+s1=m.getDefaultSensor(SENSOR_TYPE_PROXIMITY)  //wakeup
+s2=m.getDefaultSensor(SENSOR_TYPE_PROXIMITY)  //wakeup
+s3=m.getDefaultSensor(SENSOR_TYPE_PROXIMITY,true) //wakeup
+s4=m.getDefaultSensor(SENSOR_TYPE_PROXIMITY,false)  //non-wakeup
 //s1==s2 && s2==s3 && s4!=null && s4!=s1
 
-l1=m.getSensorList(SENSOR\_TYPE\_ALL)
-l2=m.getSensorList(SENSOR\_TYPE\_ALL)
+l1=m.getSensorList(SENSOR_TYPE_ALL)
+l2=m.getSensorList(SENSOR_TYPE_ALL)
 //l1==l2
 \end{lstlisting}
 
 \subsubsection{On Registration}
 \begin{lstlisting}
 SensorEventListener l //suppose initialized
-s=m.getDefaultSensor(SENSOR\_TYPE\_ACCELEROMETER)  //non-wakeup
+s=m.getDefaultSensor(SENSOR_TYPE_ACCELEROMETER)  //non-wakeup
 m.registerListener(l,s,rate)
 //debug: m.mSensorListeners.size = 1
 m.registerListener(l,s,rate)
