@@ -4,11 +4,50 @@
 This part is about our experiment and system implementation.
 
 
+\section{Useful links}
+
+\href{https://github.com/ashishb/android-security-awesome}
+{android-security-awesome}
+
+
+
 \section{APK Collection}
 
 The dataset used in ``ELITE'''s work.
 
 \section{APK analysis}
+
+\subsection{Dalvik bytecode}
+
+official doc about dalvik bytecode 
+\href{https://source.android.com/devices/tech/dalvik/dalvik-bytecode}
+{link}.
+
+
+\subsection{Apktool}
+
+\href{https://ibotpeaches.github.io/Apktool/}{link}
+
+A tool for reverse engineering Android apk files.
+
+Freatures:
+\begin{itemize}
+\item Disassembling resources to nearly original form (including resources.arsc,
+  classes.dex, 9.png. and XMLs)
+\item Rebuilding decoded resources back to binary APK/JAR
+\item Organizing and handling APKs that depend on framework resources
+\item Smali Debugging (Removed in 2.1.0 in favor of IdeaSmali)
+\item Helping with repetitive tasks
+\end{itemize}
+
+\subsection{smali/baksmali}
+
+\href{https://github.com/JesusFreke/smali}{link}
+
+smali/baksmali is an assembler/disassembler for the dex format used by dalvik,
+Android's Java VM implementation. The syntax is loosely based on
+Jasmin's/dedexer's syntax, and supports the full functionality of the dex format
+(annotations, debug info, line info, etc.)
 
 
 
