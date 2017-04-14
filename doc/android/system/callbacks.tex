@@ -1,6 +1,5 @@
 
 \section{Processes and Threads}
-\label{sec:orgheadline7}
 ref : \href{https://developer.android.com/guide/components/processes-and-threads.html}{link: dev > API Guides > App Components > Processes and Threads}
 
 By default, all components of the same application run in the same process and
@@ -9,13 +8,11 @@ components in your application to run in separate processes, and you can
 create additional threads for any process.
 
 \subsection{Processes}
-\label{sec:orgheadline1}
 In manifest file, each type of component element (e.g. \texttt{<activity>}) and
 \texttt{<application>} supports an \texttt{android:process} attribute that can specify a
 process in which that component should run.
 
 \subsection{Threads}
-\label{sec:orgheadline4}
 A main thread is created when an application is launched. THsi thread is in
 charge of dispatching events to UI widgets and interactions with UI
 components from the Android UI toolkit. As such, the main thread is also
@@ -30,14 +27,23 @@ not thread-safe.
 \end{enumerate}
 
 \subsubsection{Worker threads}
-\label{sec:orgheadline2}
-Do blocking task in a new \texttt{Thread} and post UI update operations by methods
-such as \texttt{Activity.runOnUiThread(Runnable)} , \texttt{View.post(Runnable)},
-\texttt{View.postDelayed(Runnable, long)}. Or use \texttt{AsyncTask} to make this process
-esaier.
+Do blocking task in a new \texttt{Thread} and post UI update operations by
+methods such as \texttt{Activity.runOnUiThread(Runnable)} ,
+\texttt{View.post(Runnable)}, \texttt{View.postDelayed(Runnable, long)}. Or use
+\texttt{AsyncTask} to make this process esaier.
 
 \subsubsection{{\bfseries\sffamily TODO} Thread-safe methods}
-\label{sec:orgheadline3}
+
+\subsubsection{Looper, Handler and Message}
+
+\href{https://developer.android.com/reference/android/os/Looper.htm}{Looper}
+runs a loop for a thread. It maintains a Message Queue, and get Message from the
+quese repeatly until the queue is empty. 
+
+An application has a main loop (source code
+\href{https://github.com/android/platform_frameworks_base/blob/c29fff50322599f53feadf9cf87df9956c9ac44e/core/java/android/app/ActivityThread.java#L6124}{link})
+that handles application lifecycle events etc..
+
 
 \subsection{{\bfseries\sffamily TODO} Interproceess Communication}
 \label{sec:orgheadline5}
@@ -140,7 +146,6 @@ Service is not a separate process, neither a thread. It is running in the
 application's main process unless otherwise specified. Service is a facility for
 the application to tell the system about something it wants to be doing in the
 background to expose some of its functionality to other apps.
-
 
 
 \subsection{Content Providers}
