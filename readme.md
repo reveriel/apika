@@ -3,7 +3,24 @@
 ## prepare
 copy `config.properties.template` to `config.properties`
 
-## run
-`gradle test`
+## usage
+
+(if `gradle` is not installed, use `./gradlew`, not tested)
+
+run test :
+`$ gradle test`
+
+run on an apk:
+`$ gradle jar`
+`$ ./apika.sh  <apk-file>`
+
+output:
+`output.json`
+ 
+
+
+
+
+
 
 
