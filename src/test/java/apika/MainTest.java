@@ -28,7 +28,7 @@ public class MainTest {
 
         Main.main(new String[] {
                 "-cp", SOOT_CLASS_PATH,
-                "-x", "android",   // exclude  android package , not working
+                "-x", "android.*",   // exclude  android package , not working
                 "-android-jars", ANDROID_JARS,
                 "-src-prec", "apk",
                 "-p", "bb", "enabled:false",
