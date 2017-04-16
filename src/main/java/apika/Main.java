@@ -26,7 +26,7 @@ public class Main {
         configurationInit();
         initSootOptions(args);
         addComponentTransformer();
-        soot.Main.main(new String[]{"-process-dir", args[0]});
+        soot.Main.main(new String[]{"-allow-phantom-refs", "-process-dir", args[0]});
         createOutput();
     }
 
@@ -38,11 +38,11 @@ public class Main {
     }
 
     static void initSootOptions(String[] args) {
-//        Options.v().set_soot_classpath(SOOT_CLASS_PATH); // -cp
+//        Options.v().set_soot_classpath(SOOT_CLASS_PATH); // -cp // no need
+        // Options.v().allow_phantom_refs(); // -allow-phantom-refs //doesnt' work ??????
         Options.v().set_exclude(new ArrayList<String>(Arrays.asList("android.*"))); // -x
         Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
-        Options.v().allow_phantom_refs(); // -allow-phantom-refs
         Options.v().set_output_format(Options.output_format_n); // -output-format n
 //        Options.v().set_process_dir(Arrays.asList(args));
     }
