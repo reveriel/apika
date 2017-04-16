@@ -13,4 +13,5 @@ gradle-app.setting
 /sootOutput/
 config.properties
 
-/output/
+!output
+/output/*.json

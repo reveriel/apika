@@ -5,7 +5,7 @@ copy `config.properties.template` to `config.properties`
 
 ## usage
 
-(if `gradle` is not installed, use `./gradlew`, not tested)
+(if `gradle` is not installed, use `./gradlew`)
 
 run test :
 `$ gradle test`
