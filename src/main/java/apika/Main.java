@@ -17,38 +17,25 @@ public class Main {
     public static void main(String[] args) {
 
 
-        final String ANDROID_JAR = "/Users/guoxing/Library/Android/sdk/platforms";
-
-
+//        final String ANDROID_JAR = "/Users/guoxing/Library/Android/sdk/platforms";
         // prefer android APK files // -src-prec apk
-        Options.v().set_src_prec(Options.src_prec_apk);
+//        Options.v().set_src_prec(Options.src_prec_apk);
 
 //       Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
 //       Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
-        Options.v().set_android_jars(ANDROID_JAR);
+//        Options.v().set_android_jars(ANDROID_JAR);
 
 
-        PrintWriter writer = null;
-        try {
-             writer = new PrintWriter("result.tex");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        final PrintWriter finalWriter = writer;
 
         PackManager.v().getPack("wjtp").add(
                 new Transform("wjtp.myTransform", new SceneTransformer() {
                     @Override
                     protected void internalTransform(String s, Map<String, String> map) {
                         System.out.println(Scene.v().getApplicationClasses());
-                        finalWriter.println(Scene.v().getApplicationClasses());
                     }
                 })
         );
 
-        writer.flush();
-        writer.close();
 
         soot.Main.main(args);
     }
