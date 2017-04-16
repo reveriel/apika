@@ -14,8 +14,8 @@ run on an apk:
 `$ gradle jar`
 `$ ./apika.sh  <apk-file>`
 
-output:
-`output.json`
+output:  (directory `output` needs to be created manually)
+`output/<apk-name>.json`
  
 
 

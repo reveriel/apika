@@ -101,7 +101,9 @@ public class Main {
         JSONObject obj = new JSONObject();
         List<String> apkNames= Options.v().process_dir();
         String apkName = apkNames.get(0);
-        apkName = apkName.replace('/','.');
+        apkName = apkName.replace('/','.');  // error : '/' in file name
+        apkName = apkName.replaceAll("^\\.+", ""); // remove leading '.' in file name
+
         obj.put("apk", apkName);
         JSONArray classesArray = new JSONArray();
         classesArray.addAll(classes);
