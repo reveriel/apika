@@ -28,10 +28,9 @@ public class MainTest {
 
         Main.main(new String[] {
                 "-cp", SOOT_CLASS_PATH,
-                "-x", "android.*",   // exclude  android package , not working
+                "-x", "android.*",
                 "-android-jars", ANDROID_JARS,
                 "-src-prec", "apk",
-                "-p", "bb", "enabled:false",
                 "-allow-phantom-refs",
                 "-process-dir", "src/test/resources/app-release-unsigned.apk"
         });
