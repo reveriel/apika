@@ -28,18 +28,20 @@ public class MainTest {
 
         Main.main(new String[] {
                 "-cp", SOOT_CLASS_PATH,
-                "-w",
                 "-x", "android",   // exclude  android package , not working
                 "-android-jars", ANDROID_JARS,
-                "-allow-phantom-refs",
-                "-process-dir", "src/test/resources/app-release-unsigned.apk",
                 "-src-prec", "apk",
+                "-p", "bb", "enabled:false",
+                "-allow-phantom-refs",
+                "-process-dir", "src/test/resources/app-release-unsigned.apk"
         });
     }
 
 
     /**
      * init JAVA_HOME, SOOT_CLASS_PATH, ANDROID_JARS
+     *
+     * java properties file examples : http://www.mkyong.com/java/java-properties-file-examples/
      */
     void configurationInit() {
 

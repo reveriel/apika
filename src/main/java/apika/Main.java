@@ -1,10 +1,7 @@
 package apika;
 
 
-import soot.PackManager;
-import soot.Scene;
-import soot.SceneTransformer;
-import soot.Transform;
+import soot.*;
 import soot.options.Options;
 
 import java.io.*;
@@ -26,16 +23,21 @@ public class Main {
 //        Options.v().set_android_jars(ANDROID_JAR);
 
 
+        // scenetransformer in whole-program packs
+        //bodytransformer in  jimple packs 'jtp', 'jop', 'jap'
 
-        PackManager.v().getPack("wjtp").add(
-                new Transform("wjtp.myTransform", new SceneTransformer() {
-                    @Override
-                    protected void internalTransform(String s, Map<String, String> map) {
-                        System.out.println(Scene.v().getApplicationClasses());
+        PackManager.v().getPack("jtp").add(
+                new Transform("jtp.myTransform", new BodyTransformer() {
+                    protected void internalTransform(Body body, String s, Map<String, String> map) {
+                        System.out.println(body.getMethod());
                     }
                 })
         );
 
+
+//        Options.v().
+
+        Options.v().set_output_format(Options.output_format_n);
 
         soot.Main.main(args);
     }
