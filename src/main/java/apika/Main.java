@@ -20,6 +20,7 @@ public class Main {
 
     // must be thread safe
     static Set<String> classes  = Collections.synchronizedSet(new HashSet<String>());
+    static Set<String> activities = Collections.synchronizedSet(new HashSet<String>());
 
     public static void main(String[] args) {
         checkArgs(args);
@@ -40,6 +41,7 @@ public class Main {
     static void initSootOptions(String[] args) {
 //        Options.v().set_soot_classpath(SOOT_CLASS_PATH); // -cp // no need
         // Options.v().allow_phantom_refs(); // -allow-phantom-refs //doesnt' work ??????
+
         Options.v().set_exclude(new ArrayList<String>(Arrays.asList("android.*"))); // -x
         Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
@@ -86,15 +88,8 @@ public class Main {
      */
     static void addComponentTransformer() {
         PackManager.v().getPack("jtp").add(
-                new Transform("jtp.componentTrans", new ComponentTransformer()));
-    }
-
-    // must be thread safe
-    static class ComponentTransformer extends BodyTransformer {
-        protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
-            SootClass sootClass = b.getMethod().getDeclaringClass();
-            classes.add(sootClass.toString());
-        }
+                new Transform("jtp.componentTrans",
+                        new Transformers.ComponentTransformer()));
     }
 
     static void createOutput() {
@@ -105,9 +100,16 @@ public class Main {
         apkName = apkName.replaceAll("^\\.+", ""); // remove leading '.' in file name
 
         obj.put("apk", apkName);
-        JSONArray classesArray = new JSONArray();
-        classesArray.addAll(classes);
-        obj.put("Class List", classesArray);
+        JSONArray array = null;
+
+        array = new JSONArray();
+        array.addAll(classes);
+        obj.put("Class List", array);
+
+        array = new JSONArray();
+        array.addAll(activities);
+        obj.put("Activity List", array);
+
 
         String OutputFileName = "output/" + apkName + ".json";
         try (FileWriter file = new FileWriter(OutputFileName)) {
