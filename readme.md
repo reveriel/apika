@@ -16,6 +16,9 @@ run on an apk:
 
 output:  (directory `output` needs to be created manually)
 `output/<apk-name>.json`
+
+pretty print output: (need tool `json_pp`)
+`cat output/<apk-name>.json | json_pp`
  
 
 
