@@ -2,6 +2,7 @@ package apika;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import soot.SootClass;
 import soot.options.Options;
 
 import java.io.FileWriter;
@@ -16,9 +17,9 @@ import java.util.Set;
  */
 public class Statistics {
     // must be thread safe
-    static Set<String> classes  = Collections.synchronizedSet(new HashSet<String>());
-    static Set<String> activities = Collections.synchronizedSet(new HashSet<String>());
-
+    private static Set<String> classes  = Collections.synchronizedSet(new HashSet<String>());
+    private static Set<String> activities = Collections.synchronizedSet(new HashSet<String>());
+    private static Set<String> services = Collections.synchronizedSet(new HashSet<String>());
 
     static void createOutput() {
         JSONObject obj = new JSONObject();
@@ -38,6 +39,10 @@ public class Statistics {
         array.addAll(activities);
         obj.put("Activity List", array);
 
+        array = new JSONArray();
+        array.addAll(services);
+        obj.put("Service List", array);
+
 
         String OutputFileName = "output/" + apkName + ".json";
         try (FileWriter file = new FileWriter(OutputFileName)) {
@@ -47,5 +52,32 @@ public class Statistics {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    static void addClass(SootClass sootClass) {
+        String outerClassName = getOuterClassName(sootClass.toString());
+
+
+        /**
+         *  check based on string compare
+         *  class name ended with 'Activity' is activity class
+         */
+        if (outerClassName.endsWith("Activity")) {
+            Statistics.activities.add(outerClassName);
+        } else if (outerClassName.endsWith("Service")) {
+            Statistics.services.add(outerClassName);
+        }
+
+        Statistics.classes.add(outerClassName);
+    }
+
+
+    /**
+     *  Inner classes has name like OuterClass$InnerClass
+     *  or OuterClass$1  (anonymous classes)
+     *  @return OuterClass name
+     */
+    private static String getOuterClassName(String className) {
+        return className.replaceAll("\\$.+$", "");
     }
 }

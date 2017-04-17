@@ -27,22 +27,14 @@ public class Transformers {
                     SootClass superClass = sootClass.getSuperclass();
                     System.out.println("Super Super class: " +
                             (superClass.hasSuperclass() ? superClass.getSuperclass().toString() : ""));
-//                System.out.println("is Lib class: " + (sootClass.isLibraryClass() ? "true" : "false"));
-//                System.out.println("is Appli class: " + (sootClass.isApplicationClass() ? "true" : "false"));
-//                System.out.println("is javalib class: " + (sootClass.isJavaLibraryClass() ? "true" : "false"));
+                    System.out.println("is Lib class: " + (sootClass.isLibraryClass() ? "true" : "false"));
+                    System.out.println("is Appli class: " + (sootClass.isApplicationClass() ? "true" : "false"));
+                    System.out.println("is javalib class: " + (sootClass.isJavaLibraryClass() ? "true" : "false"));
                 }
             }
 
-            String outerClassName = getOuterClassName(sootClass.toString());
+            Statistics.addClass(sootClass);
 
-            if (isActivityClass(outerClassName)) {
-                Statistics.activities.add(outerClassName);
-            }
-
-//            if (isApplicationComponentClass(sootClass)) {
-//                Statistics.activities.add(sootClass.toString());
-//            }
-            Statistics.classes.add(outerClassName);
         }
     }
 
@@ -56,24 +48,6 @@ public class Transformers {
     }
 
 
-    /**
-     *  check based on string compare
-     *  class name ended with 'Activity' is activity class
-     * @param className class name
-     * @return
-     */
-    static boolean isActivityClass(String className) {
-        return className.endsWith("Activity");
-    }
-
-    /**
-     *  Inner classes has name like OuterClass$InnerClass
-     *  or OuterClass$1  (anonymous classes)
-     *  @return OuterClass name
-     */
-    static String getOuterClassName(String className) {
-        return className.replaceAll("\\$.+$", "");
-    }
 
 
 
