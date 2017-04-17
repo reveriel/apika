@@ -1,10 +1,8 @@
 package apika;
 
-import apika.Main;
 import soot.Body;
 import soot.BodyTransformer;
 import soot.SootClass;
-import soot.options.Options;
 
 import java.util.Map;
 
@@ -20,6 +18,7 @@ public class Transformers {
     public static class ComponentTransformer extends BodyTransformer {
         protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
             SootClass sootClass = b.getMethod().getDeclaringClass();
+
             if (DEBUG) {
                 synchronized (lock) {
                     System.out.println("Class name: " + sootClass.toString());
@@ -34,11 +33,16 @@ public class Transformers {
                 }
             }
 
-            if (isApplicationComponentClass(sootClass)) {
-                Main.activities.add(sootClass.toString());
+            String outerClassName = getOuterClassName(sootClass.toString());
+
+            if (isActivityClass(outerClassName)) {
+                Statistics.activities.add(outerClassName);
             }
 
-            Main.classes.add(sootClass.toString());
+//            if (isApplicationComponentClass(sootClass)) {
+//                Statistics.activities.add(sootClass.toString());
+//            }
+            Statistics.classes.add(outerClassName);
         }
     }
 
@@ -50,5 +54,27 @@ public class Transformers {
         String className = klass.toString();
         return className.contains("Activity");
     }
+
+
+    /**
+     *  check based on string compare
+     *  class name ended with 'Activity' is activity class
+     * @param className class name
+     * @return
+     */
+    static boolean isActivityClass(String className) {
+        return className.endsWith("Activity");
+    }
+
+    /**
+     *  Inner classes has name like OuterClass$InnerClass
+     *  or OuterClass$1  (anonymous classes)
+     *  @return OuterClass name
+     */
+    static String getOuterClassName(String className) {
+        return className.replaceAll("\\$.+$", "");
+    }
+
+
 
 }
