@@ -3,10 +3,7 @@ package apika;
 import soot.*;
 import soot.options.Options;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
@@ -48,8 +45,9 @@ public class InitSoot {
         if (JAVA_HOME == null) {
             throw new RuntimeException("JAVA_HOME undefined");
         }
-
-        SOOT_CLASS_PATH = JAVA_HOME + "/jre/lib/rt.jar:" + JAVA_HOME + "/jre/lib/jsse.jar:.";
+        String separator = File.pathSeparator;
+        SOOT_CLASS_PATH = JAVA_HOME + "/jre/lib/rt.jar" + separator
+                + JAVA_HOME + "/jre/lib/jsse.jar" + separator + ".";
 
         // read config.properties
         Properties prop = new Properties();

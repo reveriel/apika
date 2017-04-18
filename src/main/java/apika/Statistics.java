@@ -2,6 +2,7 @@ package apika;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import soot.SootClass;
 import soot.options.Options;
 
@@ -27,7 +28,6 @@ public class Statistics {
         String apkName = apkNames.get(0);
         apkName = apkName.replace('/','.');  // error : '/' in file name
         apkName = apkName.replaceAll("^\\.+", ""); // remove leading '.' in file name
-
         obj.put("apk", apkName);
         JSONArray array = null;
 
