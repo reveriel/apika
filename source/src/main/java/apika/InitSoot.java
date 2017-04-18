@@ -13,8 +13,8 @@ import java.util.Properties;
  * Created by guoxing on 17/4/2017.
  */
 public class InitSoot {
-    static String JAVA_HOME;
-    static String SOOT_CLASS_PATH;
+    //static String JAVA_HOME;
+    //static String SOOT_CLASS_PATH;
     static String ANDROID_JARS;
 
     static void checkArgs(String[] args) {
@@ -41,17 +41,18 @@ public class InitSoot {
      */
     static void configurationInit() {
 
-        JAVA_HOME = System.getenv("JAVA_HOME");
-        if (JAVA_HOME == null) {
-            throw new RuntimeException("JAVA_HOME undefined");
-        }
-        String pathSeparator = File.pathSeparator;
-        String separator = File.separator;
-        String rtJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "rt.jar";
-        String jsseJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "jsse.jar";
+        //JAVA_HOME = System.getenv("JAVA_HOME");
+        //if (JAVA_HOME == null) {
+        //    throw new RuntimeException("JAVA_HOME undefined");
+        //}
+        //String pathSeparator = File.pathSeparator;
+        //String separator = File.separator;
+        //String rtJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "rt.jar";
+        //String jsseJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "jsse.jar";
         //SOOT_CLASS_PATH = JAVA_HOME + "/jre/lib/rt.jar" + pathSeparator
         //        + JAVA_HOME + "/jre/lib/jsse.jar" + pathSeparator + ".";
-        SOOT_CLASS_PATH = rtJar + pathSeparator + jsseJar + pathSeparator + ".";
+        //SOOT_CLASS_PATH = rtJar + pathSeparator + jsseJar + pathSeparator + ".";
+        //SOOT_CLASS_PATH = ".";
         // read config.properties
         Properties prop = new Properties();
         InputStream input = null;
