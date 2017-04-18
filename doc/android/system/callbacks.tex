@@ -150,15 +150,30 @@ background to expose some of its functionality to other apps.
 
 \subsection{Content Providers}
 
+You need to build a content provider if you want to provide one or more of the
+following features:
+\begin{itemize}
+\item You want to offer complex data or files to other applications.
+\item You want to allow users to copy complex data from your app into other
+  apps.
+\item You want to provide custom search suggestions using the search framework.
+\item You want to expose your application data to widgets. You want to implement
+  the AbstractThreadedSyncAdapter, CursorAdapter, or CursorLoader classes.
+\end{itemize}
+
+At construction time, the object \texttt{ContentProvider} is uninitialized, and
+most fields and methods are unavailable. Subclasses should initialize themselves
+in onCreate(), not the constructor.
+
+Content providers are created on the application main thread at application
+launch time. The constructor must not perform lengthy operations, or application
+startup will be delayed.
 
 
-
-
+\subsection{Broadcast Receiver}
 
 
 
   
-
-
 
 
