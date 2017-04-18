@@ -17,7 +17,10 @@ public class MainTest {
     @Test
     public void main() throws Exception {
 //        Main.main(new String[]{"-process-dir", "src/test/resources/app-release-unsigned.apk"});
-        Main.main(new String[]{"src/test/resources/app-release-unsigned.apk"});
+        //Main.main(new String[]{"src/test/resources/app-release-unsigned.apk"});
+        System.out.println(File.separator);
+        System.out.println(File.separatorChar);
+        System.out.println(File.pathSeparator);
     }
 
 
