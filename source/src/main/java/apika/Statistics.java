@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import soot.SootClass;
 import soot.options.Options;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -26,7 +27,7 @@ public class Statistics {
         JSONObject obj = new JSONObject();
         List<String> apkNames= Options.v().process_dir();
         String apkName = apkNames.get(0);
-        apkName = apkName.replace('/','.');  // error : '/' in file name
+        apkName = apkName.replace(File.separator.charAt(0),'.');  // error : '/' in file name
         apkName = apkName.replaceAll("^\\.+", ""); // remove leading '.' in file name
         obj.put("apk", apkName);
         JSONArray array = null;
@@ -44,7 +45,7 @@ public class Statistics {
         obj.put("Service List", array);
 
 
-        String OutputFileName = "output/" + apkName + ".json";
+        String OutputFileName = "output" + File.separator + apkName + ".json";
         try (FileWriter file = new FileWriter(OutputFileName)) {
             System.out.println(obj.toJSONString());
             file.write(obj.toJSONString());

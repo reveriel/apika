@@ -45,10 +45,13 @@ public class InitSoot {
         if (JAVA_HOME == null) {
             throw new RuntimeException("JAVA_HOME undefined");
         }
-        String separator = File.pathSeparator;
-        SOOT_CLASS_PATH = JAVA_HOME + "/jre/lib/rt.jar" + separator
-                + JAVA_HOME + "/jre/lib/jsse.jar" + separator + ".";
-
+        String pathSeparator = File.pathSeparator;
+        String separator = File.separator;
+        String rtJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "rt.jar";
+        String jsseJar = JAVA_HOME + separator + "jre" + separator + "lib" + separator + "jsse.jar";
+        //SOOT_CLASS_PATH = JAVA_HOME + "/jre/lib/rt.jar" + pathSeparator
+        //        + JAVA_HOME + "/jre/lib/jsse.jar" + pathSeparator + ".";
+        SOOT_CLASS_PATH = rtJar + pathSeparator + jsseJar + pathSeparator + ".";
         // read config.properties
         Properties prop = new Properties();
         InputStream input = null;
