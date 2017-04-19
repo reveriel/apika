@@ -3,8 +3,8 @@ package apika;
 
 import android.content.res.AXmlResourceParser;
 import android.content.res.XmlResourceParser;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import test.AXMLPrinter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +38,7 @@ public class Main {
         try {
             archive = new ZipFile(apkFile);
         } catch (IOException e) {
-            throw new RuntimeException("Error , I/O Erro in opening the apk file : " + apkFile);
+            throw new RuntimeException("Error , I/O Error in opening the apk file : " + apkFile);
         }
 
         ZipEntry entry =  archive.getEntry("AndroidManifest.xml");
@@ -57,19 +57,34 @@ public class Main {
         }
 
         // Parse the AndroidManifest.xml
+
         AXmlResourceParser parser = new AXmlResourceParser();
 
         parser.open(manifestIS);
 
         PrintStream out = System.out;
+
         try {
             int eventType = parser.getEventType();
             while (eventType != XmlResourceParser.END_DOCUMENT) {
                 switch (eventType) {
-                    case XmlResourceParser.START_DOCUMENT :  out.println("xml start");
-                    case XmlResourceParser.START_TAG : out.format("<%s>", parser.getName());
-                    case XmlResourceParser.TEXT : out.format("%s\n", parser.getText());
-                    case XmlResourceParser.END_TAG : out.format("</%s>", parser.getName());
+                    case XmlResourceParser.START_DOCUMENT :  out.println("xml start"); break;
+                    case XmlResourceParser.START_TAG :
+                        out.format("<%s", parser.getName());
+                        int AttrCnt = parser.getAttributeCount();
+                        for (int idx = 0; idx < AttrCnt; idx++) {
+                            out.format(" %s=\"%s\";"
+                                    ,parser.getAttributeName(idx)
+                                    , AXMLPrinter.getAttributeValue(parser, idx));
+//                                    parser.getAttributeValue(idx)); // this can not get correct value
+                        }
+                        out.println(">");
+                        break;
+                    case XmlResourceParser.TEXT :
+                        String text = parser.getText();
+                        out.format("%s", text == null ? "" : text);
+                        break;
+                    case XmlResourceParser.END_TAG : out.format("</%s>\n", parser.getName()); break;
                     default:
                 }
                 eventType = parser.next();

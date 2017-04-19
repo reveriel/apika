@@ -1,13 +1,8 @@
 package apika;
 
-import fj.test.reflect.Main;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Properties;
-
-import static org.junit.Assert.*;
+import java.io.File;
 
 /**
  * Created by guoxing on 1/4/2017.
@@ -16,7 +11,21 @@ public class MainTest {
 
     @Test
     public void main() throws Exception {
-        Main.main(new String[]{"src/test/resources/app-release-unsigned.apk"});
+
+        String sep = File.separator;
+
+        String testApk = "src" + sep
+                        + "test" + sep
+                        + "resources" + sep
+                        + "app-release-unsigned.apk";
+
+        File file = new File(testApk);
+        if (!file.exists()) {
+            throw new RuntimeException("apk file not found");
+        }
+
+        apika.Main.main(new String[]{testApk});
+
 //        System.out.println(File.separator);
 //        System.out.println(File.separatorChar);
 //        System.out.println(File.pathSeparator);

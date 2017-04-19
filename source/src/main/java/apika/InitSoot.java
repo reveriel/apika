@@ -61,7 +61,6 @@ public class InitSoot {
 
             prop.load(input);
             ANDROID_JARS = prop.getProperty("ANDROID_JARS");
-//            ANDROID_JARS = "/Users/guoxing/Library/Android/sdk/platforms";
             if (ANDROID_JARS == null) {
                 System.err.println("property 'ANDROID_JARS' undefined in file config.properties");
             }
