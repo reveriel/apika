@@ -1,9 +1,6 @@
 package apika;
 
-import soot.Body;
-import soot.BodyTransformer;
-import soot.Scene;
-import soot.SootClass;
+import soot.*;
 
 import java.util.Map;
 
@@ -35,7 +32,6 @@ public class Transformers {
             }
 
             Statistics.addClass(sootClass);
-
         }
     }
 

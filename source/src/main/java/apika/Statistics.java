@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import soot.SootClass;
+import soot.SootMethod;
 import soot.options.Options;
 
 import java.io.File;
