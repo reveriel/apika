@@ -1,26 +1,26 @@
-\usepackage{color}
 \documentclass{article}
+\usepackage{color}
 \title{On Statistics Program}
 \begin{document}
 \tableofcontents
 \section{Program Input}
 The command line is
-\begin{verbatime}
+\begin{verbatim}
 java apika.Main <APKName>
-\end{verbatime}
+\end{verbatim}
 The program also reads a file named 
 \textcolor{blue}{config.properties} located 
 located at the current working directory. 
 \par{
 The contents of the \textcolor{blue}{config.properties} 
 file is of the form.
-\begin{verbatime}
+\begin{verbatim}
 <PropertityName> = <PropertityValues>
 ......
-\end{verbatime}
+\end{verbatim}
 For the time being the \textcolor{blue}{PropertityName} can be
 \begin{itemize}
-	\item ANDROID_JARS : the path of android sdk(realized)
+	\item ANDROID\_JARS : the path of android sdk(realized)
 \end{itemize}
 }
 
@@ -115,11 +115,11 @@ get the virtual methods list with soot.)
 This kind of statistics can be generalized to 
 statistics on class hierachy.
 Properties like
-\begin{verbatime}
+\begin{verbatim}
 HierarchyBaseClasses = c1;c2;c3...
 HierarchyCollectVirtualMethodOverride = true/false
 HierarchyCollect* = *
-\end{verbatime}
+\end{verbatim}
 can be added to the \textcolor{blue}{config.properties} file, 
 the program reads the list, find all virtual methods defined,
 and get the statistics according to the related options.
@@ -147,18 +147,18 @@ but we also want more detailed information like,
 	 	\end{itemize}
 \end{itemize}
 So a property like
-\begin{verbatime}
+\begin{verbatim}
 HierarchyBaseClassesDetailed = c1;c2;c3...
-\end{verbatime}
+\end{verbatim}
 
 \subsubsection{Sensor and Wakelock Usage}
 The previous statistics applies here, as when 
 try to find the subclasses of Sensor the result 
 may be that there're no subclasses. 
 We can use a line like
-\begin{verbatime}
+\begin{verbatim}
 <ClassName> = method1;method2;method3...
-\end{verbatime}
+\end{verbatim}
 to indicate the (public) methods we are interested 
 in. And we can also find all the (public) methods 
 with soot when the amount is too large.
@@ -194,3 +194,6 @@ Interesting method list of PowerManager is
 %	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, Handler handler)
 %	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs, Handler handler)
 %\end{itemize}
+
+\end{document}
+

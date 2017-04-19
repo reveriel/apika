@@ -44,6 +44,9 @@ public class Transformers {
      */
     static boolean isApplicationComponentClass(SootClass klass) {
         String className = klass.toString();
+        klass.isApplicationClass();
+
+
         return className.contains("Activity");
     }
 
