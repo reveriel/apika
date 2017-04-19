@@ -3,12 +3,15 @@ package apika;
 
 import android.content.res.AXmlResourceParser;
 import android.content.res.XmlResourceParser;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import soot.Scene;
+import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.jimple.toolkits.callgraph.Edge;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -21,14 +24,20 @@ public class Main {
         InitSoot.checkArgs(args);
         InitSoot.configurationInit();
         InitSoot.initSootOptions(args);
-        InitSoot.addComponentTransformer();
+        //InitSoot.addComponentTransformer();
 
 
-        parseApkManifest(args[0]);
+        //parseApkManifest(args[0]);
 
         soot.Main.main(new String[]{"-allow-phantom-refs", "-process-dir", args[0]});
+        CallGraph cg = Scene.v().getCallGraph();
+        Iterator<Edge> it = cg.iterator();
+        while(it.hasNext())
+        {
+            System.out.println(it.next().toString());
+        }
+        //Statistics.createOutput();
 
-        Statistics.createOutput();
     }
 
     public static void parseApkManifest(String apkFile) {
