@@ -2,6 +2,7 @@ package apika;
 
 import soot.Body;
 import soot.BodyTransformer;
+import soot.Scene;
 import soot.SootClass;
 
 import java.util.Map;
@@ -46,6 +47,7 @@ public class Transformers {
         String className = klass.toString();
         klass.isApplicationClass();
 
+        Scene.v().getAndroidAPIVersion();
 
         return className.contains("Activity");
     }

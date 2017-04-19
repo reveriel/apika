@@ -56,8 +56,9 @@ public class Statistics {
     }
 
     static void addClass(SootClass sootClass) {
-        String outerClassName = getOuterClassName(sootClass.toString());
 
+        // Inner classes has name like OuterClass$InnerClass or OuterClass$1  (anonymous classes)
+        String outerClassName = (sootClass.hasOuterClass() ? sootClass.getOuterClass() : sootClass).toString();
 
         /**
          *  check based on string compare
@@ -72,13 +73,4 @@ public class Statistics {
         Statistics.classes.add(outerClassName);
     }
 
-
-    /**
-     *  Inner classes has name like OuterClass$InnerClass
-     *  or OuterClass$1  (anonymous classes)
-     *  @return OuterClass name
-     */
-    private static String getOuterClassName(String className) {
-        return className.replaceAll("\\$.+$", "");
-    }
 }
