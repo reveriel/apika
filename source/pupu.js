@@ -1,18 +1,23 @@
-var fs = require('fs');
+const fs = require('fs');
 
 
-var fileName = "output/src.test.resources.app-debug.apk.json";
+const fileName = "output/src.test.resources.app-debug.apk.json";
 
 
-var obj;
 
-fs.readFile(fileName, 'utf8', (err, data) => {
-    if (err) throw err;
-    obj = JSON.parse(data);
+
+const dirName = "output/";
+fs.readdir(dirName, (err, files) => {
+    files.forEach(parseOneFile);
 });
 
 
-console.log(obj);
-console.log(obj.Services);
+
+var appCnt = 0;
+function parseOneFile(fileName) {
+    appCnt++;
+    var obj = JSON.parse(fs.readFileSync(dirName + fileName, 'utf8'));
+    console.log(obj);
+}
 
 
