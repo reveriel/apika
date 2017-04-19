@@ -1,0 +1,196 @@
+\usepackage{color}
+\documentclass{article}
+\title{On Statistics Program}
+\begin{document}
+\tableofcontents
+\section{Program Input}
+The command line is
+\begin{verbatime}
+java apika.Main <APKName>
+\end{verbatime}
+The program also reads a file named 
+\textcolor{blue}{config.properties} located 
+located at the current working directory. 
+\par{
+The contents of the \textcolor{blue}{config.properties} 
+file is of the form.
+\begin{verbatime}
+<PropertityName> = <PropertityValues>
+......
+\end{verbatime}
+For the time being the \textcolor{blue}{PropertityName} can be
+\begin{itemize}
+	\item ANDROID_JARS : the path of android sdk(realized)
+\end{itemize}
+}
+
+\section{Kinds of Statistics}
+\subsubsection{Component Usage}
+Component base class list is
+\begin{itemize}
+	\item Activity
+		\begin{itemize}
+			\item AccountAuthenticatorActivity
+			\item ActivityGroup
+				\begin{itemize}
+					\item TabActivity
+				\end{itemize}
+			\item AliasActivity
+			\item ExpandableListActivity
+			\item FragmentActivity 
+				\begin{itemize}
+					\item AppCompatActivity
+				\end{itemize}
+			\item ListActivity
+				\begin{itemize}
+					\item LauncherActivity
+					\item PreferenceActivity
+				\end{itemize}
+			\item NativeActivity
+		\end{itemize}
+	\item Service
+		\begin{itemize}
+			\item AbstractInputMethodService
+				\begin{itemize}
+					\item InputMethodService
+				\end{itemize}
+			\item AccessibilityService
+			\item AutoFillService
+			\item CallScreeningService
+			\item CameraPrewarmService
+			\item CarrierMessagingService
+			\item CarrierService
+			\item ChooserTargetService
+			\item ConditionProviderService
+			\item ConnectionService
+			\item CustomTabService
+			\item DreamService
+			\item HostApduService
+			\item HostNfcFService
+			\item InCallService
+			\item IntentService
+			\item JobService
+			\item MediaBrowserService
+			\item MediaBrowserServiceCompat
+			\item MediaRouteProviderService
+			\item MidiDeviceService
+			\item NotificationCompatSideChannelService
+			\item NotificationListenerService
+			\item OffHostApduService
+			\item PostMessageService
+			\item PrintService
+			\item RecognitionService
+			\item RemoteViewsService
+			\item SettingInjectorService
+			\item SpellCheckerService
+			\item TextToSpeechService
+			\item TileService
+			\item TvInputService
+			\item VisualVoicemailService
+			\item VoiceInteractionService
+			\item VoiceInteractionSessionService
+			\item VpnService
+			\item VrListenerService
+			\item WallpaperService
+		\end{itemize}
+	\item BroadcastReceiver
+		\begin{itemize}
+			\item AppWidgetProvider
+			\item DeviceAdminReceiver
+			\item MediaButtonReceiver
+			\item RestrictionsReceiver
+			\item WakefulBroadcastReceiver
+		\end{itemize}
+	\item ContentProvider
+		\begin{itemize}
+			\item DocumentsProvider
+			\item FileProvider
+			\item MockContentProvider
+			\item SearchRecentSuggestionsProvider
+		\end{itemize}
+\end{itemize}
+(There're so many (virtual) methods. Maybe we can 
+get the virtual methods list with soot.)
+\par{
+This kind of statistics can be generalized to 
+statistics on class hierachy.
+Properties like
+\begin{verbatime}
+HierarchyBaseClasses = c1;c2;c3...
+HierarchyCollectVirtualMethodOverride = true/false
+HierarchyCollect* = *
+\end{verbatime}
+can be added to the \textcolor{blue}{config.properties} file, 
+the program reads the list, find all virtual methods defined,
+and get the statistics according to the related options.
+}
+\subsubsection{SensorEventListener Usage}
+(These are interfaces)Class list is 
+\begin{itemize}
+	\item SensorEventListener
+		\begin{itemize}
+			\item SensorEventListener2
+				\begin{itemize}
+					\item SensorEventCallback
+				\end{itemize}
+		\end{itemize}
+\end{itemize}
+This kind of statistics covers the hierarchy so 
+we can run the previous statistics on these 
+classes/interfaces,
+but we also want more detailed information like,
+\begin{itemize}
+	\item number of invocation point
+	 	\begin{itemize}
+	 		\item args are constant?
+	 		\item caller
+	 	\end{itemize}
+\end{itemize}
+So a property like
+\begin{verbatime}
+HierarchyBaseClassesDetailed = c1;c2;c3...
+\end{verbatime}
+
+\subsubsection{Sensor and Wakelock Usage}
+The previous statistics applies here, as when 
+try to find the subclasses of Sensor the result 
+may be that there're no subclasses. 
+We can use a line like
+\begin{verbatime}
+<ClassName> = method1;method2;method3...
+\end{verbatime}
+to indicate the (public) methods we are interested 
+in. And we can also find all the (public) methods 
+with soot when the amount is too large.
+\par
+{
+	Here, WakeLock related methods are
+	\begin{itemize}
+		\item void acquire()
+		\item void acquire(long timeout)
+		\item void release()
+		\item void release(int flags)
+	\end{itemize}
+}
+\par
+{
+	\begin{itemize}
+		\item boolean isWakeUpSensor()
+	\end{itemize}
+}
+
+\subsubsection{SensorManager and PowerManager}
+Interesting method list of PowerManager is
+\begin{itemize}
+	\item WakeLock newWakeLock(int levelAndFlags, String tag)
+\end{itemize}
+%\begin{itemize}
+%	\item Sensor getDefaultSensor(int type)
+%	\item Sensor getDefaultSensor(int type)
+%	\item List<Sensor> getSensorList(int type)
+%	\item int getSensors() (deprecated)
+%	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs)
+%	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs)
+%	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, Handler handler)
+%	\item boolean registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs, int maxReportLatencyUs, Handler handler)
+%\end{itemize}
