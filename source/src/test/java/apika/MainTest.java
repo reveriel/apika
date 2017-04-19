@@ -15,16 +15,13 @@ public class MainTest {
 
         String sep = File.separator;
 
-        String testApk = "src" + sep
+        String testApkDir = "src" + sep
                 + "test" + sep
-                + "resources" + sep
-                + "app-release-unsigned.apk";
+                + "resources" + sep;
+        Main.main(new String[]{testApkDir + "app-release-unsigned.apk"});
 
-        File file = new File(testApk);
-        if (!file.exists()) {
-            throw new RuntimeException("apk file not found");
-        }
-        Main.main(new String[]{testApk});
+        Main.main(new String[]{testApkDir + "app-debug.apk"});
+
     }
 
 }

@@ -16,3 +16,5 @@ config.properties
 /output/*.json
 out/
 *.iml
+
+.#*

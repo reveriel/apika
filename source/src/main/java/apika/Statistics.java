@@ -4,14 +4,10 @@ import apika.android.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import soot.SootClass;
-import soot.SootMethod;
-import soot.options.Options;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +15,7 @@ import java.util.Set;
 /**
  * Created by guoxing on 17/4/2017.
  */
+
 public class Statistics {
 
     static Set<AndroidActivity> usedActivities = new HashSet<>();
@@ -29,22 +26,21 @@ public class Statistics {
     static Set<AndroidFeature> usedFeatures = new HashSet<>();
 
     static void createOutput() {
+
         JSONObject obj = new JSONObject();
-        List<String> apkNames= Options.v().process_dir();
-        String apkName = apkNames.get(0);
+
+        String apkName = Config.apkName;
+
         apkName = apkName.replace(File.separator.charAt(0),'.');  // error : '/' in file name
         apkName = apkName.replaceAll("^\\.+", ""); // remove leading '.' in file name
         obj.put("apk", apkName);
-        JSONArray array = null;
 
-        array = new JSONArray();
-        obj.put("Class List", array);
-        array = new JSONArray();
-        obj.put("Activity List", array);
-
-        array = new JSONArray();
-        obj.put("Service List", array);
-
+        addArray(obj, usedActivities, "activites");
+        addArray(obj, usedServices, "services");
+        addArray(obj, usedReceivers, "receivers");
+        addArray(obj, usedProviders, "providers");
+        addArray(obj, usedPermissions, "permissions");
+        addArray(obj, usedFeatures, "features");
 
         String OutputFileName = "output" + File.separator + apkName + ".json";
         try (FileWriter file = new FileWriter(OutputFileName)) {
@@ -53,6 +49,17 @@ public class Statistics {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void addArray(JSONObject obj, Set<? extends AndroidInfoBase> set, String name) {
+        JSONArray array;
+        array = new JSONArray();
+        List<String> stringList = new ArrayList<>();
+        for (AndroidInfoBase s : set) {
+            stringList.add(s.toString());
+        }
+        array.addAll(stringList);
+        obj.put(name, array);
     }
 
     static void printOutput() {

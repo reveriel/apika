@@ -3,14 +3,9 @@ package apika.android;
 /**
  * Created by guoxing on 19/4/2017.
  */
-public class AndroidProvider {
+public class AndroidProvider extends AndroidInfoBase {
     private String name;
     public AndroidProvider(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Provider: " + this.name;
+        super(name);
     }
 }
