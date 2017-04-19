@@ -1,6 +1,7 @@
 package apika;
 
 import org.junit.Test;
+import soot.*;
 
 import java.io.File;
 
@@ -15,21 +16,15 @@ public class MainTest {
         String sep = File.separator;
 
         String testApk = "src" + sep
-                        + "test" + sep
-                        + "resources" + sep
-                        + "app-release-unsigned.apk";
+                + "test" + sep
+                + "resources" + sep
+                + "app-release-unsigned.apk";
 
         File file = new File(testApk);
         if (!file.exists()) {
             throw new RuntimeException("apk file not found");
         }
-
-        apika.Main.main(new String[]{testApk});
-
-//        System.out.println(File.separator);
-//        System.out.println(File.separatorChar);
-//        System.out.println(File.pathSeparator);
+        Main.main(new String[]{testApk});
     }
-
 
 }

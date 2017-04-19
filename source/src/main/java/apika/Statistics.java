@@ -39,7 +39,6 @@ public class Statistics {
 
         array = new JSONArray();
         obj.put("Class List", array);
-
         array = new JSONArray();
         obj.put("Activity List", array);
 
@@ -49,7 +48,6 @@ public class Statistics {
 
         String OutputFileName = "output" + File.separator + apkName + ".json";
         try (FileWriter file = new FileWriter(OutputFileName)) {
-            System.out.println(obj.toJSONString());
             file.write(obj.toJSONString());
             System.out.println("Result write to File : " + OutputFileName);
         } catch (IOException e) {
