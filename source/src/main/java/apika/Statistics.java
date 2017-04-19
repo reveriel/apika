@@ -1,5 +1,6 @@
 package apika;
 
+import apika.android.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -19,10 +20,13 @@ import java.util.Set;
  * Created by guoxing on 17/4/2017.
  */
 public class Statistics {
-    // must be thread safe
-    private static Set<String> classes  = Collections.synchronizedSet(new HashSet<String>());
-    private static Set<String> activities = Collections.synchronizedSet(new HashSet<String>());
-    private static Set<String> services = Collections.synchronizedSet(new HashSet<String>());
+
+    static Set<AndroidActivity> usedActivities = new HashSet<>();
+    static Set<AndroidService> usedServices = new HashSet<>();
+    static Set<AndroidReceiver> usedReceivers = new HashSet<>();
+    static Set<AndroidProvider> usedProviders = new HashSet<>();
+    static Set<AndroidPermission> usedPermissions = new HashSet<>();
+    static Set<AndroidFeature> usedFeatures = new HashSet<>();
 
     static void createOutput() {
         JSONObject obj = new JSONObject();
@@ -34,15 +38,12 @@ public class Statistics {
         JSONArray array = null;
 
         array = new JSONArray();
-        array.addAll(classes);
         obj.put("Class List", array);
 
         array = new JSONArray();
-        array.addAll(activities);
         obj.put("Activity List", array);
 
         array = new JSONArray();
-        array.addAll(services);
         obj.put("Service List", array);
 
 
@@ -56,22 +57,14 @@ public class Statistics {
         }
     }
 
-    static void addClass(SootClass sootClass) {
-
-        // Inner classes has name like OuterClass$InnerClass or OuterClass$1  (anonymous classes)
-        String outerClassName = (sootClass.hasOuterClass() ? sootClass.getOuterClass() : sootClass).toString();
-
-        /**
-         *  check based on string compare
-         *  class name ended with 'Activity' is activity class
-         */
-        if (outerClassName.endsWith("Activity")) {
-            Statistics.activities.add(outerClassName);
-        } else if (outerClassName.endsWith("Service")) {
-            Statistics.services.add(outerClassName);
-        }
-
-        Statistics.classes.add(outerClassName);
+    static void printOutput() {
+        System.out.println(usedActivities.toString());
+        System.out.println(usedServices.toString());
+        System.out.println(usedReceivers.toString());
+        System.out.println(usedProviders.toString());
+        System.out.println(usedPermissions.toString());
+        System.out.println(usedFeatures.toString());
     }
+
 
 }

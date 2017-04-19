@@ -30,8 +30,6 @@ public class Transformers {
                     System.out.println("is javalib class: " + (sootClass.isJavaLibraryClass() ? "true" : "false"));
                 }
             }
-
-            Statistics.addClass(sootClass);
         }
     }
 
