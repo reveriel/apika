@@ -1,6 +1,7 @@
 package apika;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ public class Config {
      */
     static String apkName;
     static String jsonFileName;
+    static String outputDir;
 
 //    static ArrayList<String> methodsToCollect = new ArrayList<>();
     /**
@@ -49,7 +51,19 @@ public class Config {
         Config.apkName = apkName;
     }
 
-    public static String getJsonFileName() {
+    public static String getOutputDir() {
+        return outputDir;
+    }
+
+    public static void setOutputDir(String outputDir) {
+        Config.outputDir = outputDir;
+    }
+
+    /**
+     * also create the outputDir if not exists
+     * @return the output json file name
+     */
+    public static String getJsonFileName() throws IOException {
         if (jsonFileName != null) {
             return jsonFileName;
         }
@@ -57,7 +71,18 @@ public class Config {
         // replace '/' in path name, and remove leading '.'
         String apk = apkName.replace(File.separator.charAt(0),'.').replaceAll("^\\.+", "");
         // TODO , make output dir configarable
-        jsonFileName = "output" + File.separator + apk + ".json";
+
+        File outDir = new File(outputDir);
+        if (outDir.isFile()) {
+            throw new IOException("output directory: " + outputDir + "is a file");
+        } else if (!outDir.exists()) {
+            boolean created = outDir.mkdirs();
+            if (!created) {
+                throw new IOException("Cannot create directory :" + outDir);
+            }
+        }
+
+        jsonFileName = outputDir + File.separator + apk + ".json";
         return jsonFileName;
     }
 

@@ -12,6 +12,7 @@ public class Main {
     public static void processOneFile(String[] args) {
 
         Config.setApkName(args[0]);
+        Config.setOutputDir("output");
 
         InitSoot.checkArgs(args);
         InitSoot.configurationInit();
