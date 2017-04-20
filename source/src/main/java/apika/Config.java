@@ -1,5 +1,6 @@
 package apika;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,19 +11,20 @@ import java.util.HashSet;
 
 
 public class Config {
-    public static String apkName;
 
 
+    /**
+     * apk name, including path
+     */
+    static String apkName;
+    static String jsonFileName;
 
 //    static ArrayList<String> methodsToCollect = new ArrayList<>();
     /**
      * map signature to sensor type index in argument list
      */
     static HashSet<String> sensorManagerListener = new HashSet<>();
-
-
     static HashMap<String, Integer> sensorMangerGetSensor = new HashMap<>();
-
 
     //by defalut we collect SensorManager.(un)registerListener
 
@@ -37,10 +39,29 @@ public class Config {
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,int)>");
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,android.os.Handler)>");
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,int,android.os.Handler)>");
-
-
-
     }
+
+    static String getApkName() {
+        return apkName;
+    }
+
+    public static void setApkName(String apkName) {
+        Config.apkName = apkName;
+    }
+
+    public static String getJsonFileName() {
+        if (jsonFileName != null) {
+            return jsonFileName;
+        }
+
+        // replace '/' in path name, and remove leading '.'
+        String apk = apkName.replace(File.separator.charAt(0),'.').replaceAll("^\\.+", "");
+        // TODO , make output dir configarable
+        jsonFileName = "output" + File.separator + apk + ".json";
+        return jsonFileName;
+    }
+
+
 }
 
 

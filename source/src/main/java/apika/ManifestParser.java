@@ -50,22 +50,22 @@ public class ManifestParser {
                 String tagName = parser.getName();
                 switch (tagName) {
                     case "activity":
-                        addDataToStatistics(parser, Statistics.usedActivities);
+                        addDataToStatistics(parser, ManifestStatistics.usedActivities);
                         break;
                     case "service":
-                        addDataToStatistics(parser, Statistics.usedServices);
+                        addDataToStatistics(parser, ManifestStatistics.usedServices);
                         break;
                     case "receiver":
-                        addDataToStatistics(parser, Statistics.usedReceivers);
+                        addDataToStatistics(parser, ManifestStatistics.usedReceivers);
                         break;
                     case "provider":
-                        addDataToStatistics(parser, Statistics.usedProviders);
+                        addDataToStatistics(parser, ManifestStatistics.usedProviders);
                         break;
                     case "uses-permission":
-                        addDataToStatistics(parser, Statistics.usedPermissions);
+                        addDataToStatistics(parser, ManifestStatistics.usedPermissions);
                         break;
                     case "uses-feature":
-                        addDataToStatistics(parser, Statistics.usedFeatures);
+                        addDataToStatistics(parser, ManifestStatistics.usedFeatures);
                         break;
                 }
                 break;

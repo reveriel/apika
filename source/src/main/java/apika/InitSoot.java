@@ -54,8 +54,6 @@ public class InitSoot {
 
 
     static void initSootOptions(String[] args, int i) {
-
-
         SetupApplication app = new SetupApplication(
                 getAndroidJars(), args[0]
         );
@@ -130,7 +128,6 @@ public class InitSoot {
     }
 
     static String getAndroidJars() {
-
         if (ANDROID_JARS != null)
             return ANDROID_JARS;
         String path = null;

@@ -3,8 +3,6 @@ package apika;
 import soot.*;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
-import soot.jimple.Stmt;
-import soot.jimple.VirtualInvokeExpr;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 
@@ -22,14 +20,11 @@ public class Transformers {
     // must be thread safe
     // mainly exam classes information
 
-
     static Object lock = new Object();
 
     public static class ComponentTransformer extends BodyTransformer {
         protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
 //            SootClass sootClass = b.getMethod().getDeclaringClass();
-//            System.out.println("");
-//            System.out.println(b.getMethod());
 //                for (UnitBox unitBox : b.getAllUnitBoxes()) {
 //                    System.out.println(unitBox.getUnit());
 //                }
@@ -44,8 +39,16 @@ public class Transformers {
                     InvokeExpr call = invokeStmt.getInvokeExpr();
                     SootMethod func = call.getMethod();
 
-                    if (Config.sensorManagerListener.contains(func.toString())) {
-                        System.out.println(unit);
+                    if (Config.sensorManagerListener.contains(func.getSignature())) {
+                        System.out.println("\n"+unit);
+                        System.out.println(b.getMethod()); // method where the invoke locates
+                        System.out.println(func.getName()); // invoke which
+                        System.out.println(func.getDeclaration()); // func
+                        System.out.println(func.getDeclaringClass());
+
+                        DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                b.getMethod().getDeclaringClass().toString(),
+                                b.getMethod().toString()));
                     }
                 }
             }// for each unit
