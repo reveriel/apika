@@ -25,6 +25,7 @@ public class Statistics {
     static Set<AndroidPermission> usedPermissions = new HashSet<>();
     static Set<AndroidFeature> usedFeatures = new HashSet<>();
 
+
     static void createOutput() {
 
         JSONObject obj = new JSONObject();

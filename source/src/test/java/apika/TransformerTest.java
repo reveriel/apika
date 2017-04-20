@@ -9,10 +9,11 @@ import java.util.Map;
 /**
  * Created by guoxing on 19/4/2017.
  */
+
+
 public class TransformerTest {
     public static class DumpSignatureTransformer extends BodyTransformer
     {
-
         @Override
         protected void internalTransform(Body body, String s, Map<String, String> map) {
             String name = body.getMethod().getName();
@@ -25,8 +26,6 @@ public class TransformerTest {
 
     public static class DumpUnitTransformer extends BodyTransformer
     {
-
-
         @Override
         protected void internalTransform(Body body, String s, Map<String, String> map) {
             for(Unit u : body.getUnits())

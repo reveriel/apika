@@ -27,14 +27,31 @@ public class InitSoot {
 
 
     static void initSootOptions(String[] args) {
+        soot.G.reset();
 //        Options.v().set_soot_classpath(SOOT_CLASS_PATH); // -cp // no need
         // Options.v().allow_phantom_refs(); // -allow-phantom-refs //doesnt' work ??????
         Options.v().set_exclude(new ArrayList<String>(Arrays.asList("android.*"))); // -x
         Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
+
+        Options.v().set_whole_program(true);
 //        Options.v().set_process_dir(Arrays.asList(args));
+
+
+//        SetupApplication app = new SetupApplication(
+//                getAndroidJars(), args[0]
+//        );
+//        SootMethod entryPoint = app.getEntryPointCreator().createDummyMain();
+//        Options.v().set_main_class(entryPoint.getSignature());
+//        Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
+//
+//        SootMethod s = new SootMethod()
+//        Scene.v().setEntryPoints(new ArrayList<SootMethod>(new SootMethod()[]
+//                {
+//                "<com.a712.collectdata.MainActivity: void onCreate(android.os.Bundle)>"}));
     }
+
 
     static void initSootOptions(String[] args, int i) {
 
@@ -70,7 +87,6 @@ public class InitSoot {
         Scene.v().loadNecessaryClasses();
 
         SootMethod entryPoint = app.getEntryPointCreator().createDummyMain();
-
         Options.v().set_main_class(entryPoint.getSignature());
         Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
         PackManager.v().runPacks();
@@ -142,9 +158,10 @@ public class InitSoot {
         PackManager.v().getPack("jtp").add(
                 new Transform("jtp.componentTrans",
                         new Transformers.ComponentTransformer()));
-        PackManager.v().getPack("wjtp").add(
-                new Transform("wjtp.detailedMethodUsage",
-                        new Transformers.CollectDetailedMethodUsage()));
+
+//        PackManager.v().getPack("wjtp").add(
+//                new Transform("wjtp.detailedMethodUsage",
+//                        new Transformers.CollectDetailedMethodUsage()));
     }
 
     /**
