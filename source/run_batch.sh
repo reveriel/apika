@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-ApkDir=../../apk_parts/part5
+ApkDir=../../apk_parts/part6
 
 for apk in $(find $ApkDir -iname "*.apk")
 do

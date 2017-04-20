@@ -1,10 +1,7 @@
 const fs = require('fs');
 
 
-const fileName = "output/src.test.resources.app-debug.apk.json";
-
-
-
+// const fileName = "output/src.test.resources.app-debug.apk.json";
 
 const dirName = "output/";
 fs.readdir(dirName, (err, files) => {
@@ -17,7 +14,8 @@ var appCnt = 0;
 function parseOneFile(fileName) {
     appCnt++;
     var obj = JSON.parse(fs.readFileSync(dirName + fileName, 'utf8'));
-    console.log(obj);
+    console.log(obj.features);
+    // console.log(obj);
 }
 
 
