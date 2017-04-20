@@ -12,7 +12,7 @@ image: java:8
 # https://docs.gradle.org/current/userguide/gradle_wrapper.html
 # It is expected that any modern gradle project has a wrapper
 before_script:
-    - chmod +x gradlew
+    - chmod +x source/gradlew
 
 # We redirect the gradle user home using -g so that it caches the
 # wrapper and dependencies.
@@ -25,11 +25,11 @@ before_script:
 build:
   stage: build
   script:
-    - ./gradlew -g /cache/.gradle clean assemble
+    - ./source/gradlew -g /cache/.gradle clean assemble
   allow_failure: false
 
 # Use the generated build output to run the tests.
 test:
   stage: test
   script:
-    - ./gradlew -g /cache/.gradle check
+    - ./source/gradlew -g /cache/.gradle check
