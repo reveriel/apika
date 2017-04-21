@@ -28,7 +28,7 @@ public class Config {
     static HashSet<String> sensorManagerListener = new HashSet<>();
     static HashMap<String, Integer> sensorMangerGetSensor = new HashMap<>();
 
-    //by defalut we collect SensorManager.(un)registerListener
+    //by default we collect SensorManager.(un)registerListener
 
     static {
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorListener,int)>");
@@ -41,7 +41,20 @@ public class Config {
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,int)>");
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,android.os.Handler)>");
         sensorManagerListener.add("<android.hardware.SensorManager: boolean registerListener(android.hardware.SensorEventListener,android.hardware.Sensor,int,int,android.os.Handler)>");
+        // dynamic
+        sensorManagerListener.add("<android.hardware.SensorManager: void registerDynamicSensorCallback(android.hardware.SensorManager$DynamicSensorCallback)>");
+        sensorManagerListener.add("<android.hardware.SensorManager: void registerDynamicSensorCallback(android.hardware.SensorManager$DynamicSensorCallback,android.os.Handler)>");
+        sensorManagerListener.add("<android.hardware.SensorManager: void unregisterDynamicSensorCallback(android.hardware.SensorManager$DynamicSensorCallback)>");
+
+
+        sensorMangerGetSensor.put("<android.hardware.SensorManager: android.hardware.Sensor getDefaultSensor(int)>", 0);
+        sensorMangerGetSensor.put("<android.hardware.SensorManager: android.hardware.Sensor getDefaultSensor(int,boolean)>", 0);
+        sensorMangerGetSensor.put("<android.hardware.SensorManager: java.util.List getSensorList(int)>", 0);
+        // dynamic
+        sensorMangerGetSensor.put("<android.hardware.SensorManager: java.util.List getDynamicSensorList(int)>", 0);
     }
+
+
 
     static String getApkName() {
         return apkName;
@@ -70,7 +83,6 @@ public class Config {
 
         // replace '/' in path name, and remove leading '.'
         String apk = apkName.replace(File.separator.charAt(0),'.').replaceAll("^\\.+", "");
-        // TODO , make output dir configarable
 
         File outDir = new File(outputDir);
         if (outDir.isFile()) {

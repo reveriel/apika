@@ -31,7 +31,6 @@ public class InitSoot {
         Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
-        Options.v().set_verbose(false); //
         G.v().out = new PrintStream(new OutputStream() {
             @Override
             public void write(int b) throws IOException {

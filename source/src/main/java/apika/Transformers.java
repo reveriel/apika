@@ -1,6 +1,8 @@
 package apika;
 
+import org.junit.Assert;
 import soot.*;
+import soot.jimple.AssignStmt;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -30,27 +32,60 @@ public class Transformers {
 //                }
 
             for (Unit unit : b.getUnits()) {
-//                    System.out.println(unit);
+//                System.out.println(unit);
+
 
                 if (unit instanceof InvokeStmt) {
                     InvokeStmt invokeStmt = (InvokeStmt) unit;
+
+//                    System.out.println(unit);
 
 //                    System.out.println(invokeStmt.getInvokeExpr().getMethod());
                     InvokeExpr call = invokeStmt.getInvokeExpr();
                     SootMethod func = call.getMethod();
 
                     if (Config.sensorManagerListener.contains(func.getSignature())) {
-                        System.out.println("\n"+unit);
-                        System.out.println(b.getMethod()); // method where the invoke locates
-                        System.out.println(func.getName()); // invoke which
-                        System.out.println(func.getDeclaration()); // func
-                        System.out.println(func.getDeclaringClass());
-
+//                        System.out.println("\n"+unit);
+//                        System.out.println(b.getMethod()); // method where the invoke locates
+//                        System.out.println(func.getName()); // invoke which
+//                        System.out.println(func.getDeclaration()); // func
+//                        System.out.println(func.getDeclaringClass());
                         DexStatistics.callSites.add(new CallSite(func.getSignature(),
                                 b.getMethod().getDeclaringClass().toString(),
                                 b.getMethod().toString()));
                     }
+
+                    if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
+                        System.out.println("\n"+unit);
+                        Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
+                        System.out.println("argument is " + v);
+                    }
+
+                } else if (unit instanceof AssignStmt) {
+                    AssignStmt assignStmt = (AssignStmt) unit;
+                    if (assignStmt.containsInvokeExpr()) {
+                        InvokeExpr call = assignStmt.getInvokeExpr();
+
+                        SootMethod func = call.getMethod();
+
+                        if (Config.sensorManagerListener.contains(func.getSignature())) {
+                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                    b.getMethod().getDeclaringClass().toString(),
+                                    b.getMethod().toString()));
+                        }
+
+                        if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
+                            System.out.println("\n"+unit);
+                            Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
+                            System.out.println("argument is " + v);
+                        }
+
+                    }
                 }
+
+
+
+
             }// for each unit
         }
     }

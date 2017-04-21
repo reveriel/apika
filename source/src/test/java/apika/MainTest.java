@@ -20,6 +20,7 @@ public class MainTest {
                 + "resources" + sep;
         Main.main(new String[]{testApkDir + "app-release-unsigned.apk"});
 
+
         Main.main(new String[]{testApkDir + "app-debug.apk"});
 
     }

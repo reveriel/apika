@@ -8,9 +8,9 @@ import org.json.simple.JSONStreamAware;
  * Created by guoxing on 20/4/2017.
  */
 public class CallSite {
-    String func;
-    String contextClass;
-    String contextMethod;
+    private String func;
+    private String contextClass;
+    private String contextMethod;
 
     public CallSite(String func, String contextClass, String contextMethod) {
         this.func = func;

@@ -6,7 +6,9 @@ package apika;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("start analysis of " + args[0]);
         processOneFile(args);
+        System.out.println("end analysis of " + args[0]);
     }
 
     public static void processOneFile(String[] args) {
