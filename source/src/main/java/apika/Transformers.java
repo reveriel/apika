@@ -27,91 +27,52 @@ public class Transformers {
 
     public static class ComponentTransformer extends BodyTransformer {
         protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
-//            SootClass sootClass = b.getMethod().getDeclaringClass();
-//                for (UnitBox unitBox : b.getAllUnitBoxes()) {
-//                    System.out.println(unitBox.getUnit());
-//                }
-
             for (Unit unit : b.getUnits()) {
-//                System.out.println(unit);
 
+                InvokeExpr call = getInvokeExpr(unit);
+                if (call == null)
+                    continue;
+                SootMethod func = call.getMethod();
 
-                if (unit instanceof InvokeStmt) {
-                    InvokeStmt invokeStmt = (InvokeStmt) unit;
-
-//                    System.out.println(unit);
-
-//                    System.out.println(invokeStmt.getInvokeExpr().getMethod());
-                    InvokeExpr call = invokeStmt.getInvokeExpr();
-                    SootMethod func = call.getMethod();
-
-                    if (Config.sensorManagerListener.contains(func.getSignature())) {
+                if (Config.sensorManagerListener.contains(func.getSignature())) {
 //                        System.out.println("\n"+unit);
 //                        System.out.println(b.getMethod()); // method where the invoke locates
 //                        System.out.println(func.getName()); // invoke which
 //                        System.out.println(func.getDeclaration()); // func
 //                        System.out.println(func.getDeclaringClass());
+                    DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                            b.getMethod().getDeclaringClass().toString(),
+                            b.getMethod().toString()));
+                } else if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
+
+                    Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
+
+                    if (v instanceof IntConstant) {
+                        IntConstant intV = (IntConstant) v;
+                        DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                b.getMethod().getDeclaringClass().toString(),
+                                b.getMethod().toString(),
+                                intV.value));
+                    } else {
                         DexStatistics.callSites.add(new CallSite(func.getSignature(),
                                 b.getMethod().getDeclaringClass().toString(),
                                 b.getMethod().toString()));
                     }
-
-                    if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
-                        System.out.println("\n"+unit);
-
-                        Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
-
-                        if (v instanceof IntConstant) {
-                            IntConstant intV = (IntConstant) v;
-                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
-                                    b.getMethod().getDeclaringClass().toString(),
-                                    b.getMethod().toString(),
-                                    intV.value));
-                        } else {
-                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
-                                    b.getMethod().getDeclaringClass().toString(),
-                                    b.getMethod().toString()));
-                        }
-
-//                        System.out.println("argument is " + v);
-                    }
-
-                } else if (unit instanceof AssignStmt) {
-                    AssignStmt assignStmt = (AssignStmt) unit;
-                    if (assignStmt.containsInvokeExpr()) {
-                        InvokeExpr call = assignStmt.getInvokeExpr();
-
-                        SootMethod func = call.getMethod();
-
-                        if (Config.sensorManagerListener.contains(func.getSignature())) {
-                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
-                                    b.getMethod().getDeclaringClass().toString(),
-                                    b.getMethod().toString()));
-                        }
-
-                        if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
-                            System.out.println("\n"+unit);
-                            Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
-//                            System.out.println("argument is " + v);
-
-                            if (v instanceof IntConstant) {
-                                IntConstant intV = (IntConstant) v;
-                                DexStatistics.callSites.add(new CallSite(func.getSignature(),
-                                        b.getMethod().getDeclaringClass().toString(),
-                                        b.getMethod().toString(),
-                                        intV.value));
-                            } else {
-                                DexStatistics.callSites.add(new CallSite(func.getSignature(),
-                                        b.getMethod().getDeclaringClass().toString(),
-                                        b.getMethod().toString()));
-                            }
-
-                        }
-                    }
                 }
 
-
             }// for each unit
+        }
+
+
+        private static InvokeExpr getInvokeExpr(Unit unit) {
+            if (unit instanceof InvokeStmt) {
+                return ((InvokeStmt) unit).getInvokeExpr();
+            } else if (unit instanceof AssignStmt) {
+                if (((AssignStmt) unit).containsInvokeExpr()) {
+                    return ((AssignStmt) unit).getInvokeExpr();
+                }
+            }
+            return null;
         }
     }
 
