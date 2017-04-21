@@ -3,6 +3,7 @@ package apika;
 import org.junit.Assert;
 import soot.*;
 import soot.jimple.AssignStmt;
+import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -57,8 +58,22 @@ public class Transformers {
 
                     if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
                         System.out.println("\n"+unit);
+
                         Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
-                        System.out.println("argument is " + v);
+
+                        if (v instanceof IntConstant) {
+                            IntConstant intV = (IntConstant) v;
+                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                    b.getMethod().getDeclaringClass().toString(),
+                                    b.getMethod().toString(),
+                                    intV.value));
+                        } else {
+                            DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                    b.getMethod().getDeclaringClass().toString(),
+                                    b.getMethod().toString()));
+                        }
+
+//                        System.out.println("argument is " + v);
                     }
 
                 } else if (unit instanceof AssignStmt) {
@@ -77,13 +92,23 @@ public class Transformers {
                         if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
                             System.out.println("\n"+unit);
                             Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
-                            System.out.println("argument is " + v);
-                        }
+//                            System.out.println("argument is " + v);
 
+                            if (v instanceof IntConstant) {
+                                IntConstant intV = (IntConstant) v;
+                                DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                        b.getMethod().getDeclaringClass().toString(),
+                                        b.getMethod().toString(),
+                                        intV.value));
+                            } else {
+                                DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                                        b.getMethod().getDeclaringClass().toString(),
+                                        b.getMethod().toString()));
+                            }
+
+                        }
                     }
                 }
-
-
 
 
             }// for each unit

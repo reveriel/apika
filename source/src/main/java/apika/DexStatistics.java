@@ -12,7 +12,6 @@ import java.util.Set;
 public class DexStatistics {
     static Set<CallSite> callSites = Collections.synchronizedSet(new HashSet<CallSite>());
 
-
     public static JSONArray toJson() {
         JSONArray array = new JSONArray();
         for (CallSite s : DexStatistics.callSites) { array.add(s.toJson()); }

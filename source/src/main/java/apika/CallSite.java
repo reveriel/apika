@@ -12,10 +12,23 @@ public class CallSite {
     private String contextClass;
     private String contextMethod;
 
+    private boolean hasArg;
+    private int sensorType;
+
     public CallSite(String func, String contextClass, String contextMethod) {
         this.func = func;
         this.contextClass = contextClass;
         this.contextMethod = contextMethod;
+        this.hasArg = false;
+    }
+
+    public CallSite(String func, String contextClass, String contextMethod, int sensorType) {
+        this.func = func;
+        this.contextClass = contextClass;
+        this.contextMethod = contextMethod;
+
+        this.hasArg = true;
+        this.sensorType = sensorType;
     }
 
     @Override
@@ -28,6 +41,9 @@ public class CallSite {
         obj.put("func",  func);
         obj.put("contextClass", contextClass);
         obj.put("contextMethod", contextMethod);
+        if (hasArg) {
+            obj.put("sensorType", sensorType);
+        }
         return obj;
     }
 
