@@ -14,6 +14,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("start analysis of " + args[0]);
 
+
+
         Statistics.startProcessTime = System.currentTimeMillis();
         processOneFile(args);
         Statistics.endProcessTime = System.currentTimeMillis();
@@ -27,7 +29,15 @@ public class Main {
 
 
         Config.setApkName(args[0]);
+
         Config.setOutputDir("output");
+
+        System.out.println("args.length = " + args.length );
+
+        if (args.length > 1) {
+            System.out.println("set Outdir " + args[1]);
+            Config.setOutputDir(args[1]);
+        }
 
         InitSoot.checkArgs(args);
         InitSoot.configurationInit();

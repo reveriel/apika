@@ -1,6 +1,6 @@
 package apika;
 import soot.*;
-import soot.jimple.infoflow.android.SetupApplication;
+//import soot.jimple.infoflow.android.SetupApplication;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
@@ -47,9 +47,9 @@ public class InitSoot {
     }
 
     static void initSootOptions(String[] args, int i) {
-        SetupApplication app = new SetupApplication(
-                getAndroidJars(), args[0]
-        );
+//        SetupApplication app = new SetupApplication(
+//                getAndroidJars(), args[0]
+//        );
 
 //        SetupApplication app = new SetupApplication(
 //                "/home/sirning/Program/Android/Sdk/platforms",
@@ -77,19 +77,19 @@ public class InitSoot {
 
         Scene.v().loadNecessaryClasses();
 
-        SootMethod entryPoint = app.getEntryPointCreator().createDummyMain();
-        Options.v().set_main_class(entryPoint.getSignature());
-        Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
-        PackManager.v().runPacks();
-        CallGraph cg = Scene.v().getCallGraph();
-        Iterator<Edge> it = cg.iterator();
-        while(it.hasNext()) {
-            Edge e = it.next();
-            System.out.println("------------------------------------");
-            if(e.toString().contains("registerListener")) {
-                System.out.println(it.next().toString());
-            }
-        }
+//        SootMethod entryPoint = app.getEntryPointCreator().createDummyMain();
+//        Options.v().set_main_class(entryPoint.getSignature());
+//        Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
+//        PackManager.v().runPacks();
+//        CallGraph cg = Scene.v().getCallGraph();
+//        Iterator<Edge> it = cg.iterator();
+//        while(it.hasNext()) {
+//            Edge e = it.next();
+//            System.out.println("------------------------------------");
+//            if(e.toString().contains("registerListener")) {
+//                System.out.println(it.next().toString());
+//            }
+//        }
 
         //*/
         //Options.v().set_app(true);

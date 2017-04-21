@@ -31,8 +31,5 @@ test {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile name: 'soot-trunk'
-    compile name: 'soot-infoflow-android'
-    compile name: 'soot-infoflow'
-    compile name: 'axml-2.0'
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
