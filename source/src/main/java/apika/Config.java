@@ -99,6 +99,12 @@ public class Config {
     }
 
 
+    public static void reset() {
+        apkName = null;
+        jsonFileName = null;
+        outputDir = null;
+    }
+
 }
 
 

@@ -12,6 +12,10 @@ import java.io.IOException;
 
 public class Statistics {
 
+
+    public static long startProcessTime;
+    public static long endProcessTime;
+
     static void printJson() {
         JSONObject obj = toJson();
         try (FileWriter file = new FileWriter(Config.getJsonFileName())) {
@@ -30,7 +34,9 @@ public class Statistics {
         obj.put("apk", Config.getApkName());
         obj.put("manifest", ManifestStatistics.toJson());
         obj.put("callsite", DexStatistics.toJson());
-
+        obj.put("sootTime", endProcessTime - startProcessTime);
+//        obj.put("jsonTime", endPrintingJson - startPrintingJson); // neglectable
         return obj;
     }
+
 }

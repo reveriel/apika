@@ -48,4 +48,5 @@ public class ManifestStatistics {
         System.out.println(usedPermissions.toString());
         System.out.println(usedFeatures.toString());
     }
+
 }

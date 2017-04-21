@@ -31,15 +31,20 @@ public class InitSoot {
         Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
+
+        Options.v().set_whole_program(true);
+    }
+
+    /**
+     * silent soot output to System.out
+     */
+    public static void silent() {
         G.v().out = new PrintStream(new OutputStream() {
             @Override
             public void write(int b) throws IOException {
             }
         });
-
-        Options.v().set_whole_program(true);
     }
-
 
     static void initSootOptions(String[] args, int i) {
         SetupApplication app = new SetupApplication(
@@ -171,4 +176,5 @@ public class InitSoot {
                 })
         );
     }
+
 }
