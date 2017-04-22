@@ -1,0 +1,64 @@
+\documentclass{article}
+\title{On Statistics}
+\begin{document}
+\tableofcontents
+\section{Overview}
+So far, we want to get the statistics of
+\begin{itemize}
+	\item deprecated methods usage
+	\item number of component and their names
+	\item wake lock usage
+	\item sensor type used
+\end{itemize}
+\par
+{
+I find it difficult to get a knowledge of dexlib ... 
+After all, I've already been learning soot for hours and can manage 
+to visit each statement in a java class file. 
+So I decided to use soot to get the statistics. 
+The procedure goes like:
+\begin{itemize}
+	\item decompile apk and transform them into jar with dex2jar
+	\item get the statistics with soot or by checking the manifest.xml file
+\end{itemize}
+}
+
+\section{Statistics of Method Usage}
+This can be used for the statistics of 
+\begin{itemize}
+	\item sensor type usage
+	\item wake lock usage
+	\item deprecated method usage
+\end{itemize}
+\par{
+To get a statistics of method usage, we need to specify the 
+\begin{itemize}
+	\item signature of the method
+		\begin{itemize}
+		\item in Jimple, the method signature is of the form
+			\begin{verbatim}<PackageName.ClassName: Type MethodName(pars)>\end{verbatim}
+			, maybe there can be a program that dump all the statements of a java class file, 
+			and one can write an android program containing the methods interested and convert 
+			the apk to class to feed the dump-all-statement program to see what's the signature
+		\end{itemize}
+	\item Java class names to visit and the jar path containing the classes
+		\begin{itemize}
+			\item There're lots of classes for a statistics, it's better to specify a 
+			root path and the program recursively find all the jars and the classes
+		\end{itemize}
+	\item environment for soot, in detail, path for jars including but not limitted to
+		\begin{itemize}
+			\item rt.jar (from jdk/jre)
+			\item jsse.jar (from jdk/jre Linux only)
+			\item jce.jar (from jdk/jre)
+			\item android.jar (from android sdk)
+		\end{itemize}
+\end{itemize}
+}
+\section{Statistics of Component Usage}
+It seemed that we can get this statistics from the manifest.xml file, 
+that is there's the claim that one cannot create a component with android code. 
+If so, it would be easy to get this kind of statistics. 
+But first need to make sure whether the claim is correct or not.
+
+\end{document}

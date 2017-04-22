@@ -1,0 +1,35 @@
+group 'ustc'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'apika.Main'
+    }          
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}          
+
+test {
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile name: 'soot-trunk'
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+}
