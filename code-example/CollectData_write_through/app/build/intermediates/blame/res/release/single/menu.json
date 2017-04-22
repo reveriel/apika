@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/res/merged/release/menu/menu_main.xml",
+        "source": "/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/src/main/res/menu/menu_main.xml"
+    },
+    {
+        "merged": "/Users/guoxing/project/kylab/android-work/survey/api/sensor/code-example/CollectData_write_through/app/build/intermediates/res/merged/release/menu/menu_main.xml",
+        "source": "/Users/guoxing/project/kylab/android-work/survey/api/sensor/code-example/CollectData_write_through/app/src/main/res/menu/menu_main.xml"
+    }
+]

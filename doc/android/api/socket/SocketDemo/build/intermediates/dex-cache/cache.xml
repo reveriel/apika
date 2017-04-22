@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.1.1_7cff7a09f25c45ab5e5825030ff07493f9280957/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="14b00e4873e19ed541f3da9e42e2e4340b9f3b24">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_5b23a923da4c5067cfaa56665d387cb81b39223f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/libs/internal_impl-23.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.1.1_2988cf0811b274aec6389bde3654b36b6d00b3d0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9cbb2863f080778a258f7181303ba5598ae9a2f8">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_82d0d0bcede08edb074479084ec96b51a18b3557/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.1.1_52fa75b59dd6ed5de36a79a0997abe3958cc80a2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/guoxing/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.1.1_17a6280939faafc71e4b50d184104eb960ced298/classes.dex" />
+    </item>
+
+</items>

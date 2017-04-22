@@ -1,0 +1,53 @@
+\contentsline {section}{\numberline {1}Overview}{2}{section.1}
+\contentsline {part}{I\hspace {1em}Android Platform}{2}{part.1}
+\contentsline {section}{\numberline {2}Offical Documents for Sensors}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}SDK referecnce (for developers)}{2}{subsection.2.1}
+\contentsline {paragraph}{note:}{3}{section*.2}
+\contentsline {subsection}{\numberline {2.2}Documents targeted at manufacturers}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Sensor's type}{4}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}How to get a wakeup or non-wakeup sensor}{5}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Sensor Registration and Unregistration}{6}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Registration}{6}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Unregistration}{6}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}TODO}{6}{subsubsection.2.5.3}
+\contentsline {subsection}{\numberline {2.6}Bizarre Usage Examples}{6}{subsection.2.6}
+\contentsline {subsubsection}{\numberline {2.6.1}On SensorManager Instance}{7}{subsubsection.2.6.1}
+\contentsline {subsubsection}{\numberline {2.6.2}On Getting Sensors}{7}{subsubsection.2.6.2}
+\contentsline {subsubsection}{\numberline {2.6.3}On Registration}{7}{subsubsection.2.6.3}
+\contentsline {section}{\numberline {3}Processes and Threads}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Processes}{7}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Threads}{7}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Worker threads}{8}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}{\bfseries \sffamily TODO} Thread-safe methods}{8}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Looper, Handler and Message}{8}{subsubsection.3.2.3}
+\contentsline {subsection}{\numberline {3.3}{\bfseries \sffamily TODO} Interproceess Communication}{8}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Other Event based libaraies}{8}{subsection.3.4}
+\contentsline {section}{\numberline {4}Lifecycle of components}{8}{section.4}
+\contentsline {subsection}{\numberline {4.1}Activity}{8}{subsection.4.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Starting Activities and Getting Results}{9}{subsubsection.4.1.1}
+\contentsline {subsubsection}{\numberline {4.1.2}Process Lifecycle Based on Activity Lifecycle}{9}{subsubsection.4.1.2}
+\contentsline {subsection}{\numberline {4.2}Service}{9}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Content Providers}{9}{subsection.4.3}
+\contentsline {part}{II\hspace {1em}Program Analysis}{9}{part.2}
+\contentsline {section}{\numberline {5}Related Work}{9}{section.5}
+\contentsline {subsection}{\numberline {5.1}What is keeping my phone awake?: characterizing and detecting no-sleep energy bugs in smartphone apps}{9}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Where has my battery gone? Finding sensor related energy black holes in smartphone applications}{10}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Understanding and Detecting Wake Lock Misuses for Android Applications}{10}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Diagnosing Energy Efficiency and Performance for Mobile Internetware Applications}{11}{subsection.5.4}
+\contentsline {subsubsection}{\numberline {5.4.1}State-of-the-art Diagnosis and Tools}{11}{subsubsection.5.4.1}
+\contentsline {subsubsection}{\numberline {5.4.2}Disussion}{12}{subsubsection.5.4.2}
+\contentsline {subsection}{\numberline {5.5}Mining energy-greedy API usage patterns in Android apps: an empirical study}{12}{subsection.5.5}
+\contentsline {subsection}{\numberline {5.6}Towards verifying android apps for the absence of no-sleep energy bugs}{12}{subsection.5.6}
+\contentsline {subsection}{\numberline {5.7}Static control-flow analysis of user-driven callbacks in Android applications}{13}{subsection.5.7}
+\contentsline {subsection}{\numberline {5.8}WLCleaner: Reducing Energy Waste Caused by WakeLock Bugs at Runtime}{13}{subsection.5.8}
+\contentsline {subsection}{\numberline {5.9}LEAKPOINT: Pinpointing the Causes of Memory Leaks}{13}{subsection.5.9}
+\contentsline {subsection}{\numberline {5.10}eDoctor Automatically Diagnosing Abnormal Battery Drain Issues on Smartphones.}{13}{subsection.5.10}
+\contentsline {subsection}{\numberline {5.11}Effective Interprocedural Resource Leak Detection}{13}{subsection.5.11}
+\contentsline {subsection}{\numberline {5.12}Learning Resource Management Specifications in Smartphones}{13}{subsection.5.12}
+\contentsline {part}{III\hspace {1em}Experiment}{13}{part.3}
+\contentsline {section}{\numberline {6}Useful links}{13}{section.6}
+\contentsline {section}{\numberline {7}APK Collection}{13}{section.7}
+\contentsline {section}{\numberline {8}APK analysis}{13}{section.8}
+\contentsline {subsection}{\numberline {8.1}Dalvik bytecode}{13}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Apktool}{14}{subsection.8.2}
+\contentsline {subsection}{\numberline {8.3}smali/baksmali}{14}{subsection.8.3}

@@ -1,0 +1,7 @@
+#Sun Mar 12 21:07:20 CST 2017
+base.0=/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_5b23a923da4c5067cfaa56665d387cb81b39223f
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_82d0d0bcede08edb074479084ec96b51a18b3557/classes.dex
+base.1=/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_82d0d0bcede08edb074479084ec96b51a18b3557
+file.0=/Users/guoxing/project/kylab/android-work/survey/socket/SocketDemo/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_5b23a923da4c5067cfaa56665d387cb81b39223f/classes.dex

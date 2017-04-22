@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="75b1f366ff0bbc78f8b1f7cf0dc82e7c53afef6a">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-25.0.0_63c5495ac4bd3ce9fa6e951e514c621c084b8095.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="f2e3b9bc1ec25f652e8007ce7774c991e38f6a00">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_bd2be6a66cb381a1693fd0c4e14febb828523dd2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_77a78f827421a1ade002e0fe833a979b0609eff2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="665d21a8a069c96b4d9e8b434f5096d865b4e261">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_753658227c13cd9f27198f2c654ea86a628e825b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8bc45ce1f63d1a391fd38b32a201be5a42f9c95d">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-25.0.0_c96d7757c21ee96805c0d38973b38105395b4ebe.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="53a420cd4f49274db6bd43475f8006ba67ef6bbd">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.0.0_c1b130632ddf30c96e8b887339a0ff7d191ed19f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="76fb65a4b41ea42dab8a1310ed772a2420c96b52">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-25.0.0_c07ac46b61778db06c44f83421b356934140714c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="07daa0b6e1d455c82a38422ffe287c18823d339a">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-25.0.0_f1302b3dd646c761423a939856a56c6559a37e32.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d29714cc76b38157e3cbd034c66e1ec808eb4c19">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-25.0.0_1da29f23a3e50891d1c3e8a911fad63a1527333d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="26674000177e45447a0326a6ad84612761199a13">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-25.0.0_5971ab068e244853520889d0c8e06a1a58c77811.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee5faf4dee5b6a4364bf51587871047dde7c703a">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_b59a0e88b879c5b22e08efbb812dc3fe4dcd46ca.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4ccbcda5c72027c7f7c14be9ff8640d9cb0d8da0">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-25.0.0_954a0581ca266a9c617c7fba37099c4adb6dc2d4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/transition/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0c6d948e6cb9ea6f535d175fb61ba2930719c0e9">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-transition-25.0.0_bf8649ed32a6ebf38403b8116ef0ba3f1be895e9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="26384be22ddc74cfe197ebda9edbc7d1fd8bd537">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-design-25.0.0_fc40ce585d962280b11e482887dd161b31a604d6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.0.0_6555ad59a5f460c6d8f51cd3a2cf1267255149b8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3b61a70884adaf0be3fc06c70c801e3e6df13133">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_30a36916f74670ff7d0b39d524b36ac416acd274.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5e497d60f0cb6ce87c458ac5420a46d0fed49bd0">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.0.0_33205db1baf0e70779245f7cea07d3384093718a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/guoxing/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.0/support-annotations-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="a22d2cc94da87b254451fa8ed28afc30b4653773">
+        <dex dex="/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.0_4b3a5ded7ff74530fe15db928e1e1cf6883f424f.jar" />
+    </item>
+
+</items>

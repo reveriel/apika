@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/guoxing/project/kylab/android-work/survey/api/sensor/code-example/CollectData_write_through/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "/Users/guoxing/project/kylab/android-work/survey/api/sensor/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/res/layout-sw600dp-v13/design_layout_snackbar.xml"
+    },
+    {
+        "merged": "/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/res/merged/debug/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "/Users/guoxing/project/kylab/android-work/code-example/CollectData_write_through/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/res/layout-sw600dp-v13/design_layout_snackbar.xml"
+    }
+]
