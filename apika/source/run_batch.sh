@@ -1,12 +1,20 @@
 #!/bin/bash
 
 
-ApkDir=../../apk_parts/part6
+# ApkDir=../../apk_parts/part1
+ApkDir=/mnt/ta/apks/elite/apk_parts
+OutDir=/mnt/ta/apks/elite/output
 
-for apk in $(find $ApkDir -iname "*.apk")
+START=1
+END=1 # including
+
+for i in $(seq $START $END)
 do
-    echo $apk
-    ./apika.sh $apk
+    for apk in $(find $ApkDir/part$i -iname "*.apk")
+    do
+        echo $apk
+        ./apika.sh $apk $OutDir/part$i
+    done
 done
 
 
