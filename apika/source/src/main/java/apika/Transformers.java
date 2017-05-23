@@ -1,6 +1,6 @@
 package apika;
 
-import org.junit.Assert;
+import apika.statistics.DexStatistics;
 import soot.*;
 import soot.jimple.AssignStmt;
 import soot.jimple.IntConstant;
@@ -33,37 +33,39 @@ public class Transformers {
                 SootMethod func = call.getMethod();
 
 
-
                 if (Config.sensorManagerListener.contains(func.getSignature())) {
 //                        System.out.println("\n"+unit);
 //                        System.out.println(b.getMethod()); // method where the invoke locates
 //                        System.out.println(func.getName()); // invoke which
 //                        System.out.println(func.getDeclaration()); // func
 //                        System.out.println(func.getDeclaringClass());
-                    DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                    CallSite c = new CallSite(func.getSignature(),
                             b.getMethod().getDeclaringClass().toString(),
-                            b.getMethod().toString()));
-
+                            b.getMethod().toString());
+                    DexStatistics.callSites.add(c);
+                    addAllSuperClass(b, c);
                     printAllSuperClass(func, b);
 
                 } else if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
                     // sensor type is in argument
                     Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
 
+                    CallSite c;
                     printAllSuperClass(func, b);
-
-
                     if (v instanceof IntConstant) {
                         IntConstant intV = (IntConstant) v;
-                        DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                        c = new CallSite(func.getSignature(),
                                 b.getMethod().getDeclaringClass().toString(),
                                 b.getMethod().toString(),
-                                intV.value));
+                                intV.value);
+                        DexStatistics.callSites.add(c);
                     } else {
-                        DexStatistics.callSites.add(new CallSite(func.getSignature(),
+                        c = new CallSite(func.getSignature(),
                                 b.getMethod().getDeclaringClass().toString(),
-                                b.getMethod().toString()));
+                                b.getMethod().toString());
+                        DexStatistics.callSites.add(c);
                     }
+                    addAllSuperClass(b, c);
                 }
 
             }// for each unit
@@ -94,7 +96,14 @@ public class Transformers {
         System.out.println("");
     }
 
-
+    private static void addAllSuperClass(Body b, CallSite c) {
+        SootClass callerClass = b.getMethod().getDeclaringClass();
+        SootClass superClass = callerClass;
+        while (superClass.hasSuperclass()) {
+            superClass = superClass.getSuperclass();
+            c.addSupperClasses(superClass.toString());
+        }
+    }
 
 
 

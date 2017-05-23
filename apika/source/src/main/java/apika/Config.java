@@ -56,7 +56,7 @@ public class Config {
 
 
 
-    static String getApkName() {
+    public static String getApkName() {
         return apkName;
     }
 

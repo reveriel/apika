@@ -1,8 +1,8 @@
-package apika;
+package apika.statistics;
 
+import apika.Config;
 import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class Statistics {
     public static long startProcessTime;
     public static long endProcessTime;
 
-    static void printJson() {
+    public static void printJson() {
         JSONObject obj = toJson();
         try (FileWriter file = new FileWriter(Config.getJsonFileName())) {
             file.write(obj.toJSONString());
@@ -33,7 +33,9 @@ public class Statistics {
 
         obj.put("apk", Config.getApkName());
         obj.put("manifest", ManifestStatistics.toJson());
-        obj.put("callsite", DexStatistics.toJson());
+        obj.put("callSites", DexStatistics.toJson());
+
+
         obj.put("sootTime", endProcessTime - startProcessTime);
 //        obj.put("jsonTime", endPrintingJson - startPrintingJson); // neglectable
         return obj;

@@ -1,4 +1,4 @@
-package apika;
+package apika.statistics;
 
 import apika.android.*;
 import org.json.simple.JSONArray;
@@ -12,12 +12,12 @@ import java.util.Set;
  * Created by guoxing on 20/4/2017.
  */
 public class ManifestStatistics {
-    static Set<AndroidActivity> usedActivities = new HashSet<>();
-    static Set<AndroidService> usedServices = new HashSet<>();
-    static Set<AndroidReceiver> usedReceivers = new HashSet<>();
-    static Set<AndroidProvider> usedProviders = new HashSet<>();
-    static Set<AndroidPermission> usedPermissions = new HashSet<>();
-    static Set<AndroidFeature> usedFeatures = new HashSet<>();
+    public static Set<AndroidActivity> usedActivities = new HashSet<>();
+    public static Set<AndroidService> usedServices = new HashSet<>();
+    public static Set<AndroidReceiver> usedReceivers = new HashSet<>();
+    public static Set<AndroidProvider> usedProviders = new HashSet<>();
+    public static Set<AndroidPermission> usedPermissions = new HashSet<>();
+    public static Set<AndroidFeature> usedFeatures = new HashSet<>();
 
 
     public static JSONObject toJson() {
