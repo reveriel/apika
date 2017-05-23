@@ -172,6 +172,38 @@ startup will be delayed.
 
 \subsection{Broadcast Receiver}
 
+ref : Develop > API Guides > App Components > Broadcasts
+\href{https://developer.android.com/guide/components/broadcasts.html}{link}
+
+Apps can receive broadcasts in two ways: through manifest-declared receivers and
+context-registered receivers. Manifest-declared receivers are staticly declared
+a \texttt{<receiver>} in the manifest file and bound to a
+\texttt{BroadcastReceiver} with some kinds of intent. Context-registered
+receivers are dynamicly registered with a context (e.g. an Activity) in code.
+
+Manifest-declared are registered when apps are installed and the system creates
+a new \texttt{BroadcastReceiver} components object to handle each broadcast that
+it receives.
+
+Context-registered receivers receive broadcasts as long as their registering
+context is valid. To stop receiving broadcasts, call
+\texttt{unregisterReceiver(android.content.BroadcastReceiver)}.
+
+Be sure to unregister the receiver when you no longer need it or the context is
+no longer valid. Be mindful of where you register and unregister the receiver,
+for example, if you register a receiver in onCreate(Bundle) using the activity's
+context, you should unregister it in \texttt{onDestroy()} to prevent leaking the
+receiver out of the activity context. If you register a receiver in
+\texttt{onResume()}, you should unregister it in \texttt{onPause()} to prevent
+registering it multiple times (If you don't want to receive broadcasts when
+paused, and this can cut down on unnecessary system overhead). Do not unregister
+in \texttt{onSaveInstanceState(Bundle)}, because this isn't called if the user
+moves back in the history stack.
+
+make
+
+
+
 
 
   

@@ -22,7 +22,6 @@ public class Transformers {
     // must be thread safe
     // mainly exam classes information
 
-    static Object lock = new Object();
 
     public static class ComponentTransformer extends BodyTransformer {
         protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
@@ -33,6 +32,8 @@ public class Transformers {
                     continue;
                 SootMethod func = call.getMethod();
 
+
+
                 if (Config.sensorManagerListener.contains(func.getSignature())) {
 //                        System.out.println("\n"+unit);
 //                        System.out.println(b.getMethod()); // method where the invoke locates
@@ -42,9 +43,15 @@ public class Transformers {
                     DexStatistics.callSites.add(new CallSite(func.getSignature(),
                             b.getMethod().getDeclaringClass().toString(),
                             b.getMethod().toString()));
-                } else if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
 
+                    printAllSuperClass(func, b);
+
+                } else if (Config.sensorMangerGetSensor.containsKey(func.getSignature())) {
+                    // sensor type is in argument
                     Value v = call.getArg(Config.sensorMangerGetSensor.get(func.getSignature()));
+
+                    printAllSuperClass(func, b);
+
 
                     if (v instanceof IntConstant) {
                         IntConstant intV = (IntConstant) v;
@@ -75,6 +82,22 @@ public class Transformers {
         }
     }
 
+    private static void printAllSuperClass(SootMethod func, Body b) {
+        System.out.println(func.getSignature());
+        SootClass callerClass = b.getMethod().getDeclaringClass();
+        System.out.println("Class :" + callerClass.getName());
+        SootClass superClass = callerClass;
+        while (superClass.hasSuperclass()) {
+            superClass = superClass.getSuperclass();
+            System.out.println("      -> " + superClass.getName());
+        }
+        System.out.println("");
+    }
+
+
+
+
+
     /**
      * check based on string compare, if class name includes 'Activity' etc.
      * @return is Application Compoenent class
@@ -88,10 +111,26 @@ public class Transformers {
         return className.contains("Activity");
     }
 
-    public static class CollectDetailedMethodUsage extends soot.SceneTransformer
+    public static class CallGraphDump extends SceneTransformer
     {
 
+        @Override
+        protected void internalTransform(String s, Map<String, String> map) {
+            CallGraph cg = Scene.v().getCallGraph();
+            cg.forEach(System.out::println);
+            System.out.println("call graph size = " + cg.size());
+        }
+    }
 
+    public static class DumpCallerParents extends SceneTransformer
+    {
+        @Override
+        protected void internalTransform(String s, Map<String, String> map) {
+        }
+    }
+
+    public static class CollectDetailedMethodUsage extends SceneTransformer
+    {
         @Override
         protected void internalTransform(String s, Map<String, String> map) {
             CallGraph cg = Scene.v().getCallGraph();

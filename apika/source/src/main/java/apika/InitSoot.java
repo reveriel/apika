@@ -1,6 +1,7 @@
 package apika;
 import soot.*;
 //import soot.jimple.infoflow.android.SetupApplication;
+import soot.JastAddJ.Opt;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
@@ -32,7 +33,12 @@ public class InitSoot {
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
 
-        Options.v().set_whole_program(true);
+        Options.v().set_whole_program(true); // -w
+
+        PhaseOptions.v().setPhaseOption("cg", "all-reachable:true");
+//        PhaseOptions.v().setPhaseOption();
+        PhaseOptions.v().setPhaseOption("cg.spark", "enabled:true");
+
     }
 
     /**
@@ -152,6 +158,11 @@ public class InitSoot {
 //        PackManager.v().getPack("wjtp").add(
 //                new Transform("wjtp.detailedMethodUsage",
 //                        new Transformers.CollectDetailedMethodUsage()));
+
+//        PackManager.v().getPack("wjtp").add(
+//                new Transform("wjtp.dumpCg",
+//                        new Transformers.CallGraphDump()));
+
     }
 
     /**
