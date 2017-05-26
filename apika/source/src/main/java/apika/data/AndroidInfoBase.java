@@ -1,6 +1,4 @@
-package apika.android;
-
-import org.json.simple.JSONObject;
+package apika.data;
 
 /**
  * Created by guoxing on 19/4/2017.

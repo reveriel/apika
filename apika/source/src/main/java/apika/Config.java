@@ -25,8 +25,8 @@ public class Config {
     /**
      * map signature to sensor type index in argument list
      */
-    static HashSet<String> sensorManagerListener = new HashSet<>();
-    static HashMap<String, Integer> sensorMangerGetSensor = new HashMap<>();
+    public static HashSet<String> sensorManagerListener = new HashSet<>();
+    public static HashMap<String, Integer> sensorMangerGetSensor = new HashMap<>();
 
     //by default we collect SensorManager.(un)registerListener
 
