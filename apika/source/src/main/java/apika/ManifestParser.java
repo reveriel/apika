@@ -2,7 +2,7 @@ package apika;
 
 import android.content.res.AXmlResourceParser;
 import android.content.res.XmlResourceParser;
-import apika.android.AndroidActivity;
+import apika.data.AndroidActivity;
 import apika.statistics.ManifestStatistics;
 import org.xmlpull.v1.XmlPullParserException;
 import test.AXMLPrinter;

@@ -1,8 +1,7 @@
 package apika.statistics;
 
-import apika.CallSite;
+import apika.data.CallSite;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.Collections;
 import java.util.HashSet;

@@ -1,9 +1,7 @@
 package apika;
+import apika.transformer.CollectCallSite;
 import soot.*;
-//import soot.jimple.infoflow.android.SetupApplication;
-import soot.JastAddJ.Opt;
-import soot.jimple.toolkits.callgraph.CallGraph;
-import soot.jimple.toolkits.callgraph.Edge;
+//import soot.jimple.infoflow.data.SetupApplication;
 import soot.options.Options;
 
 import java.io.*;
@@ -28,16 +26,14 @@ public class InitSoot {
         soot.G.reset();
 //        Options.v().set_soot_classpath(SOOT_CLASS_PATH); // -cp // no need
 //        Options.v().allow_phantom_refs(); // -allow-phantom-refs //doesnt' work ??????
-        Options.v().set_exclude(new ArrayList<String>(Arrays.asList("android.*"))); // -x
-        Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
+        Options.v().set_exclude(new ArrayList<String>(Arrays.asList("data.*"))); // -x
+        Options.v().set_android_jars(ANDROID_JARS);  // -data-jars
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
 
-        Options.v().set_whole_program(true); // -w
-
-        PhaseOptions.v().setPhaseOption("cg", "all-reachable:true");
-//        PhaseOptions.v().setPhaseOption();
-        PhaseOptions.v().setPhaseOption("cg.spark", "enabled:true");
+//        Options.v().set_whole_program(true); // -w
+//        PhaseOptions.v().setPhaseOption("cg", "all-reachable:true");
+//        PhaseOptions.v().setPhaseOption("cg.spark", "enabled:true");
 
     }
 
@@ -61,9 +57,9 @@ public class InitSoot {
 //                "/home/sirning/Program/Android/Sdk/platforms",
 //                "/home/sirning/Desktop/test/app-debug.apk");
 //        try {
-//            app.setCallbackFile("/home/sirning/Program/soot-infoflow-android/AndroidCallbacks.txt");
+//            app.setCallbackFile("/home/sirning/Program/soot-infoflow-data/AndroidCallbacks.txt");
 //            app.calculateSourcesSinksEntrypoints(
-//                    "/home/sirning/Program/soot-infoflow-android/SourcesAndSinks.txt");
+//                    "/home/sirning/Program/soot-infoflow-data/SourcesAndSinks.txt");
 //        }
 //        catch (Exception e)
 //        {
@@ -72,8 +68,8 @@ public class InitSoot {
 //        }
         //*/
         soot.G.reset();
-        //Options.v().set_exclude(new ArrayList<String>(Arrays.asList("android.*"))); // -x
-        Options.v().set_android_jars(ANDROID_JARS);  // -android-jars
+        //Options.v().set_exclude(new ArrayList<String>(Arrays.asList("data.*"))); // -x
+        Options.v().set_android_jars(ANDROID_JARS);  // -data-jars
         Options.v().set_process_dir(Collections.singletonList("/home/sirning/Desktop/test/app-debug.apk"));
         Options.v().set_src_prec(Options.src_prec_apk); // -src-prec apk
         Options.v().set_output_format(Options.output_format_n); // -output-format n
@@ -151,17 +147,20 @@ public class InitSoot {
      * get all Application Components an app uses
      */
     static void addComponentTransformer() {
+//        PackManager.v().getPack("jtp").add(
+//                new Transform("jtp.componentTrans",
+//                        new ComponentTransformer()));
         PackManager.v().getPack("jtp").add(
-                new Transform("jtp.componentTrans",
-                        new Transformers.ComponentTransformer()));
+                new Transform("jtp.collectMethodsUsage",
+                        new CollectCallSite()));
 
 //        PackManager.v().getPack("wjtp").add(
 //                new Transform("wjtp.detailedMethodUsage",
-//                        new Transformers.CollectDetailedMethodUsage()));
+//                        new Transformer.CollectDetailedMethodUsage()));
 
 //        PackManager.v().getPack("wjtp").add(
 //                new Transform("wjtp.dumpCg",
-//                        new Transformers.CallGraphDump()));
+//                        new Transformer.CallGraphDump()));
 
     }
 

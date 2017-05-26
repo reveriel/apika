@@ -1,11 +1,10 @@
 package apika.statistics;
 
-import apika.android.*;
+import apika.data.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**

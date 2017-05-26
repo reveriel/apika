@@ -46,7 +46,7 @@ public class TransformerTest {
             System.out.println("tttttttttttttttttttttttttttttt");
             soot.Main.main(new String[]{
                     "-cp", "/home/sirning/Desktop/test/app-debug-dex2jar.jar:" +
-                    "/home/sirning/Program/Android/Sdk/platforms/android-25/android.jar",
+                    "/home/sirning/Program/Android/Sdk/platforms/data-25/data.jar",
                     "com.example.sirning.deprecatedmethod.MainActivity"
             });
             System.out.println("tttttttttttttttttttttttttttttt");

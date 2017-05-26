@@ -18,6 +18,8 @@ public class MainTest {
     @Test
     public void test1() throws Exception {
         Main.main(new String[]{testApkDir + "app-release-unsigned.apk"});
+//        Main.main(new String[]{testApkDir + "air.com.ezy_dev.test.apk"});
+//        Main.main(new String[]{testApkDir + "com.industry.FlappyHeli.apk"});
     }
 
     /**

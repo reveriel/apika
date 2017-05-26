@@ -1,4 +1,4 @@
-package apika.android;
+package apika.data;
 
 /**
  * Created by guoxing on 19/4/2017.
