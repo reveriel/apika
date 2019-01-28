@@ -2,3 +2,6 @@
 auto/
 
 clocal.tex
+*.csv
+js_out
+js_out.*
