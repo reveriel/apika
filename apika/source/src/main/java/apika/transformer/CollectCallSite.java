@@ -45,7 +45,8 @@ public class CollectCallSite extends BodyTransformer {
          // android.hardware.SensorManager$WakeLock, not SensorManager.WakeLock
         return packageName.startsWith("android.hardware.SensorManager")
                 || packageName.startsWith("android.os.PowerManager")
-                || packageName.startsWith("android.hardware.Sensor");
+                || packageName.startsWith("android.hardware.Sensor")
+            || f.getSignature().contains("startActivity");
     }
 
 }

@@ -6,7 +6,10 @@ ApkDir=/mnt/ta/apks/elite/apk_parts
 OutDir=/mnt/ta/apks/elite/output
 
 START=1
-END=1 # including
+END=10 # including
+
+START=$1
+END=$2 # including
 
 for i in $(seq $START $END)
 do

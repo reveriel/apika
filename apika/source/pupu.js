@@ -19,8 +19,8 @@ var providersCntAvg = 0;
 var receiverCntAvg = 0;
 var featuresHasSensorCnt = 0;
 
-var activityDistribute = []; // number of activity : number of apk 
 
+var activityDistribute = []; // number of activity : number of apk 
 
 var hasCalledTargetFunCnt = 0;
 
@@ -28,7 +28,14 @@ var sensorTypeCnt = {};
 var canGetSensorTypeCnt = 0;
 
 var start = 1;
-var end = 1; // including
+var end = 10; // including
+
+var useStartActCnt = 0;
+var useStartActApkCnt = 0;
+
+var callSiteClassDic = {};
+var registerClassDic = {};
+var unregisterClassDic = {};
 
 for (let i = start; i <= end; i++ ) {
     dirName = rawDataDir + i + "/";
@@ -43,12 +50,17 @@ for (let i = start; i <= end; i++ ) {
 
 console.log("apk count = " + appCnt);
 console.log("time per apk, avg = " + timeAvg + "ms");
-console.log("Activity count, avg = ", activityCntAvg);
-console.log("Service count, avg = ", servicesCntAvg);
-console.log("Provider count, avg = ", providersCntAvg);
-console.log("Receiver count, avg = ", receiverCntAvg);
+console.log("Activity count, avg = ", activityCntAvg,
+            Math.round(appCnt * activityCntAvg) ,"/", appCnt);
+console.log("Service count, avg = ", servicesCntAvg,
+            Math.round(appCnt * servicesCntAvg) ,"/", appCnt);
+console.log("Provider count, avg = ", providersCntAvg,
+            Math.round(appCnt * providersCntAvg) ,"/", appCnt);
+console.log("Receiver count, avg = ", receiverCntAvg,
+            Math.round(appCnt * receiverCntAvg) ,"/", appCnt);
 console.log("features has sensor in manifest, percent = " + featuresHasSensorCnt / appCnt +
             "(" + featuresHasSensorCnt + "/" +  appCnt + ")");
+
 
 
 for (var i = 0; i < activityDistribute.length; i++) {
@@ -70,6 +82,19 @@ console.log("sensor types:");
 console.log(sensorTypeCnt);
 
 
+console.log(" callSiteClassDic  = ");
+console.log(callSiteClassDic);
+
+console.log(" registerClassDic  = ");
+console.log(registerClassDic);
+
+console.log(" unregisterClassDic  = ");
+console.log(unregisterClassDic);
+
+console.log("useStartActCnt = " + useStartActCnt );
+console.log("useStartActApkCnt = " + useStartActApkCnt );
+
+
 function obj2csv(fileName, obj) {
     var output = "letter,  frequency\n"; // : string
     for (var i = 0; i < obj.length; i++) {
@@ -79,24 +104,12 @@ function obj2csv(fileName, obj) {
     console.log("file written");
 }
 
-
 function parseOneFile(fileName, dir) {
     var obj = JSON.parse(fs.readFileSync(dir + fileName, 'utf8'));
-
     appCnt++;
     // console.log(obj.sootTime);
     timeAvg += (obj.sootTime - timeAvg) / appCnt;
-
-    // console.log(obj.manifest.activities);
-    // console.log(obj.manifest.activities.length);
-    activityCntAvg += (obj.manifest.activities.length - activityCntAvg) / appCnt;
-
-    // console.log(obj.manifest.services.length);
-    servicesCntAvg += (obj.manifest.services.length - servicesCntAvg) / appCnt;
-
-    providersCntAvg += (obj.manifest.providers.length - providersCntAvg) / appCnt;
-
-    receiverCntAvg += (obj.manifest.receiver.length - receiverCntAvg) / appCnt;
+    forAvg(obj, appCnt);
 
     if (activityDistribute[obj.manifest.activities.length] == undefined) {
         activityDistribute[obj.manifest.activities.length] = 1;
@@ -108,26 +121,89 @@ function parseOneFile(fileName, dir) {
     if (obj.manifest.features.some((f) => {return f.includes("sensor")})) {
         featuresHasSensorCnt++;
     }
+    forCallSites(obj);
+}
 
-    console.log(obj.callsite);
-    if (obj.callsite.length > 0) {
-        hasCalledTargetFunCnt++;
+function forAvg(obj, appCnt) {
+    activityCntAvg +=
+        (obj.manifest.activities.length - activityCntAvg) / appCnt;
+    servicesCntAvg +=
+        (obj.manifest.services.length - servicesCntAvg) / appCnt;
+    providersCntAvg +=
+        (obj.manifest.providers.length - providersCntAvg) / appCnt;
+    receiverCntAvg +=
+        (obj.manifest.receiver.length - receiverCntAvg) / appCnt;
+}
 
-        if (obj.callsite.some((c) => {return c.sensorType != undefined})) {
-            canGetSensorTypeCnt++;
+
+function forCallSites(obj) {
+    if (!(obj.callSites && obj.callSites.length > 0))
+        return;
+
+    hasCalledTargetFunCnt++;
+    if (obj.callSites.some(
+        (c) => {return c.sensorType != undefined})) {
+        canGetSensorTypeCnt++;
+    }
+    // count sensor type
+    for (let callSite of obj.callSites) {
+        if (callSite.sensorType != undefined) {
+            if (sensorTypeCnt[callSite.sensorType] == undefined) {
+                sensorTypeCnt[callSite.sensorType] = 0;
+            }
+            sensorTypeCnt[callSite.sensorType]++;
         }
 
-        for (let callsite of obj.callsite) {
-            if (callsite.sensorType != undefined) {
-                if (sensorTypeCnt[callsite.sensorType] == undefined) {
-                    sensorTypeCnt[callsite.sensorType] = 0;
-                }
-                sensorTypeCnt[callsite.sensorType]++;
+        // the first superclass started with android
+        let fsaClass = "others";
+        for (let superclass of callSite.superClasses) {
+            if (superclass.startsWith("android")) {
+                fsaClass = superclass;
+                break;
             }
+        }
+
+        if (callSite.contextClass.includes("unity3d")) {
+            continue;
+        }
+
+        if (callSiteClassDic[fsaClass] == undefined) {
+            callSiteClassDic[fsaClass]=1;
+        } else {
+            callSiteClassDic[fsaClass]++;
+        }
+
+        reg_unreg(callSite, fsaClass);
+
+        if (callSite.func.startsWith("<android.hardware.SensorManager: android.hardware.Sensor getDefaultSensor(int,boolean)>")
+            || callSite.func.includes("getDefaultSensor")
+            || callSite.func.includes("isWakeUpSensor")) {
+            // console.log(callSite.func);
         }
     }
 
-    // console.log(obj.callsite);
-    // console.log(obj);
+    var call_start_act = false;
+    for (let callSite of obj.callSites) {
+        if (callSite.func.includes("startActivity")) {
+            // console.log(callSite);
+            useStartActCnt++;
+            call_start_act = true;
+        }
+    }
+    if (call_start_act == true) {
+        useStartActApkCnt++;
+    }
 }
 
+
+function reg_unreg(callSite, fsaClass) {
+    if (callSite.func.includes(" register")) {
+        registerClassDic[fsaClass] = (registerClassDic[fsaClass] == undefined) ?
+            1 : registerClassDic[fsaClass]+1;
+    }
+
+    if (callSite.func.includes("unregister")) {
+        unregisterClassDic[fsaClass] = (unregisterClassDic[fsaClass] == undefined) ?
+            1 : unregisterClassDic[fsaClass]+1;
+    }
+}
