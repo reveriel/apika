@@ -8,20 +8,20 @@
 我们将其中的函数分成如下五类，同时结合cocos2d-x 3.3版本的源码分析这几类函数在源码中的位置，
 依次在下面各小节中分别说明:
 \begin{enumerate}
-\item \hei{游戏引擎库函数}：
+\item \textbf{游戏引擎库函数}：
 	指由cocos2d-x引擎提供的游戏相关的库所包含的函数，
 	参见第\ref{sec:so:cocolib}节；
-\item \hei{Lua运行时函数}：
+\item \textbf{Lua运行时函数}：
 	Lua运行时环境（Lua虚拟机）提供的库函数，
 	参见第\ref{sec:so:lualib}节；
-\item \hei{系统级JNI本地函数}：
+\item \textbf{系统级JNI本地函数}：
 	cocos2d-x中针对android系统中的JNI函数给出的本地函数实现，
 	参见第\ref{sec:so:sysjnilib}节；
-\item \hei{C++与Lua之间的绑定函数}：
+\item \textbf{C++与Lua之间的绑定函数}：
 	cocos2d-x用于方便沟通C/C++层与Lua vm之间绑定(binding)所使用的、
 	函数名以tolua开头的函数（一个自动bind工具），
 	参见第\ref{sec:so:bindlib}节；
-\item \hei{应用级JNI本地函数}：
+\item \textbf{应用级JNI本地函数}：
 	以Java\_org\_cocos2dx\_lib打头的函数，
 	这些是针对cocos2d以及游戏应用的JNI函数给出的本地函数实现，
 	参见第\ref{sec:so:appjnilib}节；
@@ -30,7 +30,7 @@
 表~\ref{table:so:fun}列出了libgame.so中涉及的5类函数的个数及所占比例。
 \begin{table}[H]
 \begin{center}
-\caption{\hei{各类符号的数目及比例}}
+\caption{\textbf{各类符号的数目及比例}}
 \label{table:so:fun}
 \begin{tabular}{|c|c|c|}
 \hline 类别 & 该类符号的数目 & 100\% \\
